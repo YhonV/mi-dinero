@@ -12,10 +12,13 @@ import { FirebaseError } from '@angular/fire/app';
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule],
+  providers: [AuthService]
 })
 
-export default class SignUpComponent {
+export default class SignUpComponent implements OnInit{
+  
+  ngOnInit() {}
   
   private _utils = inject(UtilsService)
   private _authService = inject(AuthService);
