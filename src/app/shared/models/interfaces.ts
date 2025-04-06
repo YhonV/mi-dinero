@@ -23,3 +23,18 @@ export interface Comuna {
     nombre: string,
     region: string
 }
+
+export interface Categoria {
+    id: string;
+    nombre: string;
+    icono?: string;
+  }
+  
+export interface Transaction {
+    id: string;
+    type: 'ingreso' | 'gasto';
+    amount: number;
+    category: Categoria;
+    date: Date;
+  }
+  

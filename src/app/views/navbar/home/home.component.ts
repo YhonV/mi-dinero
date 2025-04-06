@@ -1,20 +1,8 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
+import { Transaction, Categoria } from 'src/app/shared/models/interfaces';
 
-interface Categoria {
-  id: string;
-  nombre: string;
-  icono?: string;
-}
-
-interface Transaction {
-  id: string;
-  type: 'ingreso' | 'gasto';
-  amount: number;
-  category: Categoria;
-  date: Date;
-}
 
 @Component({
   selector: 'app-home',
