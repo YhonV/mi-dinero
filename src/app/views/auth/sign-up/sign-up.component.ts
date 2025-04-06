@@ -1,67 +1,102 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { FormBuilder, ReactiveFormsModule, Validators } from '@angular/forms';
 import { toast } from 'ngx-sonner';
-import { FormSignUp } from 'src/app/shared/models/interfaces';
+import { Comuna, FormSignUp } from 'src/app/shared/models/interfaces';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
-import { hasEmailError, isRequired } from 'src/app/shared/utils/validators.service';
+import {
+  hasEmailError,
+  isRequired,
+} from 'src/app/shared/utils/validators.service';
 import { firebaseErrors } from 'src/app/config/constants';
 import { FirebaseError } from '@angular/fire/app';
+import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
   imports: [ReactiveFormsModule],
-  providers: [AuthService]
+  providers: [AuthService],
 })
-
-export default class SignUpComponent implements OnInit{
-  
-  ngOnInit() {}
-  
-  private _utils = inject(UtilsService)
+export default class SignUpComponent implements OnInit {
+  private _firestoreService = inject(FirestoreService);
+  private _utils = inject(UtilsService);
   private _authService = inject(AuthService);
   private _formBuilder = inject(FormBuilder);
-  
+  direcciones: Comuna[] = [];
+
   form = this._formBuilder.group<FormSignUp>({
     username: this._formBuilder.control('', [Validators.required]),
-    email: this._formBuilder.control('', [Validators.required, Validators.email]),
+    email: this._formBuilder.control('', [
+      Validators.required,
+      Validators.email,
+    ]),
     password: this._formBuilder.control('', [Validators.required]),
     confirmPassword: this._formBuilder.control('', [Validators.required]),
+    comuna: this._formBuilder.control('', [Validators.required]),
+    region: this._formBuilder.control('', [Validators.required]),
   });
 
-  async submit(){
+  async ngOnInit() {
+    this.direcciones = await this._firestoreService.getDirecciones();
+  }
+
+  getRegionesUnicas(): string[] {
+    const regiones = this.direcciones.map((direccion) => direccion.region);
+    return [...new Set(regiones)].sort();
+  }
+
+  getComunasOfRegiones(region: string | null | undefined): Comuna[] {
+    if (!region) return [];
+    return this.direcciones.filter((direccion) => direccion.region === region);
+  }
+
+  async submit() {
     if (this.form.invalid) {
-      toast.success('Formulario incorrecto ❌')
+      toast.error('Formulario incorrecto ❌');
       return;
     }
-    try{
+    try {
       const { email, password, confirmPassword, username } = this.form.value;
-      console.log({email, password, confirmPassword, username})
+      console.log({ email, password, confirmPassword, username });
 
       if (!email || !password || !confirmPassword || !username) {
         toast.error('Email y contraseña son obligatorios ❌');
         return;
       }
 
-      if (password != confirmPassword){
+      if (password != confirmPassword) {
         toast.error('Contraseñas deben ser iguales ❌');
         return;
       }
-      
-      await this._authService.signUp({ email, password });
-      toast.success(' ✅ Registrado correctamente, se redirigirá en unos segundos...');
-      this.navigateTo('/navbar/home')
-    } catch(error){
-      let message = 'Ocurrió un error durante el inicio de sesión';
-      if(error instanceof FirebaseError){
-        message = firebaseErrors[error.code as keyof typeof firebaseErrors] || message;}
-      toast.error(message + ' ❌ ')
-    }
- }
 
-  navigateTo(path : string){
+      const credential = await this._authService.signUp({ email, password });
+
+      const uid = credential.user.uid;
+      await this._authService.createUser(
+        uid,
+        this.form.value.username || '',
+        this.form.value.region || '',
+        this.form.value.comuna || '',
+        this.form.value.email || ''
+      );
+
+      toast.success(
+        ' ✅ Registrado correctamente, se redirigirá en unos segundos...'
+      );
+      this.navigateTo('/navbar/home');
+    } catch (error) {
+      let message = 'Ocurrió un error durante el inicio de sesión';
+      if (error instanceof FirebaseError) {
+        message =
+          firebaseErrors[error.code as keyof typeof firebaseErrors] || message;
+      }
+      toast.error(message + ' ❌ ');
+    }
+  }
+
+  navigateTo(path: string) {
     this._utils.navigateTo(path);
   }
 

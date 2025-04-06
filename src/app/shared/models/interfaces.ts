@@ -10,4 +10,16 @@ export interface FormSignUp {
     email: FormControl<string | null>
     password: FormControl<string | null>
     confirmPassword: FormControl<string | null>
+    comuna: FormControl<string | null>
+    region: FormControl<string | null>
+}
+
+export interface FormSignIn {
+    email: FormControl<string | null>
+    password: FormControl<string | null>
+}
+
+export interface Comuna {
+    nombre: string,
+    region: string
 }
