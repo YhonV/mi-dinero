@@ -40,8 +40,8 @@ export default class SignInComponent {
       toast.error('Email y contraseña son obligatorios ❌');
       return;
     }
-    const result = await this._authService.signIn({email, password});
-    toast.success('Inicio de sesión éxitoso');
+    await this._authService.signIn({email, password});
+    toast.success('✅ Inicio de sesión éxitoso');
     this.navigateTo('/navbar/home');
   } catch(error){
       let message = 'Ocurrió un error durante el inicio de sesión';

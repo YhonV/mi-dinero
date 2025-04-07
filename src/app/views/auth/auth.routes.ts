@@ -9,4 +9,8 @@ export default [
         path: 'sign-in',
         loadComponent: () => import ('./sign-in/sign-in.component'),
     },
+    {
+        path: 'forgot-password',
+        loadComponent: () => import ('./forgot-password/forgot-password.component'),
+    },
 ] as Routes

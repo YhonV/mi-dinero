@@ -19,6 +19,10 @@ export interface FormSignIn {
     password: FormControl<string | null>
 }
 
+export interface FormForgotPassword{
+    email: FormControl<string | null>
+}
+
 export interface Comuna {
     nombre: string,
     region: string
