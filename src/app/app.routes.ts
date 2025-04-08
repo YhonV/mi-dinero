@@ -9,12 +9,12 @@ export const routes: Routes = [
     // canActivate: [noAuthGuard]
   },
   {
-    path: 'navbar',
+    path: '',
     loadChildren: () => import('./views/navbar/navbar.routes'),
     // canActivate: [authGuard]
   },
-  {
-    path: '**',
-    redirectTo: '/auth/sign-in'
-  }
+  // {
+  //   path: '**',
+  //   redirectTo: '/auth/sign-in'
+  // }
 ];

@@ -10,13 +10,13 @@ import {
   hasEmailError,
   isRequired,
 } from 'src/app/shared/utils/validators.service';
-
+import { IonButton } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss'],
-  imports: [ReactiveFormsModule]
+  imports: [ReactiveFormsModule, IonButton]
 })
 export default class SignInComponent {
 
@@ -30,18 +30,18 @@ export default class SignInComponent {
 
   async submit(){
   if (this.form.invalid) {
-        toast.error('Formulario incorrecto ❌');
+        toast.error('Formulario incorrecto ');
         return;
       }
 
   const { email, password } = this.form.value;
   try{
     if (!email || !password) {
-      toast.error('Email y contraseña son obligatorios ❌');
+      toast.error('Email y contraseña son obligatorios ');
       return;
     }
     await this._authService.signIn({email, password});
-    toast.success('✅ Inicio de sesión éxitoso');
+    toast.success('Inicio de sesión éxitoso');
     this.navigateTo('/navbar/home');
   } catch(error){
       let message = 'Ocurrió un error durante el inicio de sesión';
@@ -49,7 +49,7 @@ export default class SignInComponent {
         message =
           firebaseErrors[error.code as keyof typeof firebaseErrors] || message;
       }
-      toast.error(message + ' ❌ ');  
+      toast.error(message);  
   }
   }
 

@@ -1,16 +1,20 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Transaction, Categoria } from 'src/app/shared/models/interfaces';
-
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { Router } from '@angular/router';
+import { IonButton } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule],
+  imports: [CommonModule, FormsModule,IonButton ],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
 export default class HomeComponent  implements OnInit {
+  private _auth = inject(AuthService);
+  router = inject(Router);
 
   constructor() { }
 
@@ -114,4 +118,7 @@ export default class HomeComponent  implements OnInit {
       t.type === "ingreso" ? saldo + t.amount : saldo - t.amount, 0);
   }
 
+  async signOut(){
+      return await this._auth.signOutFirebase();
+  }
 }

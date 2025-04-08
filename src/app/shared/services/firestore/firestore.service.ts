@@ -22,7 +22,6 @@ export class FirestoreService {
         comunas = data["comunas"] as Comuna[];
       }
     });
-    console.log(comunas[0].nombre)
     return comunas;
   }
 

@@ -11,12 +11,12 @@ import {
 import { firebaseErrors } from 'src/app/config/constants';
 import { FirebaseError } from '@angular/fire/app';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-
+import { IonButton } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
-  imports: [ReactiveFormsModule],
+  imports: [ReactiveFormsModule, IonButton],
   providers: [AuthService],
 })
 export default class SignUpComponent implements OnInit {
@@ -54,7 +54,7 @@ export default class SignUpComponent implements OnInit {
 
   async submit() {
     if (this.form.invalid) {
-      toast.error('Formulario incorrecto ❌');
+      toast.error('Formulario incorrecto');
       return;
     }
     try {
@@ -62,17 +62,19 @@ export default class SignUpComponent implements OnInit {
       console.log({ email, password, confirmPassword, username });
 
       if (!email || !password || !confirmPassword || !username) {
-        toast.error('Email y contraseña son obligatorios ❌');
+        toast.error('Email y contraseña son obligatorios');
         return;
       }
 
       if (password != confirmPassword) {
-        toast.error('Contraseñas deben ser iguales ❌');
+        toast.error('Contraseñas deben ser iguales');
         return;
       }
 
       const credential = await this._authService.signUp({ email, password });
-
+      toast.success(
+        ' Registrado correctamente, se redirigirá en unos segundos...'
+      );
       const uid = credential.user.uid;
       await this._authService.createUser(
         uid,
@@ -82,9 +84,6 @@ export default class SignUpComponent implements OnInit {
         this.form.value.email || ''
       );
 
-      toast.success(
-        ' ✅ Registrado correctamente, se redirigirá en unos segundos...'
-      );
       this.navigateTo('/navbar/home');
     } catch (error) {
       let message = 'Ocurrió un error durante el inicio de sesión';
@@ -92,7 +91,7 @@ export default class SignUpComponent implements OnInit {
         message =
           firebaseErrors[error.code as keyof typeof firebaseErrors] || message;
       }
-      toast.error(message + ' ❌ ');
+      toast.error(message);
     }
   }
 
