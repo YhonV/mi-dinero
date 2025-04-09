@@ -22,4 +22,8 @@ export class UtilsService {
       }, 500);
     }, 1000);
   }
+
+  async navigateToWithoutLoading(path: string){
+    this._navCtrl.navigateRoot(path);
+  }
 }

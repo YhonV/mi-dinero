@@ -15,7 +15,7 @@ export default class NavbarComponent  implements OnInit {
     addIcons({ home, statsChartOutline, settingsOutline });
    }
 
-  ngOnInit() {}
+   ngOnInit(){}
 
 }
   

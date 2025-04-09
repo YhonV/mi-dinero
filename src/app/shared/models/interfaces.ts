@@ -3,6 +3,9 @@ import { FormControl } from "@angular/forms";
 export interface User {
     email: string,
     password: string,
+    nombre?: string;
+    comuna?: string;
+    region?: string;
 }
 
 export interface FormSignUp {

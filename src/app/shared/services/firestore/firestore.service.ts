@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { collection, Firestore, getDocs } from '@angular/fire/firestore';
-import { Comuna } from '../../models/interfaces';
+import { Comuna, User } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,6 @@ import { Comuna } from '../../models/interfaces';
 export class FirestoreService {
   
   private firestore = inject(Firestore)
-
 
   async getDirecciones(): Promise<Comuna[]> {
     const collectionDireccion = collection(this.firestore, "direccion");
@@ -25,5 +24,4 @@ export class FirestoreService {
     return comunas;
   }
 
-  
 }

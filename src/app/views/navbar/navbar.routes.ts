@@ -28,5 +28,29 @@ export default [
                 pathMatch: 'full'
             }
         ]
-    }
+    },
+    {
+        path: 'preferences/profile',
+        loadComponent: () => import('./preferences/profile/profile.component').then(m => m.default)
+    },
+    {
+        path: 'preferences/themes',
+        loadComponent: () => import('./preferences/themes/themes.component').then(m => m.default)
+    },
+    {
+        path: 'preferences/notifications',
+        loadComponent: () => import('./preferences/notifications/notifications.component').then(m => m.default)
+    },
+    {
+        path: 'preferences/feedback',
+        loadComponent: () => import('./preferences/feedback/feedback.component').then(m => m.default)
+    },
+    {
+        path: 'preferences/change-password',
+        loadComponent: () => import('./preferences/change-password/change-password.component').then(m => m.default)
+    },
+    {
+        path: 'preferences/language',
+        loadComponent: () => import('./preferences/language/language.component').then(m => m.default)
+    },
 ] as Routes

@@ -1,3 +1,32 @@
-<p>
-  preferences works!
-</p>
+<ion-content color="bg-white">
+  <ion-list [inset]="true">
+    <ion-item button class="ion-text-center"  (click)="navigateTo('/preferences/profile')">
+      <ion-icon name="person-outline" slot="start"></ion-icon>
+      <ion-label>Perfil</ion-label>
+    </ion-item>
+    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/change-password')">
+      <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
+      <ion-label>Cambiar contraseña</ion-label>
+    </ion-item>
+    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/themes')">
+      <ion-icon name="moon-outline" slot="start"></ion-icon>
+      <ion-label>Modo oscuro</ion-label>
+    </ion-item>
+    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/language')">
+      <ion-icon name="language-outline" slot="start"></ion-icon>
+      <ion-label>Idioma</ion-label>
+    </ion-item>
+    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/notifications')">
+      <ion-icon name="notifications-outline" slot="start"></ion-icon>
+      <ion-label>Notificaciones</ion-label>
+    </ion-item>
+    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/feedback')">
+      <ion-icon name="mail-outline"></ion-icon>
+      <ion-label>Feedback & Contacto</ion-label>
+    </ion-item>
+    <ion-item button (click)="signOut()" color="tertiary" class="ion-text-center">
+      <ion-icon name="log-out-outline" slot="start"></ion-icon>
+      <ion-label>Cerrar sesión</ion-label>
+    </ion-item>
+  </ion-list>
+</ion-content>

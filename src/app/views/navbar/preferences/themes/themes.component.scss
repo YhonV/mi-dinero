@@ -1,0 +1,96 @@
+:host {
+    --ion-background-color: #f8f9fa;
+  }
+  
+  .contact-header {
+    text-align: center;
+    padding: 20px;
+  }
+  
+  .contact-header ion-icon {
+    font-size: 48px;
+    margin-bottom: 10px;
+  }
+  
+  .contact-header h2 {
+    font-size: 22px;
+    font-weight: 600;
+    margin: 0;
+    color: var(--ion-color-dark);
+  }
+  
+  .contact-card, .feedback-card {
+    margin: 0 16px 16px;
+    border-radius: 16px;
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
+  }
+  
+  .contact-message {
+    font-size: 16px;
+    line-height: 1.5;
+    color: var(--ion-color-dark);
+    margin-bottom: 20px;
+    text-align: center;
+  }
+  
+  .contact-options {
+    margin-top: 10px;
+  }
+  
+  .contact-item {
+    --padding-start: 0;
+    --inner-padding-end: 0;
+    margin-bottom: 16px;
+  }
+  
+  .contact-item ion-icon {
+    font-size: 24px;
+    margin-right: 16px;
+  }
+  
+  .contact-item h3 {
+    font-weight: 500;
+    margin: 0 0 5px;
+    font-size: 16px;
+  }
+  
+  .contact-item p {
+    color: var(--ion-color-medium);
+    margin: 0;
+  }
+  
+  .feedback-input {
+    margin-bottom: 16px;
+    --background: transparent;
+    --padding-start: 0;
+  }
+  
+  ion-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    color: var(--ion-color-dark);
+  }
+  
+  .rating-container {
+    margin: 20px 0;
+    text-align: center;
+  }
+  
+  .rating-container p {
+    margin-bottom: 8px;
+    color: var(--ion-color-dark);
+  }
+  
+  .star-rating {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .star-rating ion-icon {
+    font-size: 28px;
+    margin: 0 5px;
+  }
+  
+  .send-button {
+    margin-top: 20px;
+  }

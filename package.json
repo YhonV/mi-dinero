@@ -30,6 +30,7 @@
     "@ionic/angular": "^8.0.0",
     "@tailwindcss/postcss": "^4.1.3",
     "ionicons": "^7.0.0",
+    "mi-dinero": "file:",
     "ngx-sonner": "^3.1.0",
     "postcss": "^8.5.3",
     "rxjs": "~7.8.0",
