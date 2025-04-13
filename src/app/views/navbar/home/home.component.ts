@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { Transaction, Category } from 'src/app/shared/models/interfaces';
 import { Router } from '@angular/router';
+import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 
 @Component({
   selector: 'app-home',
@@ -11,12 +12,12 @@ import { Router } from '@angular/router';
   styleUrls: ['./home.component.scss'],
 })
 export default class HomeComponent  implements OnInit {
-  
+  private _firestore = inject(FirestoreService);  
   router = inject(Router);
 
   constructor() { }
 
-  ngOnInit() {}
+  ngOnInit() { this._firestore.initializeCategories()}
   isModalOpen: boolean = false;
   tipoSeleccionado: 'ingreso' | 'gasto' = 'ingreso';
   monto: number= 0;
@@ -25,28 +26,9 @@ export default class HomeComponent  implements OnInit {
   defaultMonto: number = 0;
   defaultCategoria: string = '';
   transactions: Transaction[] = [];
+  
 
-  // Categorías de ingresos
-  categoriasIngreso: Category[] = [
-    { id: 'salario', description: 'Salario', type: 'ingreso' },
-    { id: 'inversiones', description: 'Inversiones', type: 'ingreso' },
-    { id: 'ventas', description: 'Ventas', type: 'ingreso' },
-    { id: 'regalos', description: 'Regalos recibidos', type: 'ingreso' },
-    { id: 'otros_ingresos', description: 'Otros ingresos', type: 'ingreso' }
-  ];
-
-  // Categorías de gastos
-  categoriasGasto: Category[] = [
-    { id: 'comida', description: 'Alimentación', type: 'gasto' },
-    { id: 'transporte', description: 'Transporte', type: 'gasto' },
-    { id: 'vivienda', description: 'Vivienda', type: 'gasto' },
-    { id: 'entretenimiento', description: 'Entretenimiento' , type: 'gasto'},
-    { id: 'servicios', description: 'Servicios' , type: 'gasto'},
-    { id: 'salud', description: 'Salud', type: 'gasto' },
-    { id: 'ropa', description: 'Ropa y accesorios', type: 'gasto' },
-    { id: 'educacion', description: 'Educación', type: 'gasto' },
-    { id: 'otros_gastos', description: 'Otros gastos', type: 'gasto' }
-  ];
+  
 
   resetForm() {
     this.tipoSeleccionado = this.defaultTipo;
@@ -89,15 +71,15 @@ export default class HomeComponent  implements OnInit {
   }
 
   thisTransaction(): void {
-    const nuevaTransaccion: Transaction = {
-      id: Date.now().toString(),
-      type: this.tipoSeleccionado,
-      amount: this.monto,
-      categoryId: this.categoriasIngreso.find(c => c.id === this.categoriaSeleccionada) || this.categoriasGasto.find(c => c.id === this.categoriaSeleccionada)!,
-      date: new Date()
-    };
-    this.transactions.push(nuevaTransaccion);
-    this.closeModal();
+    // const nuevaTransaccion: Transaction = {
+    //   id: Date.now().toString(),
+    //   type: this.tipoSeleccionado,
+    //   amount: this.monto,
+    //   categoryId: this.categoriasIngreso.find(c => c.id === this.categoriaSeleccionada) || this.categoriasGasto.find(c => c.id === this.categoriaSeleccionada)!,
+    //   date: new Date()
+    // };
+    // this.transactions.push(nuevaTransaccion);
+    // this.closeModal();
   }
 
   calcularIngresos(): number{

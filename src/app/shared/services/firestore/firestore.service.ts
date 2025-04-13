@@ -1,11 +1,6 @@
 import { inject, Injectable } from '@angular/core';
-<<<<<<< HEAD
-import { addDoc, collection, doc, Firestore, getDocs, setDoc, writeBatch } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch } from '@angular/fire/firestore';
 import { Comuna, User, Transaction, Category } from '../../models/interfaces';
-=======
-import { collection, Firestore, getDocs, getDoc, doc } from '@angular/fire/firestore';
-import { Comuna, User } from '../../models/interfaces';
->>>>>>> d7a512af4bd6d321559b94058f050a86c1ccc8a7
 
 @Injectable({
   providedIn: 'root'
@@ -15,24 +10,24 @@ export class FirestoreService {
   private firestore = inject(Firestore)
 
   categoriasIngreso: Category[] = [
-    { id: 'salario', description: 'Salario', type: 'ingreso' },
-    { id: 'inversiones', description: 'Inversiones', type: 'ingreso' },
-    { id: 'ventas', description: 'Ventas', type: 'ingreso' },
-    { id: 'regalos', description: 'Regalos recibidos', type: 'ingreso' },
-    { id: 'otros_ingresos', description: 'Otros ingresos', type: 'ingreso' }
+    { id: 'salario', description: 'Salario', type: 'ingreso', icono: 'cash-outline' },
+    { id: 'inversiones', description: 'Inversiones', type: 'ingreso', icono: 'bar-chart-outline' },
+    { id: 'ventas', description: 'Ventas', type: 'ingreso', icono: 'cart-outline' },
+    { id: 'regalos', description: 'Regalos recibidos', type: 'ingreso', icono: 'gift-outline' },
+    { id: 'otros_ingresos', description: 'Otros ingresos', type: 'ingreso', icono: 'cash-outline' },
   ];
 
   // Categorías de gastos
   categoriasGasto: Category[] = [
-    { id: 'comida', description: 'Alimentación', type: 'gasto' },
-    { id: 'transporte', description: 'Transporte', type: 'gasto' },
-    { id: 'vivienda', description: 'Vivienda', type: 'gasto' },
-    { id: 'entretenimiento', description: 'Entretenimiento' , type: 'gasto'},
-    { id: 'servicios', description: 'Servicios' , type: 'gasto'},
-    { id: 'salud', description: 'Salud', type: 'gasto' },
-    { id: 'ropa', description: 'Ropa y accesorios', type: 'gasto' },
-    { id: 'educacion', description: 'Educación', type: 'gasto' },
-    { id: 'otros_gastos', description: 'Otros gastos', type: 'gasto' }
+    { id: 'comida', description: 'Alimentación', type: 'gasto', icono: 'fast-food-outline' },
+    { id: 'transporte', description: 'Transporte', type: 'gasto', icono: 'car-outline' },
+    { id: 'vivienda', description: 'Vivienda', type: 'gasto', icono: 'home-outline' },
+    { id: 'entretenimiento', description: 'Entretenimiento' , type: 'gasto', icono: 'film-outline'},
+    { id: 'servicios', description: 'Servicios' , type: 'gasto', icono: 'bulb-outline'},
+    { id: 'salud', description: 'Salud', type: 'gasto', icono: 'medkit-outline' },
+    { id: 'ropa', description: 'Ropa y accesorios', type: 'gasto', icono: 'shirt-outline' },
+    { id: 'educacion', description: 'Educación', type: 'gasto', icono: 'school-outline' },
+    { id: 'otros_gastos', description: 'Otros gastos', type: 'gasto', icono: 'cash-outline' },
   ];
 
 
@@ -51,7 +46,6 @@ export class FirestoreService {
     return comunas;
   }
 
-<<<<<<< HEAD
   async addTransaction(
     userId: string, 
     transactionData: Transaction
@@ -90,7 +84,6 @@ export class FirestoreService {
     }  
   }
   
-=======
   async getUser(uid : string): Promise<User | null> {
     const docRef = doc(this.firestore, "users", uid);
     const userSnapshot = await getDoc(docRef);
@@ -102,7 +95,6 @@ export class FirestoreService {
     return null;
   }
 
->>>>>>> d7a512af4bd6d321559b94058f050a86c1ccc8a7
 }
  
 

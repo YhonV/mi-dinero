@@ -58,7 +58,7 @@
         class="flex justify-between items-center p-2 border-b"
       >
         <div>
-          <span class="font-medium">{{ transaction.category.nombre }}</span>
+          <!-- <span class="font-medium">{{ transaction.category.nombre }}</span> -->
           <span class="text-xs text-gray-500 block">{{
             transaction.date | date : "short"
           }}</span>
@@ -299,20 +299,20 @@
           >
             <option value="" disabled selected>Selecciona una categoría</option>
             <ng-container *ngIf="tipoSeleccionado === 'ingreso'">
-              <option
+              <!-- <option
                 *ngFor="let categoria of categoriasIngreso"
                 [value]="categoria.id"
               >
                 {{ categoria.nombre }}
-              </option>
+              </option> -->
             </ng-container>
             <ng-container *ngIf="tipoSeleccionado === 'gasto'">
-              <option
+              <!-- <option
                 *ngFor="let categoria of categoriasGasto"
                 [value]="categoria.id"
               >
                 {{ categoria.nombre }}
-              </option>
+              </option> -->
             </ng-container>
           </select>
           <div
