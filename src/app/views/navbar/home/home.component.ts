@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Transaction, Categoria } from 'src/app/shared/models/interfaces';
+import { Transaction, Category } from 'src/app/shared/models/interfaces';
 import { Router } from '@angular/router';
 
 @Component({
@@ -27,25 +27,25 @@ export default class HomeComponent  implements OnInit {
   transactions: Transaction[] = [];
 
   // Categorías de ingresos
-  categoriasIngreso: Categoria[] = [
-    { id: 'salario', nombre: 'Salario' },
-    { id: 'inversiones', nombre: 'Inversiones' },
-    { id: 'ventas', nombre: 'Ventas' },
-    { id: 'regalos', nombre: 'Regalos recibidos' },
-    { id: 'otros_ingresos', nombre: 'Otros ingresos' }
+  categoriasIngreso: Category[] = [
+    { id: 'salario', description: 'Salario', type: 'ingreso' },
+    { id: 'inversiones', description: 'Inversiones', type: 'ingreso' },
+    { id: 'ventas', description: 'Ventas', type: 'ingreso' },
+    { id: 'regalos', description: 'Regalos recibidos', type: 'ingreso' },
+    { id: 'otros_ingresos', description: 'Otros ingresos', type: 'ingreso' }
   ];
 
   // Categorías de gastos
-  categoriasGasto: Categoria[] = [
-    { id: 'comida', nombre: 'Alimentación' },
-    { id: 'transporte', nombre: 'Transporte' },
-    { id: 'vivienda', nombre: 'Vivienda' },
-    { id: 'entretenimiento', nombre: 'Entretenimiento' },
-    { id: 'servicios', nombre: 'Servicios' },
-    { id: 'salud', nombre: 'Salud' },
-    { id: 'ropa', nombre: 'Ropa y accesorios' },
-    { id: 'educacion', nombre: 'Educación' },
-    { id: 'otros_gastos', nombre: 'Otros gastos' }
+  categoriasGasto: Category[] = [
+    { id: 'comida', description: 'Alimentación', type: 'gasto' },
+    { id: 'transporte', description: 'Transporte', type: 'gasto' },
+    { id: 'vivienda', description: 'Vivienda', type: 'gasto' },
+    { id: 'entretenimiento', description: 'Entretenimiento' , type: 'gasto'},
+    { id: 'servicios', description: 'Servicios' , type: 'gasto'},
+    { id: 'salud', description: 'Salud', type: 'gasto' },
+    { id: 'ropa', description: 'Ropa y accesorios', type: 'gasto' },
+    { id: 'educacion', description: 'Educación', type: 'gasto' },
+    { id: 'otros_gastos', description: 'Otros gastos', type: 'gasto' }
   ];
 
   resetForm() {
@@ -93,7 +93,7 @@ export default class HomeComponent  implements OnInit {
       id: Date.now().toString(),
       type: this.tipoSeleccionado,
       amount: this.monto,
-      category: this.categoriasIngreso.find(c => c.id === this.categoriaSeleccionada) || this.categoriasGasto.find(c => c.id === this.categoriaSeleccionada)!,
+      categoryId: this.categoriasIngreso.find(c => c.id === this.categoriaSeleccionada) || this.categoriasGasto.find(c => c.id === this.categoriaSeleccionada)!,
       date: new Date()
     };
     this.transactions.push(nuevaTransaccion);

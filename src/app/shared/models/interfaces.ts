@@ -31,9 +31,10 @@ export interface Comuna {
     region: string
 }
 
-export interface Categoria {
+export interface Category {
     id: string;
-    nombre: string;
+    description: string;
+    type: 'ingreso' | 'gasto';
     icono?: string;
   }
   
@@ -41,7 +42,7 @@ export interface Transaction {
     id: string;
     type: 'ingreso' | 'gasto';
     amount: number;
-    category: Categoria;
+    categoryId: string;
     date: Date;
   }
   
