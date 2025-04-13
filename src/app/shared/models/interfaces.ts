@@ -3,7 +3,7 @@ import { FormControl } from "@angular/forms";
 export interface User {
     email: string,
     password: string,
-    nombre?: string;
+    username?: string;
     comuna?: string;
     region?: string;
 }

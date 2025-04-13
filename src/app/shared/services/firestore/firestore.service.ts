@@ -1,6 +1,11 @@
 import { inject, Injectable } from '@angular/core';
+<<<<<<< HEAD
 import { addDoc, collection, doc, Firestore, getDocs, setDoc, writeBatch } from '@angular/fire/firestore';
 import { Comuna, User, Transaction, Category } from '../../models/interfaces';
+=======
+import { collection, Firestore, getDocs, getDoc, doc } from '@angular/fire/firestore';
+import { Comuna, User } from '../../models/interfaces';
+>>>>>>> d7a512af4bd6d321559b94058f050a86c1ccc8a7
 
 @Injectable({
   providedIn: 'root'
@@ -46,6 +51,7 @@ export class FirestoreService {
     return comunas;
   }
 
+<<<<<<< HEAD
   async addTransaction(
     userId: string, 
     transactionData: Transaction
@@ -84,6 +90,19 @@ export class FirestoreService {
     }  
   }
   
+=======
+  async getUser(uid : string): Promise<User | null> {
+    const docRef = doc(this.firestore, "users", uid);
+    const userSnapshot = await getDoc(docRef);
+    if (userSnapshot){
+      const user = userSnapshot.data() as User;
+      console.log(user);
+      return user;
+    }
+    return null;
+  }
+
+>>>>>>> d7a512af4bd6d321559b94058f050a86c1ccc8a7
 }
  
 
