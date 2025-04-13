@@ -21,7 +21,7 @@
           <ion-icon name="person-outline" slot="start" color="tertiary"></ion-icon>
           <ion-label>
             <p>Nombre</p>
-            <h2>Juan Pérez</h2>
+            <h2>{{userData?.username}}</h2>
           </ion-label>
         </ion-item>
         
@@ -29,7 +29,7 @@
           <ion-icon name="mail-outline" slot="start" color="tertiary"></ion-icon>
           <ion-label>
             <p>Correo</p>
-            <h2>juan.perezarrobaexample.com</h2>
+            <h2>{{userData?.email}}</h2>
           </ion-label>
         </ion-item>
         
@@ -37,7 +37,7 @@
           <ion-icon name="location-outline" slot="start" color="tertiary"></ion-icon>
           <ion-label>
             <p>Región</p>
-            <h2>Región Metropolitana</h2>
+            <h2>{{userData?.region}}</h2>
           </ion-label>
         </ion-item>
         
@@ -45,7 +45,7 @@
           <ion-icon name="home" slot="start" color="tertiary"></ion-icon>
           <ion-label>
             <p>Comuna</p>
-            <h2>Las Condes</h2>
+            <h2>{{userData?.comuna}}</h2>
           </ion-label>
         </ion-item>
       </ion-list>

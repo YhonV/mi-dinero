@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { collection, Firestore, getDocs } from '@angular/fire/firestore';
+import { collection, Firestore, getDocs, getDoc, doc } from '@angular/fire/firestore';
 import { Comuna, User } from '../../models/interfaces';
 
 @Injectable({
@@ -22,6 +22,17 @@ export class FirestoreService {
       }
     });
     return comunas;
+  }
+
+  async getUser(uid : string): Promise<User | null> {
+    const docRef = doc(this.firestore, "users", uid);
+    const userSnapshot = await getDoc(docRef);
+    if (userSnapshot){
+      const user = userSnapshot.data() as User;
+      console.log(user);
+      return user;
+    }
+    return null;
   }
 
 }
