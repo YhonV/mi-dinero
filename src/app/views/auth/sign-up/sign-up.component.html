@@ -1,37 +1,18 @@
-<section class="bg-white h-full">
-  <div
-    class="flex flex-col items-center justify-center px-6 py-8 mx-auto md:h-screen lg:py-0"
-  >
-    <a
-      class="flex items-center mb-6 text-3xl font-semibold"
-    >
-      <img
-        class="w-15 h-15 mr-2"
-        src="assets/mi-dinero-logo.png"
-        alt="logo"
-      />
+<section class="bg-white overflow-auto" style="height: 100%; position: relative; -webkit-overflow-scrolling: touch;">
+  <div class="flex flex-col items-center px-4 py-4 mx-auto">
+    <a class="flex items-center mb-4 text-2xl font-semibold">
+      <img class="w-10 h-10 mr-2" src="assets/mi-dinero-logo.png" alt="logo" />
       <span class="text-blue-700 font-bold">Mi Dinero</span>  
     </a>
-    <div
-      class="w-full rounded-lg shadow-xl md:mt-0 sm:max-w-md xl:p-0 bg-white border border-purple-300"
-    >
-      <div class="p-6 space-y-4 md:space-y-6 sm:p-8">
-        <h1
-          class="text-xl font-bold leading-tight tracking-tight text-gray-900 md:text-2xl"
-        >
+    <div class="w-full rounded-lg shadow-md md:mt-0 sm:max-w-md xl:p-0 bg-white border border-purple-300 mb-6">
+      <div class="p-4 space-y-3 md:space-y-4 sm:p-6">
+        <h1 class="text-xl font-bold text-gray-900">
           Registrate
         </h1>
-        <form
-          class="space-y-4 md:space-y-6"
-          [formGroup]="form"
-          (ngSubmit)="submit()"
-        >
+        <form class="space-y-3 md:space-y-4" [formGroup]="form" (ngSubmit)="submit()">
         <!-- Campo de username -->
         <div>
-          <label
-            for="username"
-            class="block mb-2 text-sm font-medium text-gray-700"
-            >Usuario</label>
+          <label for="username" class="block mb-1 text-sm font-medium text-gray-700">Usuario</label>
           <div class="flex">
             <span class="inline-flex items-center justify-center px-3 border border-e-0 border-purple-300 rounded-s-md bg-purple-500 text-white">
               <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 20 20" stroke="currentColor">
@@ -50,12 +31,13 @@
             />
           </div>
         </div>
+        
+        <!-- Resto del formulario -->
+        <!-- Campos adicionales con las mismas clases pero manteniendo el espacio más compacto -->
+        
         <!-- Campo de correo -->
         <div>
-          <label
-            for="email"
-            class="block mb-2 text-sm font-medium text-gray-700"
-            >Tu correo</label>
+          <label for="email" class="block mb-1 text-sm font-medium text-gray-700">Tu correo</label>
           <div class="flex">
             <span class="inline-flex items-center justify-center px-3 border border-e-0 border-purple-300 rounded-s-md bg-purple-500 text-white">
               <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="1.5">
@@ -74,106 +56,108 @@
               formControlName="email"
             />
           </div>
-            @if(isRequired('email')){
-              <small class="text-red-500">Este campo es requerido</small>
-            }
-            @if(hasEmailError()){
-                <small class="text-red-500">El correo debe ser válido</small>
-            }
-          </div>
-          <!-- Campo de contraseña -->
-          <div>
-            <label
-              for="password"
-              class="block mb-2 text-sm font-medium text-gray-700"
-              >Contraseña</label>
-            <div class="flex">
-              <span class="inline-flex items-center justify-center px-3 border border-e-0 border-purple-300 rounded-s-md bg-purple-500 text-white">
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 1a5 5 0 0 0-5 5v4H6a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V11a1 1 0 0 0-1-1h-1V6a5 5 0 0 0-5-5Zm-3 5a3 3 0 1 1 6 0v4H9V6Zm0 6h6v9H9v-9Z"/>
-                </svg>
-              </span>         
-              <input
-                type="password"
-                name="password"
-                id="password"
-                style="color: black !important;"
-                placeholder="••••••••"
-                class="rounded-none rounded-e-lg bg-gray-50 border border-purple-300 text-black focus:ring-purple-500 focus:border-purple-500 block flex-1 min-w-0 w-full text-sm p-2.5"
-                required=""
-                formControlName="password"
-              />
-            </div>
-            @if(isRequired('password')){
-              <small class="text-red-500">Este campo es requerido</small>
-            }
-          </div>
-          <!-- Campo para confirmar contraseña -->
-          <div>
-            <label
-              for="confirmPassword"
-              class="block mb-2 text-sm font-medium text-gray-700"
-              >Confirma tu contraseña</label>
-            <div class="flex">
-              <span class="inline-flex items-center justify-center px-3 border border-e-0 border-purple-300 rounded-s-md bg-purple-500 text-white">
-                <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                  <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 1a5 5 0 0 0-5 5v4H6a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V11a1 1 0 0 0-1-1h-1V6a5 5 0 0 0-5-5Zm-3 5a3 3 0 1 1 6 0v4H9V6Zm0 6h6v9H9v-9Z"/>
-                </svg>
-              </span>         
-              <input
-                type="password"
-                name="confirmPassword"
-                id="confirmPassword"
-                style="color: black !important;"
-                placeholder="••••••••"
-                class="rounded-none rounded-e-lg bg-gray-50 border border-purple-300 text-black focus:ring-purple-500 focus:border-purple-500 block flex-1 min-w-0 w-full text-sm p-2.5"
-                required=""
-                formControlName="confirmPassword"
-              />
-            </div>
-            @if(isRequired('password')){
-              <small class="text-red-500">Este campo es requerido</small>
-            }
-          </div>
-          <div>
-            <label for="region" class="block mb-2 text-sm font-medium text-gray-700">
-              Selecciona tu region
-            </label>
-            <select
-              id="region"
-              formControlName="region"
+          @if(isRequired('email')){
+            <small class="text-red-500">Este campo es requerido</small>
+          }
+          @if(hasEmailError()){
+              <small class="text-red-500">El correo debe ser válido</small>
+          }
+        </div>
+        
+        <!-- Campo de contraseña -->
+        <div>
+          <label for="password" class="block mb-1 text-sm font-medium text-gray-700">Contraseña</label>
+          <div class="flex">
+            <span class="inline-flex items-center justify-center px-3 border border-e-0 border-purple-300 rounded-s-md bg-purple-500 text-white">
+              <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 1a5 5 0 0 0-5 5v4H6a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V11a1 1 0 0 0-1-1h-1V6a5 5 0 0 0-5-5Zm-3 5a3 3 0 1 1 6 0v4H9V6Zm0 6h6v9H9v-9Z"/>
+              </svg>
+            </span>         
+            <input
+              type="password"
+              name="password"
+              id="password"
               style="color: black !important;"
-              class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500">
-              <option value="" selected disabled>Selecciona una region</option>
-              @for(region of getRegionesUnicas(); track region) {
-                <option [value]="region">{{ region }}</option>
-              }
-            </select>
+              placeholder="••••••••"
+              class="rounded-none rounded-e-lg bg-gray-50 border border-purple-300 text-black focus:ring-purple-500 focus:border-purple-500 block flex-1 min-w-0 w-full text-sm p-2.5"
+              required=""
+              formControlName="password"
+            />
           </div>
-          <div>
-            <label for="comuna" class="block mb-2 text-sm font-medium text-gray-700">
-              Selecciona tu comuna
-            </label>
-            <select
-              id="comuna"
-              formControlName="comuna"
+          @if(isRequired('password')){
+            <small class="text-red-500">Este campo es requerido</small>
+          }
+        </div>
+        
+        <!-- Campo para confirmar contraseña -->
+        <div>
+          <label for="confirmPassword" class="block mb-1 text-sm font-medium text-gray-700">Confirma tu contraseña</label>
+          <div class="flex">
+            <span class="inline-flex items-center justify-center px-3 border border-e-0 border-purple-300 rounded-s-md bg-purple-500 text-white">
+              <svg class="w-5 h-5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 1a5 5 0 0 0-5 5v4H6a1 1 0 0 0-1 1v11a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V11a1 1 0 0 0-1-1h-1V6a5 5 0 0 0-5-5Zm-3 5a3 3 0 1 1 6 0v4H9V6Zm0 6h6v9H9v-9Z"/>
+              </svg>
+            </span>         
+            <input
+              type="password"
+              name="confirmPassword"
+              id="confirmPassword"
               style="color: black !important;"
-              class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500">
-              <option value="" selected disabled>Selecciona una comuna</option>
-              @for(comuna of getComunasOfRegiones(form.get('region')?.value); track comuna.nombre) {
-                <option [value]="comuna.nombre">{{ comuna.nombre }}</option>
-              }
-            </select>
+              placeholder="••••••••"
+              class="rounded-none rounded-e-lg bg-gray-50 border border-purple-300 text-black focus:ring-purple-500 focus:border-purple-500 block flex-1 min-w-0 w-full text-sm p-2.5"
+              required=""
+              formControlName="confirmPassword"
+            />
           </div>
-          <ion-button type="submit" fill="outline" color="tertiary" expand="block" class="font-bold" >Registrate</ion-button>         
-          <p class="text-sm font-light text-gray-600">
-            ¿Ya tienes una cuenta?
-            <a
-              class="font-medium text-blue-700 hover:text-blue-800 cursor-pointer"
-              (click)="navigateTo('/auth/sign-in')"
-              >Ingresa</a
-            >
-          </p>
+          @if(isRequired('password')){
+            <small class="text-red-500">Este campo es requerido</small>
+          }
+        </div>
+        
+        <!-- Seleccionador de región -->
+        <div>
+          <label for="region" class="block mb-1 text-sm font-medium text-gray-700">
+            Selecciona tu region
+          </label>
+          <select
+            id="region"
+            formControlName="region"
+            style="color: black !important;"
+            class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500">
+            <option value="" selected disabled>Selecciona una region</option>
+            @for(region of getRegionesUnicas(); track region) {
+              <option [value]="region">{{ region }}</option>
+            }
+          </select>
+        </div>
+        
+        <!-- Seleccionador de comuna -->
+        <div>
+          <label for="comuna" class="block mb-1 text-sm font-medium text-gray-700">
+            Selecciona tu comuna
+          </label>
+          <select
+            id="comuna"
+            formControlName="comuna"
+            style="color: black !important;"
+            class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500">
+            <option value="" selected disabled>Selecciona una comuna</option>
+            @for(comuna of getComunasOfRegiones(form.get('region')?.value); track comuna.nombre) {
+              <option [value]="comuna.nombre">{{ comuna.nombre }}</option>
+            }
+          </select>
+        </div>
+        
+        <!-- Botón de registro -->
+        <ion-button type="submit" fill="outline" color="tertiary" expand="block" class="font-bold mt-4">Registrate</ion-button>         
+        <p class="text-sm font-light text-gray-600">
+          ¿Ya tienes una cuenta?
+          <a
+            class="font-medium text-blue-700 hover:text-blue-800 cursor-pointer"
+            (click)="navigateTo('/auth/sign-in')"
+            >Ingresa</a
+          >
+        </p>
         </form>
       </div>
     </div>
