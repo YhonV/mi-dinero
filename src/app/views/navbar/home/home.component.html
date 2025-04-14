@@ -299,20 +299,20 @@
           >
             <option value="" disabled selected>Selecciona una categoría</option>
             <ng-container *ngIf="tipoSeleccionado === 'ingreso'">
-              <!-- <option
+              <option
                 *ngFor="let categoria of categoriasIngreso"
-                [value]="categoria.id"
+                [value]="categoria.nombre"
               >
                 {{ categoria.nombre }}
-              </option> -->
+              </option>
             </ng-container>
             <ng-container *ngIf="tipoSeleccionado === 'gasto'">
-              <!-- <option
+              <option
                 *ngFor="let categoria of categoriasGasto"
-                [value]="categoria.id"
+                [value]="categoria.nombre"
               >
                 {{ categoria.nombre }}
-              </option> -->
+              </option>
             </ng-container>
           </select>
           <div

@@ -9,26 +9,26 @@ export class FirestoreService {
   
   private firestore = inject(Firestore)
 
-  categoriasIngreso: Category[] = [
-    { id: 'salario', description: 'Salario', type: 'ingreso', icono: 'cash-outline' },
-    { id: 'inversiones', description: 'Inversiones', type: 'ingreso', icono: 'bar-chart-outline' },
-    { id: 'ventas', description: 'Ventas', type: 'ingreso', icono: 'cart-outline' },
-    { id: 'regalos', description: 'Regalos recibidos', type: 'ingreso', icono: 'gift-outline' },
-    { id: 'otros_ingresos', description: 'Otros ingresos', type: 'ingreso', icono: 'cash-outline' },
-  ];
+  // categoriasIngreso: Category[] = [
+  //   { id: 'ingresos', nombre: 'Salario', icono: 'cash-outline' },
+  //   { id: 'ingresos', nombre: 'Inversiones', icono: 'bar-chart-outline' },
+  //   { id: 'ingresos', nombre: 'Ventas', icono: 'cart-outline' },
+  //   { id: 'ingresos', nombre: 'Regalos recibidos', icono: 'gift-outline' },
+  //   { id: 'ingresos', nombre: 'Otros ingresos', icono: 'cash-outline' },
+  // ];
 
-  // Categorías de gastos
-  categoriasGasto: Category[] = [
-    { id: 'comida', description: 'Alimentación', type: 'gasto', icono: 'fast-food-outline' },
-    { id: 'transporte', description: 'Transporte', type: 'gasto', icono: 'car-outline' },
-    { id: 'vivienda', description: 'Vivienda', type: 'gasto', icono: 'home-outline' },
-    { id: 'entretenimiento', description: 'Entretenimiento' , type: 'gasto', icono: 'film-outline'},
-    { id: 'servicios', description: 'Servicios' , type: 'gasto', icono: 'bulb-outline'},
-    { id: 'salud', description: 'Salud', type: 'gasto', icono: 'medkit-outline' },
-    { id: 'ropa', description: 'Ropa y accesorios', type: 'gasto', icono: 'shirt-outline' },
-    { id: 'educacion', description: 'Educación', type: 'gasto', icono: 'school-outline' },
-    { id: 'otros_gastos', description: 'Otros gastos', type: 'gasto', icono: 'cash-outline' },
-  ];
+  // // Categorías de gastos
+  // categoriasGasto: Category[] = [
+  //   { id: 'gastos', nombre: 'Alimentación', icono: 'fast-food-outline' },
+  //   { id: 'gastos', nombre: 'Transporte', icono: 'car-outline' },
+  //   { id: 'gastos', nombre: 'Vivienda', icono: 'home-outline' },
+  //   { id: 'gastos', nombre: 'Entretenimiento' , icono: 'film-outline'},
+  //   { id: 'gastos', nombre: 'Servicios' , icono: 'bulb-outline'},
+  //   { id: 'gastos', nombre: 'Salud', icono: 'medkit-outline' },
+  //   { id: 'gastos', nombre: 'Ropa y accesorios', icono: 'shirt-outline' },
+  //   { id: 'gastos', nombre: 'Educación', icono: 'school-outline' },
+  //   { id: 'gastos', nombre: 'Otros gastos', icono: 'cash-outline' },
+  // ];
 
 
   async getDirecciones(): Promise<Comuna[]> {
@@ -46,7 +46,7 @@ export class FirestoreService {
     return comunas;
   }
 
-  async addTransaction(
+  async createTransaction(
     userId: string, 
     transactionData: Transaction
   ): Promise <string> {
@@ -61,30 +61,57 @@ export class FirestoreService {
     return docRef.id;
   }
 
-  
-  async initializeCategories(): Promise<void> {
-    try {
-      const allCategories = [...this.categoriasIngreso, ...this.categoriasGasto];
-      const batch = writeBatch(this.firestore);
+  // async getTransactions(userId: string): Promise<Transaction[]> {
+  //   const transactionCollection = collection(
+  //     this.firestore, `users/${userId}/transactions`
+  //   );
+  //   const transactionSnapshot = await getDocs(transactionCollection);
+  //   const transactions: Transaction[] = [];
 
-      allCategories.forEach(category => {
-        const docRef = doc(this.firestore, "categories", category.id);
-        batch.set(docRef, {
-          id: category.id,
-          description: category.description,
-          type: category.type,
-          icono: category.icono || null
-        });
-      });
-      await batch.commit();
-      console.log("Categorías inicializadas correctamente.");
-    } catch (error) {
-      console.error("Error al inicializar categorías:", error);
-      throw error;
-    }  
-  }
+  //   transactionSnapshot.forEach((doc) => {
+  //     const data = doc.data() as Transaction;
+  //     const date = new Date('yyyy-mm-dd-hh:mm:ss');
+  //     transactions.push({
+  //       ...data,
+  //       id: doc.id,
+  //       date: date
+  //     });
+  //   });
+  //   return transactions;
+  // }
+
   
-  async getUser(uid : string): Promise<User | null> {
+  // async initializeCategories(): Promise<void> {
+  //   try {
+  //     const batch = writeBatch(this.firestore);
+      
+  //     // Documento para gastos con array de categorías
+  //     const gastosRef = doc(this.firestore, "categories", "gastos");
+  //     batch.set(gastosRef, {
+  //       categorias: this.categoriasGasto.map(cat => ({
+  //         nombre: cat.nombre,
+  //         icono: cat.icono || null
+  //       }))
+  //     });
+      
+  //     // Documento para ingresos con array de categorías
+  //     const ingresosRef = doc(this.firestore, "categories", "ingresos");
+  //     batch.set(ingresosRef, {
+  //       categorias: this.categoriasIngreso.map(cat => ({
+  //         nombre: cat.nombre,
+  //         icono: cat.icono || null
+  //       }))
+  //     });
+  
+  //     await batch.commit();
+  //     console.log("Categorías inicializadas correctamente.");
+  //   } catch (error) {
+  //     console.error("Error al inicializar categorías:", error);
+  //     throw error;
+  //   }
+  // }
+  
+  async getUser(uid : string){
     const docRef = doc(this.firestore, "users", uid);
     const userSnapshot = await getDoc(docRef);
     if (userSnapshot){
@@ -94,6 +121,33 @@ export class FirestoreService {
     }
     return null;
   }
+
+  async getCategoriesGastos(): Promise<Category[]> {
+    const docRef = doc(this.firestore, "categories", "gastos");
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data['categorias'] || [];
+    } else {
+      console.log("El documento no existe");
+      return [];
+    }
+  }
+
+  async getCategoriesIngresos(): Promise<Category[]> {
+    const docRef = doc(this.firestore, "categories", "ingresos");
+    const docSnap = await getDoc(docRef);
+    
+    if (docSnap.exists()) {
+      const data = docSnap.data();
+      return data['categorias'] || [];
+    } else {
+      console.log("El documento no existe");
+      return [];
+    }
+  }
+
 
 }
  

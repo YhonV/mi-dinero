@@ -33,8 +33,7 @@ export interface Comuna {
 
 export interface Category {
     id: string;
-    description: string;
-    type: 'ingreso' | 'gasto';
+    nombre: string;
     icono?: string;
   }
   
