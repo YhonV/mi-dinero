@@ -59,7 +59,6 @@ export default class SignUpComponent implements OnInit {
     }
     try {
       const { email, password, confirmPassword, username } = this.form.value;
-      console.log({ email, password, confirmPassword, username });
 
       if (!email || !password || !confirmPassword || !username) {
         toast.error('Email y contraseña son obligatorios');

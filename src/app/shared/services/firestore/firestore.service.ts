@@ -116,7 +116,6 @@ export class FirestoreService {
     const userSnapshot = await getDoc(docRef);
     if (userSnapshot){
       const user = userSnapshot.data() as User;
-      console.log(user);
       return user;
     }
     return null;

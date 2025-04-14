@@ -9,6 +9,13 @@ export class UtilsService {
   private _navCtrl = inject(NavController);
   loadingCtrl = inject(LoadingController);
 
+  loadingSpinner(){
+    return this.loadingCtrl.create({
+      // message: 'Cargando...',
+      spinner: 'crescent'
+    });
+  }
+
   async navigateTo(path: string) {
     const loading = await this.loadingCtrl.create({
       message: 'Redirigiendo...',
@@ -19,11 +26,11 @@ export class UtilsService {
       this._navCtrl.navigateRoot(path);
       setTimeout(() => {
         loading.dismiss();
-      }, 500);
+      }, 500); 
     }, 1000);
   }
 
   async navigateToWithoutLoading(path: string){
     this._navCtrl.navigateRoot(path);
-  }
+  }  
 }

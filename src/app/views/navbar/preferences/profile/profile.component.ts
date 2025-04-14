@@ -26,6 +26,7 @@ import {
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { Auth } from '@angular/fire/auth';
 import { User } from 'src/app/shared/models/interfaces';
+import { UtilsService } from 'src/app/shared/utils/utils.service';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -50,7 +51,7 @@ export default class ProfileComponent implements OnInit {
   private _firestore = inject(FirestoreService);
   private _auth = inject(Auth);
   userData: User | null = null
-
+  private _utils = inject(UtilsService);
   constructor() {
     addIcons({
       saveOutline,
@@ -63,10 +64,12 @@ export default class ProfileComponent implements OnInit {
   }
 
   async ngOnInit() {
+    const loading = await this._utils.loadingSpinner();
+    await loading.present();
     this._auth.onAuthStateChanged(async user => {
       if(user){
-        console.log(user.uid);
         this.userData = await this._firestore.getUser(user["uid"]);
+        await loading.dismiss();
       } else{
         console.log("no user");
         this.userData = null;  

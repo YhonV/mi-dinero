@@ -38,7 +38,6 @@ export default class HomeComponent  implements OnInit {
     this._auth.onAuthStateChanged(async user => {
       if(user){
         this.uid = user.uid;
-        console.log(user.uid);
         this.userData = await this._firestore.getUser(user["uid"]);
       } else{
         console.log("no user");
