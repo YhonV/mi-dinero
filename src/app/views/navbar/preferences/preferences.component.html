@@ -1,32 +1,76 @@
-<ion-content color="bg-white">
-  <ion-list [inset]="true">
-    <ion-item button class="ion-text-center"  (click)="navigateTo('/preferences/profile')">
-      <ion-icon name="person-outline" slot="start"></ion-icon>
-      <ion-label>Perfil</ion-label>
+<ion-content>
+  <!-- Header con título de la sección -->
+  <div class="header-container">
+    <h1 class="preferences-title">Ajustes</h1>
+    <p class="preferences-subtitle">Personaliza tu experiencia</p>
+  </div>
+
+  <!-- Lista de opciones de preferencias -->
+  <div class="preferences-content">
+    <!-- Sección de cuenta -->
+    <div class="section-label">CUENTA</div>
+
+    <ion-item button detail="true" class="preference-item" (click)="navigateTo('/preferences/profile')">
+      <ion-icon name="person-outline" slot="start" class="preference-icon"></ion-icon>
+      <ion-label>
+        <h2>Perfil</h2>
+        <p>Gestiona tu información personal</p>
+      </ion-label>
     </ion-item>
-    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/change-password')">
-      <ion-icon name="lock-closed-outline" slot="start"></ion-icon>
-      <ion-label>Cambiar contraseña</ion-label>
+
+    <ion-item button detail="true" class="preference-item" (click)="navigateTo('/preferences/change-password')">
+      <ion-icon name="lock-closed-outline" slot="start" class="preference-icon"></ion-icon>
+      <ion-label>
+        <h2>Cambiar contraseña</h2>
+        <p>Actualiza tus credenciales de acceso</p>
+      </ion-label>
     </ion-item>
-    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/themes')">
-      <ion-icon name="moon-outline" slot="start"></ion-icon>
-      <ion-label>Modo oscuro</ion-label>
+
+    <!-- Sección de apariencia -->
+    <div class="section-label">APARIENCIA</div>
+
+    <ion-item button detail="true" class="preference-item" (click)="navigateTo('/preferences/themes')">
+      <ion-icon name="moon-outline" slot="start" class="preference-icon"></ion-icon>
+      <ion-label>
+        <h2>Modo oscuro</h2>
+        <p>Cambia el tema de la aplicación</p>
+      </ion-label>
+      <ion-toggle slot="end" class="mode-toggle"></ion-toggle>
     </ion-item>
-    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/language')">
-      <ion-icon name="language-outline" slot="start"></ion-icon>
-      <ion-label>Idioma</ion-label>
+
+    <ion-item button detail="true" class="preference-item" (click)="navigateTo('/preferences/language')">
+      <ion-icon name="language-outline" slot="start" class="preference-icon"></ion-icon>
+      <ion-label>
+        <h2>Idioma</h2>
+        <p>Selecciona tu idioma preferido</p>
+      </ion-label>
     </ion-item>
-    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/notifications')">
-      <ion-icon name="notifications-outline" slot="start"></ion-icon>
-      <ion-label>Notificaciones</ion-label>
+
+    <!-- Sección de comunicación -->
+    <div class="section-label">COMUNICACIÓN</div>
+
+    <ion-item button detail="true" class="preference-item" (click)="navigateTo('/preferences/notifications')">
+      <ion-icon name="notifications-outline" slot="start" class="preference-icon"></ion-icon>
+      <ion-label>
+        <h2>Notificaciones</h2>
+        <p>Configura tus alertas</p>
+      </ion-label>
     </ion-item>
-    <ion-item button class="ion-text-center" (click)="navigateTo('/preferences/feedback')">
-      <ion-icon name="mail-outline"></ion-icon>
-      <ion-label>Feedback & Contacto</ion-label>
+
+    <ion-item button detail="true" class="preference-item" (click)="navigateTo('/preferences/feedback')">
+      <ion-icon name="mail-outline" slot="start" class="preference-icon"></ion-icon>
+      <ion-label>
+        <h2>Feedback & Contacto</h2>
+        <p>Envíanos tus comentarios</p>
+      </ion-label>
     </ion-item>
-    <ion-item button (click)="signOut()" color="tertiary" class="ion-text-center">
-      <ion-icon name="log-out-outline" slot="start"></ion-icon>
-      <ion-label>Cerrar sesión</ion-label>
-    </ion-item>
-  </ion-list>
+
+    <!-- Botón de cerrar sesión destacado -->
+    <div class="logout-container">
+      <ion-button expand="block" class="logout-button" (click)="signOut()">
+        <ion-icon name="log-out-outline" slot="start"></ion-icon>
+        Cerrar sesión
+      </ion-button>
+    </div>
+  </div>
 </ion-content>

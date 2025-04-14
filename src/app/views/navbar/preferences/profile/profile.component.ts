@@ -71,7 +71,8 @@ export default class ProfileComponent implements OnInit {
         console.log("no user");
         this.userData = null;  
       }
-    })
-    
+    }) 
   }
+
+  
 }
