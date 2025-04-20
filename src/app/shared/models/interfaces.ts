@@ -48,5 +48,6 @@ export interface Transaction {
     amount: number;
     categoryId: string;
     date: Date;
+    categoryIcon?: string;
   }
   

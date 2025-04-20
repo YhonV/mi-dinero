@@ -54,13 +54,14 @@
     <!-- Lista de transacciones -->
     <div class="mt-4 space-y-2">
       <div
-        *ngFor="let transaction of transactions.slice().reverse()"
+        *ngFor="let transaction of paginatedTransactions"
         class="flex justify-between items-center p-2 border-b"
       >
         <div>
-          <!-- <span class="font-medium">{{ transaction.category.nombre }}</span> -->
+          <ion-icon slot="start" name="{{transaction.categoryIcon}}"></ion-icon>
+          <span class="font-medium">{{ transaction.categoryId }}</span>
           <span class="text-xs text-gray-500 block">{{
-            transaction.date | date : "short"
+            transaction.date | date:'dd/MM/yyyy' 
           }}</span>
         </div>
         <span
@@ -83,102 +84,49 @@
         No hay transacciones registradas
       </div>
     </div>
-    <nav
-      aria-label="Page navigation example"
-      class="flex items-center justify-between"
-    >
-      <div class="flex justify-center flex-1">
-        <ul class="flex items-center -space-x-px h-8 text-sm">
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-3 h-8 ms-0 leading-tight text-gray-500 bg-white border border-e-0 border-gray-300 rounded-s-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              <span class="sr-only">Previous</span>
-              <svg
-                class="w-2.5 h-2.5 rtl:rotate-180"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 6 10"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="M5 1 1 5l4 4"
-                />
-              </svg>
-            </a>
-          </li>
-          <li>
-            <a
-              href="#"
-              aria-current="page"
-              class="z-10 flex items-center justify-center px-3 h-8 leading-tight text-blue-600 border border-blue-300 bg-blue-50 hover:bg-blue-100 hover:text-blue-700 dark:border-gray-700 dark:bg-gray-700 dark:text-white"
-              >1</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >2</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-              >3</a
-            >
-          </li>
-          <li>
-            <a
-              href="#"
-              class="flex items-center justify-center px-3 h-8 leading-tight text-gray-500 bg-white border border-gray-300 rounded-e-lg hover:bg-gray-100 hover:text-gray-700 dark:bg-gray-800 dark:border-gray-700 dark:text-gray-400 dark:hover:bg-gray-700 dark:hover:text-white"
-            >
-              <span class="sr-only">Next</span>
-              <svg
-                class="w-2.5 h-2.5 rtl:rotate-180"
-                aria-hidden="true"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 6 10"
-              >
-                <path
-                  stroke="currentColor"
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  stroke-width="2"
-                  d="m1 9 4-4-4-4"
-                />
-              </svg>
-            </a>
-          </li>
-        </ul>
+    <nav aria-label="Paginación" class="flex items-center justify-between px-4 py-2 bg-gray-800 dark:bg-gray-900">
+      <!-- Controlador de Paginación - Simplicado -->
+      <div class="flex items-center space-x-1">
+        <!-- Botón Anterior -->
+        <button 
+          (click)="currentPage > 1 && changePage(currentPage - 1)"
+          [disabled]="currentPage === 1"
+          class="flex items-center justify-center w-8 h-8 text-white bg-gray-700 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+        >
+          <span class="sr-only">Anterior</span>
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
+          </svg>
+        </button>
+        
+        <!-- Indicador de Página Actual - Simplificado -->
+        <div class="flex items-center justify-center h-8 px-3 text-white bg-blue-600 rounded">
+          {{currentPage}}
+        </div>
+        
+        <!-- Botón Siguiente -->
+        <button 
+          (click)="currentPage < getPageCount() && changePage(currentPage + 1)"
+          [disabled]="currentPage === getPageCount()"
+          class="flex items-center justify-center w-8 h-8 text-white bg-gray-700 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+        >
+          <span class="sr-only">Siguiente</span>
+          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
+          </svg>
+        </button>
       </div>
+      
+      <!-- Botón de Añadir -->
       <button
         (click)="openModal()"
         type="button"
-        class="text-white bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm p-2.5 text-center inline-flex items-center me-2 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
+        class="flex items-center justify-center w-6 h-6 text-white bg-blue-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-700"
       >
-        <svg
-          class="w-5 h-5"
-          fill="none"
-          stroke="currentColor"
-          stroke-width="2"
-          viewBox="0 0 24 24"
-          xmlns="http://www.w3.org/2000/svg"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            d="M12 4v16m8-8H4"
-          />
+        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
         </svg>
-        <span class="sr-only">Add</span>
+        <span class="sr-only">Añadir</span>
       </button>
     </nav>
   </div>

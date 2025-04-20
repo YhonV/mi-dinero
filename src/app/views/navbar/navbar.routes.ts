@@ -3,7 +3,7 @@ import NavbarComponent from "./navbar.component";
 
 export default [
     {
-        path: '',
+        path: 'navbar',
         component: NavbarComponent,
         children: [
             {

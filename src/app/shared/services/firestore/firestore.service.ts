@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch, QuerySnapshot } from '@angular/fire/firestore';
 import { Comuna, User, Transaction, Category } from '../../models/interfaces';
 
 @Injectable({
@@ -146,6 +146,23 @@ export class FirestoreService {
       return [];
     }
   }
+
+  async getTransactions(userId: string): Promise<Transaction[]> {
+    const transactionsRef = collection(this.firestore, `users/${userId}/transactions`);
+    const docSnap = await getDocs(transactionsRef);
+
+    const transactions: Transaction[] = [];
+    docSnap.forEach((doc)=> {
+      const data = doc.data();
+
+      const date = data['date']?.toDate() || new Date();
+      transactions.push({id: doc.id, ...data, date: date } as Transaction);
+    }); 
+    console.log(transactions)
+    return transactions   
+
+  }
+
 
 
 }

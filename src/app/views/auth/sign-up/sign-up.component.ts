@@ -80,7 +80,7 @@ export default class SignUpComponent implements OnInit {
         this.form.value.username || '',
         this.form.value.region || '',
         this.form.value.comuna || '',
-        this.form.value.email || ''
+        this.form.value.email || '',
       );
 
       this.navigateTo('/navbar/home');
