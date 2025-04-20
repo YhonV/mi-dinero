@@ -8,6 +8,11 @@ export interface User {
     region?: string;
 }
 
+export interface FormFeedback {
+    subject: FormControl<string | null>
+    message: FormControl<string | null>
+}
+
 export interface FormSignUp {
     username: FormControl<string | null>
     email: FormControl<string | null>

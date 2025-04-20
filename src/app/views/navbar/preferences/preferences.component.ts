@@ -1,5 +1,5 @@
 import { Component, inject, OnInit } from '@angular/core';
-import { IonLabel, IonItem, IonList, IonContent, IonIcon, IonItemDivider, IonToggle, IonButton  } from '@ionic/angular/standalone'
+import { IonLabel, IonItem, IonContent, IonIcon, IonToggle, IonButton  } from '@ionic/angular/standalone'
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { logOutOutline, personOutline, lockClosedOutline, moonOutline, languageOutline, notificationsOutline, mailOutline } from 'ionicons/icons'; 
 import { addIcons } from 'ionicons';
@@ -9,7 +9,7 @@ import { UtilsService } from 'src/app/shared/utils/utils.service';
   selector: 'app-preferences',
   templateUrl: './preferences.component.html',
   styleUrls: ['./preferences.component.scss'],
-  imports: [IonLabel, IonItem, IonList, IonContent, IonIcon, IonItemDivider, IonToggle, IonButton]
+  imports: [IonLabel, IonItem, IonContent, IonIcon, IonToggle, IonButton]
 })
 export default class PreferencesComponent  implements OnInit {
   private _auth = inject(AuthService);

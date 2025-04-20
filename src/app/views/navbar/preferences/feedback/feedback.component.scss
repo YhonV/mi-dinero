@@ -1,0 +1,163 @@
+/* Estilos generales */
+ion-content {
+    --background: #f8f9fa;
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+  
+  /* Estilos para el encabezado */
+  .contact-header {
+    padding: 12px 20px 20px;
+    text-align: center;
+    background-color: #f0f2ff;
+  }
+  
+  .avatar-container {
+    width: 48px;
+    height: 48px;
+    background-color: #e0e4ff;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin: 5px auto 10px;
+  }
+  
+  .headset-icon {
+    font-size: 24px;
+    color: #4758f5;
+  }
+  
+  .contact-header h2 {
+    font-size: 18px;
+    font-weight: 600;
+    color: #333;
+    margin: 10px 0 8px;
+  }
+  
+  .subtitle {
+    color: #666;
+    font-size: 13px;
+    line-height: 1.4;
+    margin: 0;
+    padding: 0 15px;
+  }
+  
+  /* Opciones de contacto */
+  .contact-options {
+    margin-bottom: 15px;
+  }
+  
+  .contact-item {
+    --padding-start: 16px;
+    --padding-end: 16px;
+    --min-height: 60px;
+  }
+  
+  .icon-container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px;
+    height: 36px;
+    border-radius: 8px;
+    margin-right: 12px;
+  }
+  
+  .mail-icon {
+    color: white;
+    font-size: 18px;
+    background-color: #4758f5;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  
+  .phone-icon {
+    color: white;
+    font-size: 18px;
+    background-color: #175cff;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  
+  .contact-item h3 {
+    font-size: 15px;
+    font-weight: 500;
+    margin-bottom: 2px;
+  }
+  
+  .contact-item p {
+    font-size: 13px;
+    color: #666;
+  }
+  
+  /* Formulario de feedback */
+  .feedback-section {
+    padding: 0 16px 20px;
+  }
+  
+  .feedback-title {
+    font-size: 17px;
+    font-weight: 600;
+    color: #333;
+    margin: 15px 0 12px;
+  }
+  
+  .form-field {
+    margin-bottom: 15px;
+  }
+  
+  .form-field label {
+    display: block;
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 5px;
+  }
+  
+  .input-field {
+    --background: #ffffff;
+    --padding-start: 12px;
+    --padding-end: 12px;
+    --padding-top: 8px;
+    --padding-bottom: 8px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    margin-top: 3px;
+    font-size: 14px;
+  }
+  
+  /* Calificación de estrellas */
+  .rating-section {
+    margin: 15px 0;
+  }
+  
+  .rating-section p {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 8px;
+  }
+  
+  .star-rating {
+    display: flex;
+    gap: 5px;
+  }
+  
+  .rating-star {
+    font-size: 22px;
+    color: #ddd;
+  }
+  
+  .rating-star.active {
+    color: #ffc107;
+  }
+  
+  /* Botón de enviar */
+  .send-button {
+    --background: #4758f5;
+    --border-radius: 6px;
+    --box-shadow: none;
+    font-weight: 500;
+    font-size: 14px;
+    height: 42px;
+    margin-top: 15px;
+  }
