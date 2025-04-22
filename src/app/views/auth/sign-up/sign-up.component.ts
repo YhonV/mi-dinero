@@ -83,7 +83,7 @@ export default class SignUpComponent implements OnInit {
         this.form.value.email || '',
       );
 
-      this.navigateTo('/navbar/home');
+      this.navigateTo('/home');
     } catch (error) {
       let message = 'Ocurrió un error durante el inicio de sesión';
       if (error instanceof FirebaseError) {

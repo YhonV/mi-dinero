@@ -6,12 +6,12 @@ export const routes: Routes = [
   {
     path: 'auth',
     loadChildren: () => import('./views/auth/auth.routes'),
-    canActivate: [noAuthGuard]
+    // canActivate: [noAuthGuard]
   },
   {
     path: '',
     loadChildren: () => import('./views/navbar/navbar.routes'),
-    canActivate: [authGuard]
+    // canActivate: [authGuard]
   },
   {
     path: '**',
