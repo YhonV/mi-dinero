@@ -5,14 +5,14 @@ import { Transaction, Category, User } from 'src/app/shared/models/interfaces';
 import { Router } from '@angular/router';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { Auth } from '@angular/fire/auth';
-import { IonIcon }   from '@ionic/angular/standalone';
+import { IonIcon, IonContent }   from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cashOutline, fastFoodOutline, carOutline, homeOutline, filmOutline, bulbOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline } from 'ionicons/icons';
 import { toast } from 'ngx-sonner';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule, IonIcon],
+  imports: [CommonModule, FormsModule, IonIcon, IonContent],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })

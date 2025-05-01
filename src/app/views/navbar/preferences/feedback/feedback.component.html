@@ -14,13 +14,13 @@
     </div>
     <h2>Estamos para ayudarte</h2>
     <p class="subtitle">
-      En caso de alguna duda te puedes comunicar con nosotros. Tu opinión es muy importante para seguir mejorando nuestro servicio.
+      En caso de alguna duda, comunicate con nosotros. Queremos seguir mejorando nuestro servicio.
     </p>
   </div>
 
   
   <div class="contact-options">
-    <ion-item href="mailto:soportearrobamiapp.com" detail="true" lines="full" class="contact-item">
+    <ion-item detail="false" lines="full" class="contact-item">
       <div class="icon-container">
         <ion-icon name="mail" class="contact-icon mail-icon"></ion-icon>
       </div>
@@ -28,9 +28,12 @@
         <h3>Correo electrónico</h3>
         <p>cactuishere&#64;gmail.com</p>
       </ion-label>
+      <button class="icon-container" (click)="writeToClipboard('cactuishere&#64;gmail.com')">
+        <ion-icon name="copy-outline" color="tertiary"></ion-icon>
+      </button>
     </ion-item>
 
-    <ion-item href="tel:+56221234567" detail="true" lines="full" class="contact-item">
+    <ion-item detail="false" lines="full" class="contact-item">
       <div class="icon-container">
         <ion-icon name="call" class="contact-icon phone-icon"></ion-icon>
       </div>
@@ -38,6 +41,9 @@
         <h3>Teléfono</h3>
         <p>+56 9 2202 3698</p>
       </ion-label>
+      <button class="icon-container" (click)="writeToClipboard('+56 9 2202 3698')">
+        <ion-icon name="copy-outline" color="tertiary"></ion-icon>
+      </button>
     </ion-item>
   </div>
 

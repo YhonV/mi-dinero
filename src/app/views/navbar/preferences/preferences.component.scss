@@ -1,113 +1,129 @@
 :host {
-    --primary-color: #0066ff;
-    --text-color: #333333;
-    --text-secondary: #6b7280;
-    --background-color: #ffffff;
-  }
-  
-  /* Contenedor principal */
-  ion-content {
-    --background: var(--background-color);
-    --padding-start: 0;
-    --padding-end: 0;
-    --padding-top: 0;
-    --padding-bottom: 0;
-  }
-  
-  /* Eliminar bordes y scroll visible */
-  ::ng-deep .inner-scroll {
-    overflow: scroll !important;
-    scrollbar-width: none !important; /* Firefox */
-    -ms-overflow-style: none !important; /* IE y Edge */
-  }
-  
-  ::ng-deep .inner-scroll::-webkit-scrollbar {
-    display: none !important; /* Chrome, Safari, Opera */
-    width: 0 !important;
-  }
-  
-  /* Configuración del header */
-  .header-container {
-    padding: 16px 16px 12px;
-    background-color: var(--background-color);
-    border-bottom: 1px solid rgba(0,0,0,0.05);
-  }
-  
-  .preferences-title {
-    margin: 0;
-    font-size: 22px;
-    font-weight: 600;
-    color: var(--text-color);
-  }
-  
-  .preferences-subtitle {
-    margin: 4px 0 0 0;
-    font-size: 14px;
-    color: var(--text-secondary);
-    font-weight: 400;
-  }
-  
-  /* Configuración de las secciones */
-  .section-label {
-    padding: 20px 16px 8px;
-    color: var(--primary-color);
-    font-size: 13px;
-    font-weight: 600;
-    letter-spacing: 0.5px;
-  }
-  
-  /* Configuración de los items */
-  .preference-item {
-    --background: var(--background-color);
-    --padding-start: 16px;
-    --padding-end: 16px;
-    --inner-padding-end: 0;
-    --border-color: rgba(0,0,0,0.05);
-    --border-style: solid;
-    --border-width: 0 0 1px 0;
-    --min-height: 60px;
-    --detail-icon-color: #c5c5c5;
-    --detail-icon-opacity: 1;
-    --detail-icon-font-size: 18px;
-  }
-  
-  .preference-icon {
-    color: var(--primary-color);
-    font-size: 20px;
-    margin-right: 16px;
-  }
-  
-  .mode-toggle {
-    --background: #e4e4e4;
-    --background-checked: var(--primary-color);
-    --handle-background: white;
-  }
-  
-  ion-item h2 {
-    font-size: 15px;
-    font-weight: 500;
-    margin: 0;
-    color: var(--text-color);
-  }
-  
-  ion-item p {
-    font-size: 13px;
-    color: var(--text-secondary);
-    margin: 3px 0 0 0;
-  }
-  
-  /* Botón de cerrar sesión */
-  .logout-container {
-    padding: 32px 16px;
-  }
-  
-  .logout-button {
-    --background: #f44336;
-    --background-hover: #d32f2f;
-    --color: white;
-    --border-radius: 8px;
-    --box-shadow: none;
-    font-weight: 500;
-    text-transform: none;
-    height: 44px;
-  }
+  --primary-color: #8c52ff; /* Cambio a color morado como en la imagen */
+  --text-color: #333333;
+  --text-secondary: #6b7280;
+  --background-color: #ffffff;
+  --border-radius: 8px; /* Bordes redondeados como en la imagen */
+  --item-shadow: 0 2px 5px rgba(0,0,0,0.05); /* Sombra sutil */
+}
+
+/* Contenedor principal */
+ion-content {
+  --background: #f5f6fa; /* Fondo gris muy claro como en la imagen */
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --padding-top: 16px;
+  --padding-bottom: 16px;
+}
+
+/* Eliminar bordes y scroll visible */
+::ng-deep .inner-scroll {
+  overflow: scroll !important;
+  scrollbar-width: none !important; /* Firefox */
+  -ms-overflow-style: none !important; /* IE y Edge */
+}
+
+::ng-deep .inner-scroll::-webkit-scrollbar {
+  display: none !important; /* Chrome, Safari, Opera */
+  width: 0 !important;
+}
+
+/* Configuración del header */
+.header-container {
+  padding: 20px 16px;
+  background-color: var(--background-color);
+  border-radius: var(--border-radius);
+  margin-bottom: 16px;
+  box-shadow: var(--item-shadow);
+}
+
+.preferences-title {
+  margin: 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: var(--text-color);
+}
+
+.preferences-subtitle {
+  margin: 4px 0 0 0;
+  font-size: 14px;
+  color: var(--text-secondary);
+  font-weight: 400;
+}
+
+/* Configuración de las secciones */
+.section-label {
+  padding: 20px 16px 8px;
+  color: var(--primary-color);
+  font-size: 13px;
+  font-weight: 600;
+  letter-spacing: 0.5px;
+}
+
+/* Configuración de los items */
+.preference-item {
+  --background: var(--background-color);
+  --padding-start: 16px;
+  --padding-end: 16px;
+  --inner-padding-end: 0;
+  --border-color: transparent;
+  --border-style: solid;
+  --border-width: 0;
+  --border-radius: 8px;
+  --min-height: 60px;
+  --detail-icon-color: #c5c5c5;
+  --detail-icon-opacity: 1;
+  --detail-icon-font-size: 18px;
+  margin-bottom: 8px;
+  box-shadow: var(--item-shadow);
+}
+
+.preference-icon {
+  color: var(--primary-color);
+  font-size: 20px;
+  margin-right: 16px;
+  background-color: rgba(140, 82, 255, 0.1); /* Fondo del icono similar a la imagen */
+  padding: 8px;
+  border-radius: 6px;
+}
+
+.mode-toggle {
+  --background: #e4e4e4;
+  --background-checked: var(--primary-color);
+  --handle-background: white;
+}
+
+ion-item h2 {
+  font-size: 15px;
+  font-weight: 500;
+  margin: 0;
+  color: var(--text-color);
+}
+
+ion-item p {
+  font-size: 13px;
+  color: var(--text-secondary);
+  margin: 3px 0 0 0;
+}
+
+/* Botón de cerrar sesión */
+.logout-container {
+  padding: 32px 16px;
+}
+
+.logout-button {
+  --background: var(--primary-color);
+  --background-hover: rgba(140, 82, 255, 0.9);
+  --color: white;
+  --border-radius: 8px;
+  --box-shadow: none;
+  font-weight: 500;
+  text-transform: none;
+  height: 44px;
+  margin: 0 auto;
+}
+
+/* Estilo para que la lista de opciones tenga un contenedor blanco */
+.preferences-content {
+  background-color: transparent;
+}

@@ -1,317 +1,303 @@
-<div class="p-4 space-y-6 max-w-md mx-auto">
-  <!-- Tarjetas de ingresos y gastos -->
-  <div class="grid grid-cols-2 gap-4">
-    <div
-      class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-    >
-      <h5
-        class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center"
-      >
-        Income
-      </h5>
-      <p class="font-normal text-gray-700 dark:text-gray-400 text-center">
-        ${{ calcularIngresos() }}
-      </p>
-    </div>
-    <div
-      class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-    >
-      <h5
-        class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center"
-      >
-        Spent
-      </h5>
-      <p class="font-normal text-gray-700 dark:text-gray-400 text-center">
-        ${{ calcularGastos() }}
-      </p>
-    </div>
-  </div>
-
-  <!-- Balance -->
-  <div
-    class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-  >
-    <h5
-      class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center"
-    >
-      Balance
-    </h5>
-    <p class="font-normal text-gray-700 dark:text-gray-400 text-center">
-      ${{ calcularSaldo() }}
-    </p>
-  </div>
-
-  <!-- Recent Transactions -->
-  <div
-    class="block max-w-sm p-6 bg-white border border-gray-200 rounded-lg shadow-sm hover:bg-gray-100 dark:bg-gray-800 dark:border-gray-700 dark:hover:bg-gray-700"
-  >
-    <h5
-      class="mb-2 text-2xl font-bold tracking-tight text-gray-900 dark:text-white text-center"
-    >
-      Recent Transactions
-    </h5>
-
-    <!-- Lista de transacciones -->
-    <div class="mt-4 space-y-2">
-      <div
-        *ngFor="let transaction of paginatedTransactions"
-        class="flex justify-between items-center p-2 border-b"
-      >
-        <div>
-          <ion-icon slot="start" name="{{transaction.categoryIcon}}"></ion-icon>
-          <span class="font-medium">{{ transaction.categoryId }}</span>
-          <span class="text-xs text-gray-500 block">{{
-            transaction.date | date:'dd/MM/yyyy' 
-          }}</span>
-        </div>
-        <span
-          [ngClass]="{
-            'text-green-500': transaction.type === 'ingreso',
-            'text-red-500': transaction.type === 'gasto'
-          }"
-        >
-          {{ transaction.type === "ingreso" ? "+" : "-" }} ${{
-            transaction.amount
-          }}
-        </span>
+<ion-content>
+  <div class="p-4 space-y-6 max-w-md mx-auto">
+    <!-- Tarjetas de ingresos y gastos -->
+    <div class="grid grid-cols-2 gap-4">
+      <div class="block income">
+        <h5 class="text-2xl text-center mb-2">
+          Ingresos
+        </h5>
+        <p class="amount positive text-center">
+          ${{ calcularIngresos() }}
+        </p>
       </div>
-
-      <!-- Mensaje cuando no hay transacciones -->
-      <div
-        *ngIf="transactions.length === 0"
-        class="text-center text-gray-500 py-2"
-      >
-        No hay transacciones registradas
+      <div class="block expense">
+        <h5 class="text-2xl text-center mb-2">
+          Gastos
+        </h5>
+        <p class="amount negative text-center">
+          ${{ calcularGastos() }}
+        </p>
       </div>
     </div>
-    <nav aria-label="Paginación" class="flex items-center justify-between px-4 py-2 bg-gray-800 dark:bg-gray-900">
-      <!-- Controlador de Paginación - Simplicado -->
-      <div class="flex items-center space-x-1">
-        <!-- Botón Anterior -->
-        <button 
-          (click)="currentPage > 1 && changePage(currentPage - 1)"
-          [disabled]="currentPage === 1"
-          class="flex items-center justify-center w-8 h-8 text-white bg-gray-700 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+
+    <!-- Balance -->
+    <div class="block balance">
+      <h5 class="text-2xl text-center mb-2">
+        Balance
+      </h5>
+      <p class="amount balance text-center">
+        ${{ calcularSaldo() }}
+      </p>
+    </div>
+
+    <!-- Recent Transactions -->
+    <div class="block transactions-card">
+      <div class="transactions-header">
+        <h5 class="transactions-title">
+          Transacciones Recientes
+        </h5>
+      </div>
+
+      <!-- Lista de transacciones -->
+      <div>
+        <div
+          *ngFor="let transaction of paginatedTransactions"
+          class="transaction-item"
         >
-          <span class="sr-only">Anterior</span>
-          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
-          </svg>
-        </button>
-        
-        <!-- Indicador de Página Actual - Simplificado -->
-        <div class="flex items-center justify-center h-8 px-3 text-white bg-blue-600 rounded">
-          {{currentPage}}
+          <div class="transaction-info">
+            <div class="transaction-icon">
+              <ion-icon name="{{transaction.categoryIcon}}"></ion-icon>
+            </div>
+            <div class="transaction-details">
+              <span class="transaction-category">{{ transaction.categoryId }}</span>
+              <span class="transaction-date">{{
+                transaction.date | date:'dd/MM/yyyy' 
+              }}</span>
+            </div>
+          </div>
+          <span
+            class="transaction-amount"
+            [ngClass]="{
+              'positive': transaction.type === 'ingreso',
+              'negative': transaction.type === 'gasto'
+            }"
+          >
+            {{ transaction.type === "ingreso" ? "+" : "-" }} ${{
+              transaction.amount
+            }}
+          </span>
         </div>
-        
-        <!-- Botón Siguiente -->
-        <button 
-          (click)="currentPage < getPageCount() && changePage(currentPage + 1)"
-          [disabled]="currentPage === getPageCount()"
-          class="flex items-center justify-center w-8 h-8 text-white bg-gray-700 rounded hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:opacity-50"
+
+        <!-- Mensaje cuando no hay transacciones -->
+        <div
+          *ngIf="transactions.length === 0"
+          class="empty-state"
         >
-          <span class="sr-only">Siguiente</span>
-          <svg class="w-4 h-4" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
-          </svg>
-        </button>
+          No hay transacciones registradas
+        </div>
       </div>
       
-      <!-- Botón de Añadir -->
-      <button
-        (click)="openModal()"
-        type="button"
-        class="flex items-center justify-center w-6 h-6 text-white bg-blue-600 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 hover:bg-blue-700"
-      >
-        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
-        </svg>
-        <span class="sr-only">Añadir</span>
-      </button>
-    </nav>
-  </div>
-
-  <!-- Modal -->
-  <div
-    *ngIf="isModalOpen"
-    class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50"
-  >
-    <div
-      class="bg-white dark:bg-gray-800 p-6 rounded-lg shadow-lg max-w-sm w-full relative"
-    >
-      <!-- Título del modal con botón de cierre -->
-      <div class="flex justify-between items-center mb-4">
-        <h2 class="text-xl font-semibold text-gray-800 dark:text-white">
-          Nueva Transacción
-        </h2>
-        <button
-          (click)="closeModal()"
-          class="text-gray-400 hover:text-gray-600 dark:hover:text-white"
-        >
-          <svg
-            class="w-5 h-5"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
+      <!-- Paginación mejorada -->
+      <div class="pagination-container">
+        <div class="pagination-controls">
+          <button 
+            class="page-button"
+            (click)="currentPage > 1 && changePage(currentPage - 1)"
+            [disabled]="currentPage === 1"
           >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M6 18L18 6M6 6l12 12"
-            />
-          </svg>
-        </button>
-      </div>
-
-      <!-- Contenedor principal del contenido -->
-      <div class="bg-gray-50 dark:bg-gray-700 p-4 rounded-lg mb-4">
-        <!-- Botones de tipo de transacción -->
-        <div class="grid grid-cols-2 gap-2 mb-6">
-          <button
-            type="button"
-            (click)="tipoSeleccionado = 'ingreso'"
-            [ngClass]="{
-              'bg-white text-gray-800 shadow-md':
-                tipoSeleccionado === 'ingreso',
-              'bg-gray-200 text-gray-700': tipoSeleccionado !== 'ingreso'
-            }"
-            class="py-3 rounded-lg flex flex-col items-center justify-center"
-          >
-            <svg
-              class="w-6 h-6 mb-1"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M19 14l-7 7m0 0l-7-7m7 7V3"
-              />
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7" />
             </svg>
-            <span>Ingreso</span>
           </button>
-          <button
-            type="button"
-            (click)="tipoSeleccionado = 'gasto'"
-            [ngClass]="{
-              'bg-white text-gray-800 shadow-md': tipoSeleccionado === 'gasto',
-              'bg-gray-200 text-gray-700': tipoSeleccionado !== 'gasto'
-            }"
-            class="py-3 rounded-lg flex flex-col items-center justify-center"
+          
+          <div class="current-page">
+            {{currentPage}} / {{getPageCount()}}
+          </div>
+          
+          <button 
+            class="page-button"
+            (click)="currentPage < getPageCount() && changePage(currentPage + 1)"
+            [disabled]="currentPage === getPageCount()"
           >
-            <svg
-              class="w-6 h-6 mb-1"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="2"
-              viewBox="0 0 24 24"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                d="M5 10l7-7m0 0l7 7m-7-7v18"
-              />
+            <svg width="14" height="14" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7" />
             </svg>
-            <span>Gasto</span>
           </button>
         </div>
-
-        <!-- Campo de monto -->
-        <div class="mb-4">
-          <label
-            class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1"
-            >Monto</label
-          >
-          <div class="bg-white dark:bg-gray-800 p-4 rounded-md">
-            <input type="number" [(ngModel)]="monto" class="w-full p-2" />
-          </div>
-        </div>
-      </div>
-
-      <!-- Dropdown de categorías -->
-      <div class="mb-4">
-        <label
-          for="categoria"
-          class="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-        >
-          Categoría
-        </label>
-        <div class="relative">
-          <select
-            id="categoria"
-            [(ngModel)]="categoriaSeleccionada"
-            class="block w-full p-3 bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-600 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-purple-500 appearance-none"
-          >
-            <option value="" disabled selected>Selecciona una categoría</option>
-            <ng-container *ngIf="tipoSeleccionado === 'ingreso'">
-              <option
-                *ngFor="let categoria of categoriasIngreso"
-                [value]="categoria.nombre"
-              >
-                {{ categoria.nombre }}
-              </option>
-            </ng-container>
-            <ng-container *ngIf="tipoSeleccionado === 'gasto'">
-              <option
-                *ngFor="let categoria of categoriasGasto"
-                [value]="categoria.nombre"
-              >
-                {{ categoria.nombre }}
-              </option>
-            </ng-container>
-          </select>
-          <div
-            class="pointer-events-none absolute inset-y-0 right-0 flex items-center px-2 text-gray-700 dark:text-gray-300"
-          >
-            <svg
-              class="w-5 h-5"
-              fill="none"
-              stroke="currentColor"
-              viewBox="0 0 24 24"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M19 9l-7 7-7-7"
-              ></path>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <!-- Botones de acción -->
-      <div class="flex flex-col space-y-2">
+        
+        <!-- Botón de Añadir -->
         <button
-          class="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white rounded-lg flex items-center justify-center"
-          (click)="guardarTransaccion()"
+          (click)="openModal()"
+          type="button"
+          class="add-button"
         >
-          <svg
-            class="w-5 h-5 mr-2"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="2"
-            viewBox="0 0 24 24"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              d="M19 19H5V5h10l4 4v10a2 2 0 01-2 2zM17 7V3H7v4H3v10a2 2 0 002 2h12a2 2 0 002-2V7h-2z"
-            />
+          <svg width="18" height="18" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v12m6-6H6"/>
           </svg>
-          Guardar Transacción
-        </button>
-        <button
-          class="w-full py-2 text-blue-600 hover:text-blue-800 dark:text-blue-400 dark:hover:text-blue-300 rounded-lg"
-          (click)="closeModal()"
-        >
-          Cancelar
         </button>
       </div>
     </div>
+
+    <!-- Modal -->
+    <div
+      *ngIf="isModalOpen"
+      class="fixed inset-0 modal-overlay flex items-center justify-center z-50"
+    >
+      <div class="modal-container">
+        <!-- Título del modal con botón de cierre -->
+        <div class="modal-header">
+          <h2 class="modal-title">
+            Nueva Transacción
+          </h2>
+          <button
+            (click)="closeModal()"
+            class="close-button"
+          >
+            <svg
+              width="18"
+              height="18"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M6 18L18 6M6 6l12 12"
+              />
+            </svg>
+          </button>
+        </div>
+
+        <div class="modal-body">
+          <!-- Botones de tipo de transacción -->
+          <div class="transaction-type-buttons">
+            <button
+              type="button"
+              (click)="tipoSeleccionado = 'ingreso'"
+              class="type-button income"
+              [ngClass]="{'active': tipoSeleccionado === 'ingreso'}"
+            >
+              <div class="icon-container">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M19 14l-7 7m0 0l-7-7m7 7V3"
+                  />
+                </svg>
+              </div>
+              <span class="type-label">Ingreso</span>
+            </button>
+            <button
+              type="button"
+              (click)="tipoSeleccionado = 'gasto'"
+              class="type-button expense"
+              [ngClass]="{'active': tipoSeleccionado === 'gasto'}"
+            >
+              <div class="icon-container">
+                <svg
+                  width="20"
+                  height="20"
+                  fill="none"
+                  stroke="currentColor"
+                  stroke-width="2"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    d="M5 10l7-7m0 0l7 7m-7-7v18"
+                  />
+                </svg>
+              </div>
+              <span class="type-label">Gasto</span>
+            </button>
+          </div>
+
+          <!-- Campo de monto -->
+          <div class="form-field">
+            <label class="form-label">Monto</label>
+            <div class="input-container">
+              <input 
+                type="number" 
+                [(ngModel)]="monto" 
+                placeholder="0.00" 
+                class="amount-input" 
+              />
+            </div>
+          </div>
+
+          <!-- Dropdown de categorías -->
+          <div class="form-field">
+            <label
+              for="categoria"
+              class="form-label"
+            >
+              Categoría
+            </label>
+            <div class="relative">
+              <select
+                id="categoria"
+                [(ngModel)]="categoriaSeleccionada"
+                class="category-select"
+              >
+                <option value="" disabled selected>Selecciona una categoría</option>
+                <ng-container *ngIf="tipoSeleccionado === 'ingreso'">
+                  <option
+                    *ngFor="let categoria of categoriasIngreso"
+                    [value]="categoria.nombre"
+                  >
+                    {{ categoria.nombre }}
+                  </option>
+                </ng-container>
+                <ng-container *ngIf="tipoSeleccionado === 'gasto'">
+                  <option
+                    *ngFor="let categoria of categoriasGasto"
+                    [value]="categoria.nombre"
+                  >
+                    {{ categoria.nombre }}
+                  </option>
+                </ng-container>
+              </select>
+              <div class="select-icon">
+                <svg
+                  width="16"
+                  height="16"
+                  fill="none"
+                  stroke="currentColor"
+                  viewBox="0 0 24 24"
+                >
+                  <path
+                    stroke-linecap="round"
+                    stroke-linejoin="round"
+                    stroke-width="2"
+                    d="M19 9l-7 7-7-7"
+                  ></path>
+                </svg>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Botones de acción -->
+        <div class="modal-actions">
+          <button
+            class="action-button primary-button"
+            (click)="guardarTransaccion()"
+          >
+            <svg
+              width="16"
+              height="16"
+              fill="none"
+              stroke="currentColor"
+              stroke-width="2"
+              viewBox="0 0 24 24"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                d="M5 13l4 4L19 7"
+              />
+            </svg>
+            Guardar Transacción
+          </button>
+          <button
+            class="action-button secondary-button"
+            (click)="closeModal()"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
-</div>
+</ion-content>

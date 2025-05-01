@@ -26,10 +26,15 @@ import {
   headset,
   paperPlaneOutline,
   headsetOutline,
+  copyOutline
 } from 'ionicons/icons';
 import { toast } from 'ngx-sonner';
 import { FormFeedback } from 'src/app/shared/models/interfaces';
 import { FeedbackService } from 'src/app/shared/services/feedback/feedback.service';
+import { Clipboard } from '@capacitor/clipboard';
+
+
+
 @Component({
   selector: 'app-feedback',
   templateUrl: './feedback.component.html',
@@ -58,6 +63,8 @@ export default class FeedbackComponent implements OnInit {
   private _formBuilder = inject(FormBuilder);
   stars: number[] = [1,2,3,4,5];
   rating: number = 1;
+  text: string = '';
+
   form = this._formBuilder.group<FormFeedback>({
     subject: this._formBuilder.control('', [Validators.required]),
     message: this._formBuilder.control('', [Validators.required]),
@@ -74,6 +81,7 @@ export default class FeedbackComponent implements OnInit {
       headset,
       paperPlaneOutline,
       headsetOutline,
+      copyOutline
     });
   }
 
@@ -99,5 +107,10 @@ export default class FeedbackComponent implements OnInit {
     }catch(error){
       console.log(error)
     }
+  }
+
+  async writeToClipboard(text : string){
+    toast.info('Copiado')
+    await Clipboard.write({ string : text });
   }
 }

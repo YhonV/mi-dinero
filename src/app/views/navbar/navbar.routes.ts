@@ -15,6 +15,10 @@ export default [
                 loadComponent: () => import('./dashboard/dashboard.component').then(m => m.default)
             },
             {
+                path: 'budget',
+                loadComponent: () => import('./budget/budget.component').then(m => m.default)
+            },
+            {
                 path: 'preferences',
                 loadComponent: () => import('./preferences/preferences.component').then(m => m.default)
             },
@@ -34,10 +38,6 @@ export default [
         loadComponent: () => import('./preferences/profile/profile.component').then(m => m.default)
     },
     {
-        path: 'preferences/themes',
-        loadComponent: () => import('./preferences/themes/themes.component').then(m => m.default)
-    },
-    {
         path: 'preferences/notifications',
         loadComponent: () => import('./preferences/notifications/notifications.component').then(m => m.default)
     },
@@ -48,9 +48,5 @@ export default [
     {
         path: 'preferences/change-password',
         loadComponent: () => import('./preferences/change-password/change-password.component').then(m => m.default)
-    },
-    {
-        path: 'preferences/language',
-        loadComponent: () => import('./preferences/language/language.component').then(m => m.default)
     },
 ] as Routes
