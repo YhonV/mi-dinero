@@ -29,7 +29,15 @@
         ${{ calcularSaldo() }}
       </p>
     </div>
-
+<!-- Cuentas de ahorro -->
+  <button
+    (click)="navigateTo('/home/saving-accounts')"
+    type="button"
+    class="piggy-bank"
+  >
+  <i class="fas fa-piggy-bank"></i>
+  </button>
+    
     <!-- Recent Transactions -->
     <div class="block transactions-card">
       <div class="transactions-header">
@@ -117,7 +125,6 @@
         </button>
       </div>
     </div>
-
     <!-- Modal -->
     <div
       *ngIf="isModalOpen"

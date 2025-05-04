@@ -9,6 +9,7 @@ import { IonIcon, IonContent }   from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
 import { cashOutline, fastFoodOutline, carOutline, homeOutline, filmOutline, bulbOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline } from 'ionicons/icons';
 import { toast } from 'ngx-sonner';
+import { UtilsService } from 'src/app/shared/utils/utils.service';
 
 @Component({
   selector: 'app-home',
@@ -27,7 +28,8 @@ export default class HomeComponent  implements OnInit {
   categoriasGasto: Category[] = [];
   uid: string = '';
   categoryIcon : string | undefined;
-  private _firestore = inject(FirestoreService);  
+  private _firestore = inject(FirestoreService); 
+  private _utils = inject(UtilsService) 
   router = inject(Router);
   private _auth = inject(Auth)
   userData: User | null = null
@@ -224,6 +226,9 @@ export default class HomeComponent  implements OnInit {
     return this.sortedTransactions.slice(startIndex, startIndex + this.itemsPerPage);
   }
 
+  navigateTo(path: string) {
+    this._utils.navigateToWithoutLoading(path);
+  }
   
 
   

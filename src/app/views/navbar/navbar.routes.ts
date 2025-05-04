@@ -49,4 +49,8 @@ export default [
         path: 'preferences/change-password',
         loadComponent: () => import('./preferences/change-password/change-password.component').then(m => m.default)
     },
+    {
+        path: 'home/saving-accounts',
+        loadComponent:() => import('./home/saving-accounts/saving-accounts.component').then(m => m.default)
+    },
 ] as Routes

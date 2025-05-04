@@ -50,4 +50,17 @@ export interface Transaction {
     date: Date;
     categoryIcon?: string;
   }
+
+export interface SavingAccount {
+    id: string;
+    nombre: string;
+    amount: number;
+    bankId: string;
+    date: Date;
+}
+
+export interface Bank {
+    codigo: string;
+    nombre: string;
+}
   
