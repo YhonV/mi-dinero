@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch, QuerySnapshot } from '@angular/fire/firestore';
-import { Comuna, User, Transaction, Category, Budget } from '../../models/interfaces';
+import { Comuna, User, Transaction, Category, Budget, Bank } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -174,6 +174,19 @@ export class FirestoreService {
     })
   }
 
+  async getBanks(): Promise <Bank[]> {
+    const collectionBank = collection(this.firestore, "banks");
+    const allBanks = await getDocs(collectionBank);
+    let banks: Bank[] = []
+    
+    allBanks.docs.forEach((doc) => {
+      const data = doc.data();
+      if (data["banks"]){
+        banks = data["banks"] as Bank[];
+      }
+    });
+    return banks;
+  } 
 
 
 }

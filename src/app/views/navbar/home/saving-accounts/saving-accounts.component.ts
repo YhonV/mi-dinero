@@ -22,6 +22,7 @@ export default class SavingAccountsComponent  implements OnInit {
   constructor() { }
 
   async ngOnInit() {
+    this.bancos = await this._firestore.getBanks()
   }
 
   navigateTo(path: string) {
