@@ -18,30 +18,10 @@ export default class SavingAccountsComponent  implements OnInit {
   isModalOpen: boolean = false;
   bancos: Bank[] = [];
 
-  banks: Bank[]=
-    [
-      { "codigo": "001", "nombre": "Banco De Chile" },
-      { "codigo": "009", "nombre": "Banco Internacional" },
-      { "codigo": "014", "nombre": "Scotiabank Chile" },
-      { "codigo": "016", "nombre": "Banco De Credito E Inversiones" },
-      { "codigo": "028", "nombre": "Banco Bice" },
-      { "codigo": "031", "nombre": "Hsbc Bank (Chile)" },
-      { "codigo": "037", "nombre": "Banco Santander-Chile" },
-      { "codigo": "039", "nombre": "Banco Itaú Chile" },
-      { "codigo": "049", "nombre": "Banco Security" },
-      { "codigo": "051", "nombre": "Banco Falabella" },
-      { "codigo": "053", "nombre": "Banco Ripley" },
-      { "codigo": "055", "nombre": "Banco Consorcio" },
-      { "codigo": "059", "nombre": "Banco Btg Pactual Chile" },
-      { "codigo": "062", "nombre": "Tanner Banco Digital" },
-      { "codigo": "012", "nombre": "Banco Del Estado De Chile" }
-    ];
     
   constructor() { }
 
   async ngOnInit() {
-    this.bancos = await this._firestore.getBanks()
-    this._firestore.createBanks(this.banks)
   }
 
   navigateTo(path: string) {
