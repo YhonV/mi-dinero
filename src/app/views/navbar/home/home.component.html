@@ -30,13 +30,12 @@
       </p>
     </div>
 <!-- Cuentas de ahorro -->
-  <button
-    (click)="navigateTo('/home/saving-accounts')"
-    type="button"
-    class="piggy-bank"
-  >
-  <i class="fas fa-piggy-bank"></i>
-  </button>
+<div class="savings-access-button" (click)="navigateTo('/home/saving-accounts')">
+  <div class="savings-icon">
+    <i class="fas fa-piggy-bank"></i>
+  </div>
+  <div class="savings-label">Mis Ahorros</div>
+</div>
     
     <!-- Recent Transactions -->
     <div class="block transactions-card">

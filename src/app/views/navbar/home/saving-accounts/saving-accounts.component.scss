@@ -1,305 +1,468 @@
-/* ESTILOS DEL MODAL */
-.modal-overlay {
-    background-color: rgba(0, 0, 0, 0.5);
-    animation: fadeIn 0.2s ease-out;
-    position: fixed;
-    top: 0;
-    left: 0;
-    right: 0;
-    bottom: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    z-index: 1000;
-  }
-  
-  .modal-container {
-    background-color: #ffffff;
-    border-radius: 16px;
-    width: 90%;
-    max-width: 400px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
-    overflow: hidden;
-    animation: slideUp 0.3s ease-out;
-  }
-  
-  .modal-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 16px;
-    border-bottom: 1px solid #f0f0f0;
-  }
-  
-  .modal-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #000000;
-    margin: 0;
-  }
-  
-  .close-button {
-    background: none;
-    border: none;
-    padding: 8px;
-    cursor: pointer;
-    color: #666;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-  }
-  
-  .modal-body {
-    padding: 16px;
-  }
-  
-  .form-field {
-    margin-bottom: 16px;
-  }
-  
-  .form-label {
-    display: block;
-    font-size: 14px;
-    color: #666;
-    margin-bottom: 8px;
-  }
-  
-  .input-container {
-    position: relative;
-  }
-  
-  .amount-input {
-    width: 100%;
-    padding: 12px;
-    border: 1px solid #ddd;
-    border-radius: 8px;
-    font-size: 16px;
-    background-color: #f9f9f9;
-    transition: border-color 0.2s;
-  }
-  
-  .amount-input:focus {
-    border-color: #6c5ce7;
-    outline: none;
-    background-color: #fff;
-  }
-  
-  .modal-actions {
-    display: flex;
-    flex-direction: column;
-    padding: 16px;
-    gap: 8px;
-  }
-  
-  .action-button {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 12px;
-    border-radius: 8px;
-    font-weight: 500;
-    cursor: pointer;
-    transition: background-color 0.2s;
-  }
-  
-  .action-button svg {
-    margin-right: 8px;
-  }
-  
-  .primary-button {
-    background-color: #6c5ce7; /* Color púrpura similar al de tu app */
-    color: white;
-    border: none;
-  }
-  
-  .primary-button:hover {
-    background-color: #5b4cc4;
-  }
-  
-  .secondary-button {
-    background-color: #f1f1f1;
-    color: #333;
-    border: none;
-  }
-  
-  .secondary-button:hover {
-    background-color: #e1e1e1;
-  }
-  
-  .add-button {
-    position: fixed;
-    bottom: 20px;
-    right: 20px;
-    width: 56px;
-    height: 56px;
-    border-radius: 50%;
-    background-color: #6c5ce7;
-    color: white;
-    border: none;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    z-index: 10;
-  }
-  
-  /* ESTILOS DE LA VISTA VACÍA */
-  .empty-state-container {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
-    height: 100%;
-    padding: 20px;
-    max-width: 500px;
-    margin: 0 auto;
-  }
-  
-  .illustration-container {
-    margin-bottom: 20px;
-    animation: float 3s ease-in-out infinite;
-  }
-  
-  .savings-illustration {
-    width: 200px;
-    height: 200px;
-  }
-  
-  .empty-title {
-    font-size: 24px;
-    font-weight: 700;
-    color: #333;
-    margin-bottom: 16px;
-  }
-  
-  .empty-description {
-    font-size: 16px;
-    color: #666;
-    margin-bottom: 24px;
-    line-height: 1.5;
-  }
-  
-  .tips-container {
-    background-color: #f5f3ff;
-    border-radius: 12px;
-    padding: 16px;
-    margin-bottom: 30px;
-    width: 100%;
-    border-left: 4px solid #6c5ce7;
-  }
-  
-  .tips-title {
-    font-size: 18px;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 12px;
-    text-align: left;
-  }
-  
-  .tips-list {
-    list-style: none;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-  }
-  
-  .tips-list li {
-    display: flex;
-    align-items: center;
-    margin-bottom: 10px;
-    color: #555;
-  }
-  
-  .tips-list li ion-icon {
-    color: #6c5ce7;
-    margin-right: 8px;
-    font-size: 20px;
-  }
-  
-  .create-account-button {
-    background-color: #6c5ce7;
-    color: white;
-    border: none;
-    border-radius: 8px;
-    padding: 14px 24px;
-    font-size: 16px;
-    font-weight: 600;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    box-shadow: 0 4px 12px rgba(108, 92, 231, 0.3);
-  }
-  
-  .create-account-button ion-icon {
-    margin-right: 8px;
-    font-size: 20px;
-  }
-  
-  .create-account-button:hover {
-    background-color: #5b4cc4;
-  }
-  
-  /* ANIMACIONES COMPARTIDAS */
-  @keyframes fadeIn {
-    from { opacity: 0; }
-    to { opacity: 1; }
-  }
-  
-  @keyframes slideUp {
-    from { transform: translateY(20px); opacity: 0; }
-    to { transform: translateY(0); opacity: 1; }
-  }
-  
-  @keyframes float {
-    0% {
-      transform: translateY(0px);
-    }
-    50% {
-      transform: translateY(-10px);
-    }
-    100% {
-      transform: translateY(0px);
-    }   
-  }
-  .accounts-container {
-    padding: 16px;
-  }
-  
-  .accounts-header {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    margin-bottom: 20px;
-  }
-  
-  .accounts-title {
-    font-size: 1.4rem;
-    font-weight: 700;
-    color: var(--ion-color-dark);
-    margin: 0;
-  }
+:host {
+  --primary-color: #8c52ff;
+  --primary-dark: #7a45e0;
+  --primary-light: #f0f4ff;
+  --text-color: #333333;
+  --text-secondary: #6b7280;
+  --background-color: #ffffff;
+  --border-radius: 16px;
+  --card-radius: 20px;
+  --item-shadow: 0 2px 15px rgba(0,0,0,0.08);
+  --card-shadow: 0 10px 25px -5px rgba(140, 82, 255, 0.15);
+}
 
-  .accounts-list {
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+ion-header {
+  background: transparent;
+}
+
+ion-toolbar {
+  --background: linear-gradient(135deg, #9f6cff 0%, #8c52ff 100%);
+  --color: white;
+  border-radius: 0 0 20px 20px;
+  padding-bottom: 10px;
+}
+
+ion-title {
+  font-size: 18px;
+  font-weight: 700;
+}
+
+ion-back-button {
+  --color: white;
+}
+
+ion-content {
+  --background: #f9fafc;
+}
+
+/* Empty state */
+.empty-state-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding: 30px 20px;
+  text-align: center;
+}
+
+.illustration-container {
+  width: 200px;
+  height: 200px;
+  margin-bottom: 20px;
+}
+
+.savings-illustration {
+  width: 100%;
+  height: 100%;
+}
+
+.empty-title {
+  font-size: 24px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0 0 15px;
+}
+
+.empty-description {
+  font-size: 16px;
+  color: var(--text-secondary);
+  margin-bottom: 25px;
+  max-width: 320px;
+  line-height: 1.5;
+}
+
+.tips-container {
+  width: 100%;
+  background: linear-gradient(to bottom, #f0f4ff, #ffffff);
+  border-radius: var(--card-radius);
+  border: 2px dashed #c4d3ff;
+  padding: 20px;
+  margin-bottom: 30px;
+  text-align: left;
+  box-shadow: var(--card-shadow);
+}
+
+.tips-title {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--primary-color);
+  margin: 0 0 15px;
+}
+
+.tips-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.tips-list li {
+  display: flex;
+  align-items: center;
+  margin-bottom: 12px;
+  color: var(--text-color);
+  font-size: 15px;
+}
+
+.tips-list li:last-child {
+  margin-bottom: 0;
+}
+
+.tips-list ion-icon {
+  color: var(--primary-color);
+  font-size: 20px;
+  margin-right: 10px;
+}
+
+.create-account-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 14px 24px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(140, 82, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.create-account-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(140, 82, 255, 0.3);
+}
+
+.create-account-button ion-icon {
+  font-size: 20px;
+  margin-right: 8px;
+}
+
+/* Accounts container styles */
+.accounts-container {
+  padding: 20px;
+}
+
+.accounts-header {
+  display: flex;
+  justify-content: flex-end;
+  margin-bottom: 20px;
+}
+
+.add-account-button {
+  display: flex;
+  align-items: center;
+  background-color: var(--primary-color);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  padding: 10px 16px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(140, 82, 255, 0.25);
+  transition: all 0.3s ease;
+}
+
+.add-account-button:hover {
+  background-color: var(--primary-dark);
+  transform: translateY(-2px);
+  box-shadow: 0 6px 16px rgba(140, 82, 255, 0.3);
+}
+
+.add-account-button ion-icon {
+  font-size: 18px;
+  margin-right: 8px;
+}
+
+.accounts-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.account-card {
+  background-color: white;
+  border-radius: var(--card-radius);
+  padding: 20px;
+  box-shadow: var(--card-shadow);
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.account-card:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 15px 30px -5px rgba(140, 82, 255, 0.2);
+}
+
+.account-info {
+  display: flex;
+  align-items: center;
+}
+
+.account-details {
+  flex: 1;
+}
+
+.account-name {
+  font-size: 18px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0 0 5px;
+}
+
+.account-bank {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+
+.account-balance {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+}
+
+.balance-label {
+  font-size: 14px;
+  color: var(--text-secondary);
+  margin: 0 0 5px;
+}
+
+.balance-amount {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--primary-color);
+  margin: 0;
+}
+
+.account-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 10px;
+}
+
+.action-icon-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  background-color: #f5f5f5;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.action-icon-button:hover {
+  background-color: #ebebeb;
+}
+
+.action-icon-button ion-icon {
+  font-size: 18px;
+  color: var(--text-secondary);
+}
+
+.total-summary {
+  background: linear-gradient(135deg, #9f6cff 0%, #8c52ff 100%);
+  border-radius: var(--card-radius);
+  padding: 20px;
+  color: white;
+  margin-top: 20px;
+  text-align: center;
+  box-shadow: 0 10px 20px rgba(140, 82, 255, 0.2);
+}
+
+.total-label {
+  font-size: 16px;
+  opacity: 0.9;
+  margin: 0 0 10px;
+}
+
+.total-amount {
+  font-size: 28px;
+  font-weight: 700;
+  margin: 0;
+  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+/* Modal styles */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  z-index: 999;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+}
+
+.modal-container {
+  width: 90%;
+  max-width: 400px;
+  background-color: white;
+  border-radius: 24px;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  overflow: hidden;
+  animation: modalOpen 0.3s ease-out;
+}
+
+@keyframes modalOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
   }
-  
-  .account-card {
-    background-color: white;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
-    padding: 16px;
-    display: flex;
-    flex-direction: column;
-    gap: 16px;
+  to {
+    opacity: 1;
+    transform: scale(1);
   }
-  
-  .account-info {
-    display: flex;
-    align-items: center;
-  }
+}
+
+.modal-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 20px 24px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.modal-title {
+  font-size: 20px;
+  font-weight: 600;
+  color: var(--text-color);
+  margin: 0;
+}
+
+.close-button {
+  background: none;
+  border: none;
+  width: 36px;
+  height: 36px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: background-color 0.2s;
+  color: var(--text-secondary);
+}
+
+.close-button:hover {
+  background-color: #f5f5f5;
+}
+
+.modal-body {
+  padding: 24px;
+}
+
+.form-field {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: block;
+  font-weight: 500;
+  font-size: 15px;
+  margin-bottom: 8px;
+  color: var(--text-color);
+}
+
+.input-container {
+  position: relative;
+}
+
+.amount-input {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  color: var(--text-color);
+  font-size: 16px;
+  transition: all 0.2s;
+}
+
+.amount-input:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(140, 82, 255, 0.1);
+}
+
+.banks-select {
+  width: 100%;
+  padding: 12px 16px;
+  border-radius: 12px;
+  border: 1px solid #d1d5db;
+  background-color: #f9fafb;
+  color: var(--text-color);
+  font-size: 16px;
+  appearance: none;
+  background-image: url("data:image/svg+xml;charset=UTF-8,%3csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24' fill='none' stroke='%236b7280' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3e%3cpolyline points='6 9 12 15 18 9'%3e%3c/polyline%3e%3c/svg%3e");
+  background-repeat: no-repeat;
+  background-position: right 16px center;
+  background-size: 16px;
+  transition: all 0.2s;
+}
+
+.banks-select:focus {
+  border-color: var(--primary-color);
+  outline: none;
+  box-shadow: 0 0 0 3px rgba(140, 82, 255, 0.1);
+}
+
+.modal-actions {
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}
+
+.action-button {
+  width: 100%;
+  padding: 14px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 600;
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+}
+
+.action-button:hover {
+  transform: translateY(-2px);
+}
+
+.action-button:active {
+  transform: translateY(0);
+}
+
+.primary-button {
+  background-color: var(--primary-color);
+  color: white;
+}
+
+.primary-button:hover {
+  background-color: var(--primary-dark);
+  box-shadow: 0 4px 12px rgba(140, 82, 255, 0.2);
+}
+
+.secondary-button {
+  background-color: #f5f5f5;
+  color: var(--text-color);
+}
+
+.secondary-button:hover {
+  background-color: #ebebeb;
+}

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch, QuerySnapshot } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch, QuerySnapshot, deleteDoc, updateDoc } from '@angular/fire/firestore';
 import { Comuna, User, Transaction, Category, Budget, Bank, SavingAccount } from '../../models/interfaces';
 
 @Injectable({
@@ -139,7 +139,9 @@ export class FirestoreService {
       ...accountData,
       date: new Date()
     });
-    return accountRef.id
+
+    await updateDoc(accountRef, {id: accountRef.id});
+    return accountRef.id;
   }
 
   async getSavingAccounts(userId: string): Promise <SavingAccount[]>{
@@ -149,6 +151,7 @@ export class FirestoreService {
     const accounts: SavingAccount[] = [];
     accountRef.forEach((doc)=> {
       const data = doc.data();
+      console.log('Firestore ID:', doc.id, 'Campo id:', data['id']);
 
       const date = data['date']?.toDate() || new Date();
       accounts.push({id: doc.id, ...data, date:date} as SavingAccount);
@@ -157,6 +160,21 @@ export class FirestoreService {
     return accounts
 
   }
+
+  async deleteSavingAccount(userId: string, cuenta: SavingAccount) {
+      const accountRef = doc(this.firestore, `users/${userId}/saving_accounts/${cuenta.id}`);
+      await deleteDoc(accountRef);
+    }
+  
+    async updateSavingAccount(userId: string, cuenta: SavingAccount): Promise <void> {
+      const accountRef = doc(this.firestore, `users/${userId}/saving_accounts/${cuenta.id}`);
+      await updateDoc(accountRef, {
+        nombre: cuenta.nombre,
+        amount: cuenta.amount,
+        bankId: cuenta.bankId,
+        date: cuenta.date
+      });
+    }
 
 
 }

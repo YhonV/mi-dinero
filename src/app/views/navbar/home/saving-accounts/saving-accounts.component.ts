@@ -1,13 +1,14 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import {IonHeader, IonTitle, IonButtons, IonBackButton, IonToolbar, IonContent, IonIcon} from '@ionic/angular/standalone';
+import {createOutline, trashOutline, addCircleOutline} from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { Bank, SavingAccount, User } from 'src/app/shared/models/interfaces';
 import { toast } from 'ngx-sonner';
 import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
-
+import { addIcons } from 'ionicons';
 
 
 @Component({
@@ -24,13 +25,21 @@ export default class SavingAccountsComponent  implements OnInit {
   uid: string = '';
   userData: User | null = null
   isModalOpen: boolean = false;
+  id: string = ''
   bancos: Bank[] = [];
   cuentas: SavingAccount[] = [];
   nombre: string = '';
   monto: number= 0;
   bancoSeleccionado: string= '';
+  modalMode: 'add' | 'edit' = 'add';
     
-  constructor() { }
+  constructor() {
+    addIcons({
+      createOutline,
+      trashOutline,
+      addCircleOutline
+      });
+   }
 
   async ngOnInit() {
     this.bancos = await this._firestore.getBanks()
@@ -61,11 +70,44 @@ export default class SavingAccountsComponent  implements OnInit {
     this._utils.navigateToWithoutLoading(path);
   }
 
-  openModal() {
+  openModal(mode: 'add' | 'edit' = 'add', cuenta?: SavingAccount) {
+    this.modalMode = mode;
+
+    if (mode == 'add'){
+      this.nombre = '';
+      this.monto = 0;
+      this.bancoSeleccionado= '';
+    } else if (mode === 'edit' && cuenta){
+      this.nombre = cuenta.nombre;
+      this.monto = cuenta.amount;
+      this.bancoSeleccionado = cuenta.bankId;
+      this.id = cuenta.id
+    }
     this.isModalOpen = true;
   }
+
   closeModal() {
     this.isModalOpen = false; 
+  }
+
+  editAccount(cuenta: SavingAccount) {
+    this.openModal('edit', cuenta);
+  }
+
+  async deleteAccount(cuenta: SavingAccount){
+    const confirmDelete = confirm("¿Estás seguro que deseas eliminar esta cuenta?")
+    if (!confirmDelete) return;
+
+    try{
+      await this._firestore.deleteSavingAccount(this.uid, cuenta)
+      this.cuentas = this.cuentas.filter(c => c.id !== cuenta.id);
+      console.log(`Eliminando cuenta con ID: ${cuenta.id}`);
+
+      toast.success("Cuenta eliminada correctamente")
+    } catch (error) {
+      toast.error ("Error eliminando la cuenta")
+    }
+
   }
 
   async saveSavingAccounts(): Promise <void> {
@@ -74,15 +116,20 @@ export default class SavingAccountsComponent  implements OnInit {
       return;
     }
   const savingAccount: SavingAccount = {
-    id: Date.now().toString(),
+    id: this.modalMode === 'edit' ? this.id: Date.now().toString(),
     nombre: this.nombre,
     amount: this.monto,
     bankId: this.bancoSeleccionado,
     date: new Date()
+  };
+  if (this.modalMode === 'edit'){
+    await this._firestore.updateSavingAccount(this.uid, savingAccount);
+    toast.success('✏️ Cuenta actualizada correctamente')
+  }else {
+    await this._firestore.createSavingAccount(this.uid, savingAccount)
+    toast.success('✅ Cuenta creada exitosamente')
   }
-  await this._firestore.createSavingAccount(this.uid, savingAccount)
-  toast.success('✅ Cuenta de ahorro creada exitosamente')
-
+  
   await this.loadAccounts();
   this.nombre= '';
   this.monto = 0;
