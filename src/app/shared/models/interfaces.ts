@@ -1,8 +1,14 @@
 import { FormControl } from "@angular/forms";
 
+export interface Budget {
+    id: number;
+    categoryId : string;
+    amount: number;
+}
+
 export interface User {
-    email: string,
-    password: string,
+    email: string;
+    password: string;
     username?: string;
     comuna?: string;
     region?: string;

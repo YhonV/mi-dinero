@@ -1,23 +1,34 @@
-import { Component, ElementRef, OnInit, ViewChild } from '@angular/core';
-import { IonContent } from '@ionic/angular/standalone'
+import { Component, ElementRef, inject, OnInit, ViewChild } from '@angular/core';
+import { IonContent, IonButton, IonIcon, IonItem, IonInput } from '@ionic/angular/standalone'
 import { Chart, registerables } from 'chart.js';
-
+import { CommonModule } from '@angular/common';
+import { addIcons } from 'ionicons';
+import { trendingUpOutline } from 'ionicons/icons'; 
+import { Category } from 'src/app/shared/models/interfaces';
+import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 
 Chart.register(...registerables);
 @Component({
   selector: 'app-budget',
   templateUrl: './budget.component.html',
   styleUrls: ['./budget.component.scss'],
-  imports: [IonContent]
+  imports: [IonContent, IonButton, IonIcon, IonItem, IonInput, CommonModule]
 })
 export default class BudgetComponent  implements OnInit {
 
   @ViewChild('chartCanvas') private chartCanvas!: ElementRef;
   private chart: Chart | undefined;
+  private _firestore = inject(FirestoreService);
+  categoriasGasto: Category[] = [];
+  isModalOpen: boolean = false;
 
-  constructor() { }
+  constructor() { 
+    addIcons({trendingUpOutline})
+  }
 
-  ngOnInit() {}
+  async ngOnInit() {
+    this.categoriasGasto = await this._firestore.getCategoriesGastos()
+  }
 
   ngAfterViewInit() {
     this.createChart();
@@ -27,7 +38,7 @@ export default class BudgetComponent  implements OnInit {
     const ctx = this.chartCanvas.nativeElement.getContext('2d');
     
     this.chart = new Chart(ctx, {
-      type: 'bar', // Puedes cambiar el tipo según necesites
+      type: 'line',
       data: {
         labels: ['Enero', 'Febrero', 'Marzo', 'Abril', 'Mayo', 'Junio'],
         datasets: [{
@@ -48,6 +59,13 @@ export default class BudgetComponent  implements OnInit {
         }
       }
     });
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+  closeModal() {
+    this.isModalOpen = false; 
   }
 
 }

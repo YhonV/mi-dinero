@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch, QuerySnapshot } from '@angular/fire/firestore';
-import { Comuna, User, Transaction, Category, Bank, SavingAccount } from '../../models/interfaces';
+import { Comuna, User, Transaction, Category, Budget } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -8,7 +8,7 @@ import { Comuna, User, Transaction, Category, Bank, SavingAccount } from '../../
 export class FirestoreService {
   
   private firestore = inject(Firestore)
-
+  private n : number = 0;
   // categoriasIngreso: Category[] = [
   //   { id: 'ingresos', nombre: 'Salario', icono: 'cash-outline' },
   //   { id: 'ingresos', nombre: 'Inversiones', icono: 'bar-chart-outline' },
@@ -167,39 +167,13 @@ export class FirestoreService {
 
   }
 
-  async createBanks(banks: Bank[]){
-    const banksCollection = collection(this.firestore, "banks");
-    const bankRef = await addDoc(banksCollection, {
-      banks
+  async createBudget(userId: string, budget : Budget ){
+    const collectionBudget = collection(this.firestore,`users/${userId}/transactions`);
+    await addDoc(collectionBudget, {
+      id: this.n, budget
     })
   }
 
-  async getBanks(): Promise <Bank[]> {
-    const collectionBank = collection(this.firestore, "banks");
-    const allBanks = await getDocs(collectionBank);
-    let banks: Bank[] = []
-    
-    allBanks.docs.forEach((doc) => {
-      const data = doc.data();
-      if (data["banks"]){
-        banks = data["banks"] as Bank[];
-      }
-    });
-    return banks;
-  } 
-
-
-  async createSavingAccount(
-    userId: string,
-    accountData: SavingAccount): Promise <string>{
-      const accountCollection = collection(
-        this.firestore, `users/${userId}/saving_accounts`
-      );
-      const docRef = await addDoc(accountCollection, {})
-      return '';
-    }
-
-    
 
 
 }

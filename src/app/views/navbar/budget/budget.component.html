@@ -1,12 +1,82 @@
 <ion-content>
   <div class="p-4 space-y-6 max-w-md mx-auto">
-    <h1>
-      Hola
-    </h1>
+
+    <div class="header-container">
+      <h1 class="budget-title">Presupuesto</h1>
+      <p class="budget-subtitle">Arma los presupuestos para tu mes 🙂‍↕️</p>
+    </div>
+
+    <div class="crear-presupuesto-container">
+      <ion-button  color="tertiary" fill="outline" (click)="openModal()">
+        <ion-icon name="trending-up-outline"></ion-icon>
+        Crea tu presupuesto
+      </ion-button>
+    </div>
 
     <div class="chart-container">
       <canvas #chartCanvas></canvas>
     </div>
-    
+
+
+    <div class="fixed inset-0 modal-overlay flex items-center justify-center z-50" *ngIf="isModalOpen">
+      <div class="modal-container">
+        <div class="modal-body">
+          <h2 class="text-xl font-semibold mb-4">Crear Nuevo Presupuesto</h2>
+        <label for="username" class="block mb-1 text-sm font-medium text-gray-700">Categoría del presupuesto</label>
+        <select
+          style="color: black !important;"
+          class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500">
+          <option value="" selected disabled>Seleccione una categoría</option>
+          <option
+              *ngFor="let categoria of categoriasGasto"
+              [value]="categoria.nombre"
+            >
+              {{ categoria.nombre }}
+          </option>
+        </select>
+      
+
+      <div>
+        <label for="username" class="block mb-1 text-sm font-medium text-gray-700">Ingresa la cantidad de tu presupuesto</label>
+        <ion-item
+        style="color: black !important;"
+        class="rounded-none rounded-e-lg bg-gray-50 border border-purple-300 text-black focus:ring-purple-500 focus:border-purple-500 block flex-1 min-w-0 w-full text-sm p-2.5">
+          <ion-input type="number" placeholder="$19.990"></ion-input>
+        </ion-item>    
+      </div>
+
+      <div class="modal-actions">
+        <button
+          class="action-button primary-button"
+
+        >
+          <svg
+            width="16"
+            height="16"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="2"
+            viewBox="0 0 24 24"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              d="M5 13l4 4L19 7"
+            />
+          </svg>
+          Guardar Transacción
+        </button>
+        <button
+          class="action-button secondary-button"
+          (click)="closeModal()"
+        >
+          Cancelar
+        </button>
+      </div>
+    </div>
+    </div>
+      
+    </div>
+
   </div>
 </ion-content>

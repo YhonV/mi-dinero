@@ -1,0 +1,124 @@
+:host {
+  --primary-color: #8c52ff;
+  --text-color: #333333;
+  --text-secondary: #6b7280;
+  --background-color: #ffffff;
+  --border-radius: 8px;
+  --item-shadow: 0 2px 5px rgba(0,0,0,0.05);
+}
+
+
+.budget-title {
+    margin: 0;
+    font-size: 22px;
+    font-weight: 600;
+    color: var(--text-color);
+}
+
+.budget-subtitle {
+    margin: 4px 0 0 0;
+    font-size: 14px;
+    color: var(--text-secondary);
+    font-weight: 400;
+}
+
+.crear-presupuesto-container{
+    width: 20px;
+}
+
+/* Modal actions */
+.modal-overlay {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(4px);
+  transition: all 0.3s ease;
+}
+
+.modal-container {
+  max-width: 90%;
+  width: 400px;
+  border-radius: 20px;
+  background-color: white;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  transform: scale(1);
+  transition: transform 0.3s ease;
+  
+  &.open {
+    animation: modalOpen 0.3s ease-out;
+  }
+}
+
+.modal-body {
+  padding: 24px;
+  
+  label {
+    margin-bottom: 8px;
+    display: block;
+    font-weight: 500;
+  }
+  
+  select, ion-item {
+    margin-bottom: 16px;
+  }
+}
+
+.modal-actions {
+  padding: 0 24px 24px;
+  display: flex;
+  flex-direction: column; 
+  gap: 12px;
+  width: 100%;
+}
+
+.action-button {
+  width: 100%;
+  min-width: unset;
+  padding: 12px 24px;
+  border-radius: 12px;
+  border: none;
+  font-weight: 500;
+  font-size: 0.95rem;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  transition: all 0.2s ease;
+  
+  &:hover {
+    transform: translateY(-1px);
+  }
+  
+  &:active {
+    transform: translateY(0);
+  }
+}
+
+.primary-button {
+  background-color: var(--primary-color);
+  color: white;
+  
+  &:hover {
+    background-color: darken(#8c52ff, 5%);
+    box-shadow: 0 4px 12px rgba(140, 82, 255, 0.2);
+  }
+}
+
+.secondary-button {
+  background-color: #f5f5f5;
+  color: var(--text-color);
+  
+  &:hover {
+    background-color: #ebebeb;
+  }
+}
+
+@keyframes modalOpen {
+  from {
+    opacity: 0;
+    transform: scale(0.95);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
