@@ -101,6 +101,24 @@ export class FirestoreService {
     return docRef.id
   }
 
+  async getBudget(uid: string): Promise<Budget[]> {
+    const collectionBudget = collection(this.firestore, `users/${uid}/budget`);
+    const allBudgets = await getDocs(collectionBudget);
+    let budget: Budget[] = [];
+    
+    allBudgets.docs.forEach((doc) => {
+      const data = doc.data();
+      if (data["budget"]) {
+        budget.push({
+          id: data["budget"].id,
+          categoryId: data["budget"].categoryId,
+          amount: data["budget"].amount
+        });
+      }
+    });
+    return budget;
+}
+
   async getBanks(): Promise <Bank[]> {
     const collectionBank = collection(this.firestore, "banks");
     const allBanks = await getDocs(collectionBank);
