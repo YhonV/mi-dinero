@@ -7,7 +7,7 @@
     <ion-title>Mis cuentas de ahorro</ion-title>
   </ion-toolbar>
 </ion-header>
-  <div class="empty-state-container">
+<div class="empty-state-container" *ngIf="cuentas.length === 0">
     <!-- Ilustración de ahorro -->
     <div class="illustration-container">
       <svg class="savings-illustration" viewBox="0 0 200 200" xmlns="http://www.w3.org/2000/svg">
@@ -62,7 +62,50 @@
       <ion-icon name="add-circle-outline"></ion-icon>
       Crear mi primera cuenta
     </button>
+</div>
+
+
+<!-- Vista cuando sí hay cuentas de ahorro -->
+<div class="accounts-container" *ngIf="cuentas.length > 0">
+  <div class="accounts-header">
+  <button class="add-account-button" (click)="openModal()">
+    <ion-icon name="add-circle-outline"></ion-icon>
+    Agregar cuenta
+  </button>
+</div>
+<div class="accounts-list">
+  <!-- Tarjeta para cada cuenta de ahorro -->
+  <div class="account-card" *ngFor="let cuenta of cuentas">
+    <div class="account-info">
+      <!-- <div class="account-bank-logo" [ngStyle]="{'background-color': getBankColor(cuenta.bankId)}"> -->
+        <ion-icon name="business-outline"></ion-icon>
+      <!-- </div> -->
+      <div class="account-details">
+        <h3 class="account-name">{{ cuenta.nombre }}</h3>
+        <p class="account-bank">{{ cuenta.bankId }}</p>
+      </div>
+    </div>
+    <div class="account-balance">
+      <p class="balance-label">Saldo actual</p>
+      <h3 class="balance-amount">${{ cuenta.amount | number:'1.2-2' }}</h3>
+    </div>
+    <div class="account-actions">
+      <!-- <button class="action-icon-button" (click)="editAccount(cuenta)">
+        <ion-icon name="create-outline"></ion-icon>
+      </button>
+      <button class="action-icon-button" (click)="deleteAccount(cuenta)">
+        <ion-icon name="trash-outline"></ion-icon>
+      </button> -->
+    </div>
   </div>
+
+  <!-- Resumen total de las cuentas -->
+  <div class="total-summary">
+    <p class="total-label">Saldo total en ahorros:</p>
+    <h2 class="total-amount">${{ getTotalSavingAccounts() | number:'1.2-2' }}</h2>
+  </div>
+</div>
+</div>
 
 <!-- Modal -->
 <div
@@ -98,7 +141,7 @@
         <div class="input-container">
           <input
             type="text"
-            
+            [(ngModel)]="nombre"
             placeholder="Mi cuenta de ahorros"
             class="amount-input"
           />
@@ -111,7 +154,7 @@
         <div class="input-container">
           <input
             type="number"
-            
+            [(ngModel)]="monto"
             placeholder="0.00"
             class="amount-input"
           />
@@ -123,6 +166,7 @@
         <label for="bancos" class="form-label">Banco</label>
         <div class="relative">
           <select id="bancos"
+          [(ngModel)]="bancoSeleccionado"
           class="banks-select"
           >
           <option value="" disabled selected>Selecciona un banco</option>
@@ -138,7 +182,7 @@
     <div class="modal-actions">
       <button
         class="action-button primary-button"
-        
+        (click)="saveSavingAccounts()"
       >
         <svg
           width="16"
@@ -165,6 +209,8 @@
     </div>
   </div>
 </div>
+
+
 
 
 
