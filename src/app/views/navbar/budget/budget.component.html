@@ -24,6 +24,7 @@
           <h2 class="text-xl font-semibold mb-4">Crear Nuevo Presupuesto</h2>
         <label for="username" class="block mb-1 text-sm font-medium text-gray-700">Categoría del presupuesto</label>
         <select
+          [(ngModel)]="categoriaSeleccionada"
           style="color: black !important;"
           class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500">
           <option value="" selected disabled>Seleccione una categoría</option>
@@ -41,14 +42,14 @@
         <ion-item
         style="color: black !important;"
         class="rounded-none rounded-e-lg bg-gray-50 border border-purple-300 text-black focus:ring-purple-500 focus:border-purple-500 block flex-1 min-w-0 w-full text-sm p-2.5">
-          <ion-input type="number" placeholder="$19.990"></ion-input>
+          <ion-input type="number" placeholder="$19.990" [(ngModel)]="amount" ></ion-input>
         </ion-item>    
       </div>
 
       <div class="modal-actions">
         <button
           class="action-button primary-button"
-
+          (click)="saveBudget()"
         >
           <svg
             width="16"

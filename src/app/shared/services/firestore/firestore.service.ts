@@ -9,6 +9,7 @@ export class FirestoreService {
   
   private firestore = inject(Firestore)
   private n : number = 0;
+
   // categoriasIngreso: Category[] = [
   //   { id: 'ingresos', nombre: 'Salario', icono: 'cash-outline' },
   //   { id: 'ingresos', nombre: 'Inversiones', icono: 'bar-chart-outline' },
@@ -62,59 +63,7 @@ export class FirestoreService {
 
     return docRef.id;
   }
-
-  // async getTransactions(userId: string): Promise<Transaction[]> {
-  //   const transactionCollection = collection(
-  //     this.firestore, `users/${userId}/transactions`
-  //   );
-  //   const transactionSnapshot = await getDocs(transactionCollection);
-  //   const transactions: Transaction[] = [];
-
-  //   transactionSnapshot.forEach((doc) => {
-  //     const data = doc.data() as Transaction;
-  //     const date = new Date('yyyy-mm-dd-hh:mm:ss');
-  //     transactions.push({
-  //       ...data,
-  //       id: doc.id,
-  //       date: date
-  //     });
-  //   });
-  //   return transactions;
-  // }
-
-  
-  // async initializeCategories(): Promise<void> {
-  //   try {
-  //     const batch = writeBatch(this.firestore);
-      
-  //     // Documento para gastos con array de categorías
-  //     const gastosRef = doc(this.firestore, "categories", "gastos");
-  //     batch.set(gastosRef, {
-  //       categorias: this.categoriasGasto.map(cat => ({
-  //         nombre: cat.nombre,
-  //         icono: cat.icono || null
-  //       }))
-  //     });
-      
-  //     // Documento para ingresos con array de categorías
-  //     const ingresosRef = doc(this.firestore, "categories", "ingresos");
-  //     batch.set(ingresosRef, {
-  //       categorias: this.categoriasIngreso.map(cat => ({
-  //         nombre: cat.nombre,
-  //         icono: cat.icono || null
-  //       }))
-  //     });
-  
-  //     await batch.commit();
-  //     console.log("Categorías inicializadas correctamente.");
-  //   } catch (error) {
-  //     console.error("Error al inicializar categorías:", error);
-  //     throw error;
-  //   }
-  // }
-
- 
-  
+   
   async getUser(uid : string){
     const docRef = doc(this.firestore, "users", uid);
     const userSnapshot = await getDoc(docRef);
@@ -168,10 +117,12 @@ export class FirestoreService {
   }
 
   async createBudget(userId: string, budget : Budget ){
-    const collectionBudget = collection(this.firestore,`users/${userId}/transactions`);
-    await addDoc(collectionBudget, {
+    const collectionBudget = collection(this.firestore,`users/${userId}/budget`);
+    const docRef = await addDoc(collectionBudget, {
       id: this.n, budget
     })
+
+    return docRef.id
   }
 
   async getBanks(): Promise <Bank[]> {
@@ -188,6 +139,56 @@ export class FirestoreService {
     return banks;
   } 
 
+
+  // async getTransactions(userId: string): Promise<Transaction[]> {
+  //   const transactionCollection = collection(
+  //     this.firestore, `users/${userId}/transactions`
+  //   );
+  //   const transactionSnapshot = await getDocs(transactionCollection);
+  //   const transactions: Transaction[] = [];
+
+  //   transactionSnapshot.forEach((doc) => {
+  //     const data = doc.data() as Transaction;
+  //     const date = new Date('yyyy-mm-dd-hh:mm:ss');
+  //     transactions.push({
+  //       ...data,
+  //       id: doc.id,
+  //       date: date
+  //     });
+  //   });
+  //   return transactions;
+  // }
+
+  
+  // async initializeCategories(): Promise<void> {
+  //   try {
+  //     const batch = writeBatch(this.firestore);
+      
+  //     // Documento para gastos con array de categorías
+  //     const gastosRef = doc(this.firestore, "categories", "gastos");
+  //     batch.set(gastosRef, {
+  //       categorias: this.categoriasGasto.map(cat => ({
+  //         nombre: cat.nombre,
+  //         icono: cat.icono || null
+  //       }))
+  //     });
+      
+  //     // Documento para ingresos con array de categorías
+  //     const ingresosRef = doc(this.firestore, "categories", "ingresos");
+  //     batch.set(ingresosRef, {
+  //       categorias: this.categoriasIngreso.map(cat => ({
+  //         nombre: cat.nombre,
+  //         icono: cat.icono || null
+  //       }))
+  //     });
+  
+  //     await batch.commit();
+  //     console.log("Categorías inicializadas correctamente.");
+  //   } catch (error) {
+  //     console.error("Error al inicializar categorías:", error);
+  //     throw error;
+  //   }
+  // }
 
 }
  
