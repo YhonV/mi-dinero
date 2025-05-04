@@ -3,7 +3,7 @@ import { IonContent, IonButton, IonIcon, IonItem, IonInput } from '@ionic/angula
 import { Chart, registerables } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { trendingUpOutline } from 'ionicons/icons'; 
+import { trendingUpOutline, addOutline, filmOutline, carOutline, bulbOutline, restaurantOutline } from 'ionicons/icons'; 
 import { Budget, Category, User } from 'src/app/shared/models/interfaces';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { FormsModule } from '@angular/forms';
@@ -23,21 +23,24 @@ export default class BudgetComponent  implements OnInit {
   @ViewChild('chartCanvas') private chartCanvas!: ElementRef;
   private chart: Chart | undefined;
   private _firestore = inject(FirestoreService);
+  private _auth = inject(Auth)
+
   categoriasGasto: Category[] = [];
   uid: string = '';
   userData: User | null = null
   isModalOpen: boolean = false;
   amount: number = 0;
   categoriaSeleccionada: string = '';
-  private _auth = inject(Auth)
   budget : Budget[] = []
-  n : number = 0;
-  nombre = ''
+  hasBudget : boolean = false
+  isLoading: boolean = true;
+
   constructor() { 
-    addIcons({trendingUpOutline})
+    addIcons({trendingUpOutline, addOutline, filmOutline,carOutline, bulbOutline, restaurantOutline })
   }
 
   async ngOnInit() {
+    this.isLoading = true;
     this.categoriasGasto = await this._firestore.getCategoriesGastos()
     
     this._auth.onAuthStateChanged(async user => {
@@ -45,8 +48,7 @@ export default class BudgetComponent  implements OnInit {
         this.uid = user.uid;
         this.userData = await this._firestore.getUser(user["uid"]);
         this.budget = await this._firestore.getBudget(this.uid);
-        console.log('Budget cargado ' + JSON.stringify(this.budget));
-
+        this.hasBudget = true;
         setTimeout(() => {
           if (this.budget.length > 0){
             this.createChart()
@@ -55,9 +57,11 @@ export default class BudgetComponent  implements OnInit {
           }
         }, 1000);
         
+        this.isLoading = false;
       } else{
         console.log("no user");
         this.userData = null;  
+        this.isLoading = false;
       }
     })
   }
@@ -81,11 +85,10 @@ export default class BudgetComponent  implements OnInit {
     }
   
     this.chart = new Chart(ctx, {
-      type: 'bar',
+      type: 'doughnut',
       data: {
         labels: labels,
         datasets: [{
-          label: 'Presupuesto por categoría',
           data: data,
           backgroundColor: [
             'rgba(255, 99, 132, 0.2)',
@@ -109,7 +112,11 @@ export default class BudgetComponent  implements OnInit {
         maintainAspectRatio: false,
         plugins: {
           legend: {
-            position: 'bottom'
+            position: 'top'
+          },
+          title:{
+            display: true,
+            text: "Presupuestos actuales"
           },
           tooltip: {
             callbacks: {
@@ -128,7 +135,6 @@ export default class BudgetComponent  implements OnInit {
               }
             }
           },
-          // Add this new section to display data labels
           datalabels: {
             formatter: (value) => {
               return new Intl.NumberFormat('es-CL', {
@@ -162,15 +168,16 @@ export default class BudgetComponent  implements OnInit {
       toast.error("¡¡ Todos los campos son requeridos !!");
       return;
     }
-    this.n += 1;
+
     const budget : Budget = {
-    id: this.n,
+    id: new Date().getTime(),
     categoryId: this.categoriaSeleccionada,
     amount: this.amount
     }
-
     await this._firestore.createBudget(this.uid, budget)
-
+    toast.success("Presupuesto guardado exitosamente")
+    this.ngOnInit();
+    this.closeModal();
   }
 
 }
