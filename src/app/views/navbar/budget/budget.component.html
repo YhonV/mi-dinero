@@ -68,46 +68,19 @@
       </div>
       
       <!-- Budget summary cards -->
-      <div class="budget-summary">
+      <div class="budget-summary" *ngFor="let item of this.budget">
         <div class="summary-card">
           <div class="summary-icon transport">
-            <ion-icon name="car-outline"></ion-icon>
+            <ion-icon name="{{item.iconoCategoria}}"></ion-icon>
           </div>
           <div class="summary-details">
-            <span class="summary-category">Transporte</span>
-            <span class="summary-amount">$40.000</span>
-            <div class="progress-bar">
+            <span class="summary-category">{{item.categoryId}}</span>
+            <span class="summary-amount">{{item.montoFormateado}}</span>
+            <!-- Se agregará luego esta funcion -->
+            <!-- <div class="progress-bar">
               <div class="progress" style="width: 40%;"></div>
             </div>
-            <span class="summary-status">40% usado</span>
-          </div>
-        </div>
-        
-        <div class="summary-card">
-          <div class="summary-icon entertainment">
-            <ion-icon name="film-outline"></ion-icon>
-          </div>
-          <div class="summary-details">
-            <span class="summary-category">Entretenimiento</span>
-            <span class="summary-amount">$54.667</span>
-            <div class="progress-bar">
-              <div class="progress" style="width: 65%;"></div>
-            </div>
-            <span class="summary-status">65% usado</span>
-          </div>
-        </div>
-        
-        <div class="summary-card">
-          <div class="summary-icon food">
-            <ion-icon name="restaurant-outline"></ion-icon>
-          </div>
-          <div class="summary-details">
-            <span class="summary-category">Alimentación</span>
-            <span class="summary-amount">$100.000</span>
-            <div class="progress-bar">
-              <div class="progress" style="width: 85%;"></div>
-            </div>
-            <span class="summary-status">85% usado</span>
+            <span class="summary-status">40% usado</span> -->
           </div>
         </div>
       </div>

@@ -79,11 +79,9 @@ export default class HomeComponent  implements OnInit {
         if (transaction.type === 'ingreso'){
           const category = this.categoriasIngreso.find(cat => cat.nombre === transaction.categoryId);
           iconoCategoria = category?.icono ?? 'default-icon';
-          console.log( iconoCategoria);
         } else {
           const category = this.categoriasGasto.find(cat => cat.nombre === transaction.categoryId);
           iconoCategoria = category?.icono ?? 'default-icon';
-          console.log( iconoCategoria);
         }
         
         return {

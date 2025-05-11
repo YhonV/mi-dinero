@@ -11,7 +11,7 @@
   --card-shadow: 0 10px 25px -5px rgba(140, 82, 255, 0.15);
   --transport-color: #ff7285;
   --entertainment-color: #54c5ff;
-  --food-color: #ffca62;
+  --alimentacion-color: #ffca62;
 }
 
 .budget-wrapper {
@@ -505,17 +505,6 @@
   border-radius: 4px;
 }
 
-.summary-card:nth-child(1) .progress {
-  background-color: var(--transport-color);
-}
-
-.summary-card:nth-child(2) .progress {
-  background-color: var(--entertainment-color);
-}
-
-.summary-card:nth-child(3) .progress {
-  background-color: var(--food-color);
-}
 
 .summary-status {
   display: block;

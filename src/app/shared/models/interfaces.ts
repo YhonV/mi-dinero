@@ -4,6 +4,8 @@ export interface Budget {
     id: number;
     categoryId : string;
     amount: number;
+    iconoCategoria?: string;
+    montoFormateado?: string;
 }
 
 export interface User {
