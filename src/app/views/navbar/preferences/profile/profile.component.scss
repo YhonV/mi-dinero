@@ -100,3 +100,10 @@ ion-list {
   background: transparent;
   padding: 8px 0;
 }
+
+.edit-item ion-icon {
+  color: var(--primary-color);
+  font-size: 20px;
+  background-color: var(--primary-light);
+  padding: 8px;
+}
