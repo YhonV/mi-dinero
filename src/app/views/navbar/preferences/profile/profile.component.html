@@ -26,6 +26,7 @@
           <ion-label>
             <p>Nombre</p>
             <ion-input 
+            class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500"
             [readonly] ="!editar" 
             [(ngModel)]="userData.username"
             *ngIf="editar"
@@ -46,22 +47,15 @@
           <ion-icon name="location-outline" slot="start" color="tertiary"></ion-icon>
           <ion-label>
             <p>Región</p>
-            <div>
+            <select
+            *ngIf="editar"
+            [(ngModel)] = "userData.region"
+            class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500"
+            >
+            <option value="" disabled>Selecciona una región</option>
+            <option *ngFor="let region of getRegionesUnicas()" [value]="region"> {{region}}</option>
+          </select>
               <h2 *ngIf="!editar">{{userData.region}}</h2>
-              <label for="region" class="block mb-1 text-sm font-medium text-gray-700">
-                Selecciona tu region
-              </label>
-              <select
-                id="region"
-                formControlName="region"
-                style="color: black !important;"
-                class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500">
-                <option value="" selected disabled>Selecciona una region</option>
-                @for(region of getRegionesUnicas(); track region) {
-                  <option [value]="region">{{ region }}</option>
-                }
-              </select>
-            </div>
           </ion-label>
         </ion-item>
         
@@ -69,11 +63,13 @@
           <ion-icon name="home" slot="start" color="tertiary"></ion-icon>
           <ion-label>
             <p>Comuna</p>
-            <ion-input
-            [readonly]="!editar"
-            [(ngModel)]="userData.comuna"
-            *ngIf="editar"
-            ></ion-input>
+           <select *ngIf="editar"
+           [(ngModel)]="userData.comuna"
+           class="block w-full p-2.5 text-sm bg-gray-50 border border-purple-300 text-black rounded-lg focus:ring-purple-500 focus:border-purple-500"
+           >
+           <option value=""disabled>Selecciona una comuna</option>
+           <option *ngFor="let comuna of getComunasOfRegiones(userData.region)" [value]="comuna.nombre"> {{comuna.nombre}}</option>
+          </select>
             <h2 *ngIf="!editar">{{userData.comuna}}</h2>
           </ion-label>
         </ion-item>

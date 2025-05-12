@@ -35,6 +35,7 @@ import { Comuna, User } from 'src/app/shared/models/interfaces';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
+import { AuthService } from 'src/app/shared/services/auth/auth.service';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -62,6 +63,7 @@ import { toast } from 'ngx-sonner';
 export default class ProfileComponent implements OnInit {
   private _firestore = inject(FirestoreService);
   private _auth = inject(Auth);
+  private _authService  = inject(AuthService)
   userData: User | null = null
   private _utils = inject(UtilsService);
   editar = false;
@@ -97,7 +99,6 @@ export default class ProfileComponent implements OnInit {
     }) 
   }
 
-   
   
     getRegionesUnicas(): string[] {
       const regiones = this.direcciones.map((direccion) => direccion.region);
@@ -115,10 +116,14 @@ export default class ProfileComponent implements OnInit {
   }
 
   guardarCambios(){
-    console.log("uid en guardarCambios " + this.uid)
     this.editar = false;
+    
+    if (!this.userData || !this.userData.username || !this.userData.region || !this.userData.comuna || !this.userData.email){
+      toast.warning("Debes completar todos los campos")
+      this.editar = true
+      return
+    }
+      this._authService.editUser(this.uid, this.userData.username, this.userData.region, this.userData.comuna, this.userData.email);
+      toast.success("Datos actualizados correctamente")
+    } 
   }
-
-
-  
-}

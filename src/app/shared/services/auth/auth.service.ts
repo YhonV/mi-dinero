@@ -17,6 +17,13 @@ export class AuthService{
     })
   }
 
+  
+  async editUser(uid : string, username: string, region: string, comuna: string, email:string){
+    await setDoc(doc(this.firestore, "users", uid),{
+      username, region, comuna, email
+    })
+  }
+
   signUp(user: User) {
     return createUserWithEmailAndPassword(this._auth, user.email, user.password);
   }
