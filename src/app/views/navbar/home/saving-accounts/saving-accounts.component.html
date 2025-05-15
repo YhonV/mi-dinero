@@ -109,7 +109,7 @@
       <button class="action-icon-button" (click)="editAccount(cuenta)">
         <ion-icon name="create-outline"></ion-icon>
       </button>
-      <button class="action-icon-button" (click)="deleteAccount(cuenta)">
+      <button class="action-icon-button" (click)="openModalToDeleteSaving(cuenta)">
         <ion-icon name="trash-outline"></ion-icon>
       </button>
     </div>
@@ -226,6 +226,31 @@
   </div>
 </div>
 
+<!-- Modal para eliminar presupuesto -->
+<div class="modal-overlay" *ngIf="isModalToDeleteSaving">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">Eliminar cuenta de ahorro</h2>
+      <button class="close-button" (click)="closeModalToDeleteSaving()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding: 10px;">
+      <div>
+        <label class="form-label" style="margin-bottom: 0px">¿Estás seguro que deseas eliminar esta cuenta de ahorro?</label>
+      </div>
+    </div>
+
+    <ion-button color="tertiary" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="deleteSaving(dataSavingToDelete)">
+      Sí
+    </ion-button>
+    <ion-button color="danger" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="closeModalToDeleteSaving()">
+      No
+    </ion-button>
+
+  </div>
+</div>
 
 
 

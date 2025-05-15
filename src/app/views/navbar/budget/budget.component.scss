@@ -432,6 +432,7 @@
 }
 
 .summary-card {
+  position: relative;
   display: flex;
   align-items: center;
   background-color: white;
@@ -439,6 +440,12 @@
   padding: 16px;
   box-shadow: var(--item-shadow);
   transition: transform 0.2s;
+
+  .card-header {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+  }
 }
 
 .summary-card:hover {
@@ -516,7 +523,7 @@
 .tips-section {
   background-color: var(--primary-light);
   border-radius: var(--card-radius);
-  padding: 20px;
+  padding: 10px;
   margin-bottom: 20px;
 }
 
@@ -676,13 +683,13 @@
   transition: all 0.2s ease;
 }
 
-.action-button:hover {
-  transform: translateY(-1px);
-}
+// .action-button:hover {
+//   transform: translateY(-1px);
+// }
 
-.action-button:active {
-  transform: translateY(0);
-}
+// .action-button:active {
+//   transform: translateY(0);
+// }
 
 .primary-button {
   background-color: var(--primary-color);
@@ -711,5 +718,20 @@
   to {
     opacity: 1;
     transform: scale(1);
+  }
+}
+
+.edit-item{
+  background: transparent;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 50%;
+
+  ion-icon {
+    color: var(--primary-color);
+    font-size: 20px;
+    display: block;
   }
 }

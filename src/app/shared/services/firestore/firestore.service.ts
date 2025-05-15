@@ -112,7 +112,8 @@ export class FirestoreService {
         budget.push({
           id: data["budget"].id,
           categoryId: data["budget"].categoryId,
-          amount: data["budget"].amount
+          amount: data["budget"].amount,
+          docId: doc.id,
         });
       }
     });
@@ -166,15 +167,29 @@ export class FirestoreService {
       await deleteDoc(accountRef);
     }
   
-    async updateSavingAccount(userId: string, cuenta: SavingAccount): Promise <void> {
-      const accountRef = doc(this.firestore, `users/${userId}/saving_accounts/${cuenta.id}`);
-      await updateDoc(accountRef, {
-        nombre: cuenta.nombre,
-        amount: cuenta.amount,
-        bankId: cuenta.bankId,
-        date: cuenta.date
-      });
-    }
+  async updateSavingAccount(userId: string, cuenta: SavingAccount): Promise <void> {
+    const accountRef = doc(this.firestore, `users/${userId}/saving_accounts/${cuenta.id}`);
+    await updateDoc(accountRef, {
+      nombre: cuenta.nombre,
+      amount: cuenta.amount,
+      bankId: cuenta.bankId,
+      date: cuenta.date
+    });
+  }
+
+  async editBudget(newBudget : Budget, uid: string){
+    console.log(newBudget.docId)
+    await updateDoc(doc(this.firestore, `users/${uid}/budget/${newBudget.docId}`),{
+      "budget.amount": newBudget.amount,
+      "budget.categoryId": newBudget.categoryId
+    });
+  }
+
+  async deleteBudget(budget: Budget, userId: string) {
+    const budgetRef = doc(this.firestore, `users/${userId}/budget/${budget.docId}`);
+    console.log(budget.docId)
+    await deleteDoc(budgetRef);
+  }
 
 
 }

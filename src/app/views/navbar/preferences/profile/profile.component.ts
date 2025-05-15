@@ -118,12 +118,12 @@ export default class ProfileComponent implements OnInit {
   guardarCambios(){
     this.editar = false;
     
-    if (!this.userData || !this.userData.username || !this.userData.region || !this.userData.comuna || !this.userData.email){
+    if (!this.userData || !this.userData.username || !this.userData.region || !this.userData.comuna){
       toast.warning("Debes completar todos los campos")
       this.editar = true
       return
     }
-      this._authService.editUser(this.uid, this.userData.username, this.userData.region, this.userData.comuna, this.userData.email);
+      this._authService.editUser(this.uid, this.userData.username, this.userData.region, this.userData.comuna);
       toast.success("Datos actualizados correctamente")
     } 
   }

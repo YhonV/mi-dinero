@@ -1,7 +1,7 @@
 import { inject, Injectable } from '@angular/core';
 import { User } from '../../models/interfaces';
 import { createUserWithEmailAndPassword, Auth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
-import { setDoc, doc, Firestore } from '@angular/fire/firestore';
+import { setDoc, doc, Firestore, updateDoc } from '@angular/fire/firestore';
 @Injectable({
   providedIn: 'root'
 })
@@ -18,9 +18,9 @@ export class AuthService{
   }
 
   
-  async editUser(uid : string, username: string, region: string, comuna: string, email:string){
-    await setDoc(doc(this.firestore, "users", uid),{
-      username, region, comuna, email
+  async editUser(uid : string, username: string, region: string, comuna: string){
+    await updateDoc(doc(this.firestore, "users", uid),{
+      username, region, comuna
     })
   }
 

@@ -1,6 +1,6 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
-import {IonHeader, IonTitle, IonButtons, IonBackButton, IonToolbar, IonContent, IonIcon} from '@ionic/angular/standalone';
+import {IonHeader, IonTitle, IonButtons, IonBackButton, IonToolbar, IonContent, IonIcon, IonButton} from '@ionic/angular/standalone';
 import {createOutline, trashOutline, addCircleOutline} from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
@@ -15,7 +15,7 @@ import { addIcons } from 'ionicons';
   selector: 'app-saving-accounts',
   templateUrl: './saving-accounts.component.html',
   styleUrls: ['./saving-accounts.component.scss'],
-  imports: [FormsModule, CommonModule, IonHeader, IonTitle, IonButtons, IonBackButton, IonToolbar, IonContent, IonIcon]
+  imports: [FormsModule, CommonModule, IonHeader, IonTitle, IonButtons, IonBackButton, IonToolbar, IonContent, IonIcon, IonButton]
 })
 export default class SavingAccountsComponent  implements OnInit {
   private _utils = inject(UtilsService)
@@ -32,7 +32,9 @@ export default class SavingAccountsComponent  implements OnInit {
   monto: number= 0;
   bancoSeleccionado: string= '';
   modalMode: 'add' | 'edit' = 'add';
-    
+  isModalToDeleteSaving : boolean = false;
+  dataSavingToDelete !: SavingAccount;
+
   constructor() {
     addIcons({
       createOutline,
@@ -146,6 +148,29 @@ export default class SavingAccountsComponent  implements OnInit {
   getTotalSavingAccounts(): number {
     return this.cuentas.reduce((sum, cuenta) => sum + cuenta.amount, 0);
   }
+
+  openModalToDeleteSaving(selectedSaving : SavingAccount){
+      this.dataSavingToDelete = selectedSaving;
+      console.log(this.dataSavingToDelete)
+      this.isModalToDeleteSaving = true;
+    }
+  
+    closeModalToDeleteSaving(){
+      this.isModalToDeleteSaving = false;
+      this.dataSavingToDelete = null!;
+    }
+
+  async deleteSaving(selectedSaving : SavingAccount){
+      try{
+        await this._firestore.deleteSavingAccount(this.uid, selectedSaving);
+        toast.success("Cuenta de ahorro eliminada correctamente")
+        this.closeModalToDeleteSaving();
+        this.ngOnInit();
+      }catch(error){
+        toast.error("Error al eliminar presupuesto " + error)
+        console.log(error);
+      }
+    }
 
 
 }

@@ -3,7 +3,7 @@ import { IonContent, IonButton, IonIcon, IonItem, IonInput } from '@ionic/angula
 import { Chart, registerables } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
-import { trendingUpOutline, addOutline, filmOutline, carOutline, bulbOutline, restaurantOutline, fastFoodOutline, cashOutline, homeOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline } from 'ionicons/icons'; 
+import { trendingUpOutline, addOutline, filmOutline, carOutline, bulbOutline, restaurantOutline, fastFoodOutline, cashOutline, homeOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline, createOutline, trashOutline, closeOutline } from 'ionicons/icons'; 
 import { Budget, Category, User } from 'src/app/shared/models/interfaces';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { FormsModule } from '@angular/forms';
@@ -29,14 +29,24 @@ export default class BudgetComponent  implements OnInit {
   uid: string = '';
   userData: User | null = null
   isModalOpen: boolean = false;
+  isModalToEditBudget: boolean = false;
+  isModalToDeleteBudget: boolean = false;
   amount: number = 0;
   categoriaSeleccionada: string = '';
   budget : Budget[] = []
   hasBudget : boolean = false
   isLoading: boolean = true;
-
+  dataBudgetToEdit !: Budget;
+  dataBudgetToDelete !: Budget;
   constructor() { 
-    addIcons({trendingUpOutline, addOutline, filmOutline,carOutline, bulbOutline, restaurantOutline, cashOutline,
+    addIcons({
+      trendingUpOutline, 
+      addOutline, 
+      filmOutline,
+      carOutline,
+      bulbOutline, 
+      restaurantOutline, 
+      cashOutline,
       fastFoodOutline,
       homeOutline,   
       medkitOutline, 
@@ -44,7 +54,10 @@ export default class BudgetComponent  implements OnInit {
       schoolOutline, 
       barChartOutline, 
       cartOutline, 
-      giftOutline })
+      giftOutline,
+      createOutline,
+      trashOutline,
+      closeOutline })
   }
 
   async ngOnInit() {
@@ -56,8 +69,6 @@ export default class BudgetComponent  implements OnInit {
         this.uid = user.uid;
         this.userData = await this._firestore.getUser(user["uid"]);
         await this.loadBudgets(this.uid);
-      
-        
         this.isLoading = false;
       } else{
         console.log("no user");
@@ -207,9 +218,60 @@ export default class BudgetComponent  implements OnInit {
     amount: this.amount
     }
     await this._firestore.createBudget(this.uid, budget)
+    this.categoriaSeleccionada = '';
+    this.amount = 0;
     toast.success("Presupuesto guardado exitosamente")
     this.ngOnInit();
     this.closeModal();
+  }
+
+
+  openModalToEditBudget(selectedBudget : Budget){
+    this.dataBudgetToEdit = selectedBudget;
+    this.isModalToEditBudget = true;
+  }
+
+  closeModalToEditBudget(){
+    this.isModalToEditBudget = false;
+  }
+
+  openModalToDeleteBudget(selectedBudget : Budget){
+    this.dataBudgetToDelete = selectedBudget;
+    console.log(this.dataBudgetToDelete)
+    this.isModalToDeleteBudget = true;
+  }
+
+  closeModalToDeleteBudget(){
+    this.isModalToDeleteBudget = false;
+    this.dataBudgetToDelete = null!;
+  }
+
+
+  async deleteBudget(selectedBudget : Budget){
+    try{
+      await this._firestore.deleteBudget(selectedBudget, this.uid);
+      toast.success("Presupuesto eliminado correctamente")
+      this.closeModalToDeleteBudget();
+      this.ngOnInit();
+    }catch(error){
+      toast.error("Error al eliminar presupuesto " + error)
+      console.log(error);
+    }
+  }
+
+  async editBudget(selectedBudget : Budget){
+    try{
+      if(!selectedBudget.amount || !selectedBudget.categoryId){
+        toast.error("Debes tener los datos completos")
+        return;
+      }
+      await this._firestore.editBudget(selectedBudget, this.uid);
+      toast.success("Presupuesto actualizado correctamente");
+      this.closeModalToEditBudget();
+      this.ngOnInit();
+    } catch (e){
+      toast.error("Error al editar")
+    }
   }
 
 }

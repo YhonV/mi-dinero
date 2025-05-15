@@ -56,9 +56,9 @@
       <div class="budget-header">
         <h2 class="section-title">Presupuestos actuales</h2>
         <div class="period-selector">
-          <span class="period-label">Periodo:</span>
+          <!-- <span class="period-label">Periodo:</span> -->
           <button class="period-button active">Mes actual</button>
-          <button class="period-button">Personalizado</button>
+          <!-- <button class="period-button">Personalizado</button> -->
         </div>
       </div>
       
@@ -68,8 +68,16 @@
       </div>
       
       <!-- Budget summary cards -->
-      <div class="budget-summary" *ngFor="let item of this.budget">
+      <div class="budget-summary" *ngFor="let item of budget; let  i =index">
         <div class="summary-card">
+          <div class="card-header">
+            <button class="edit-item" (click)="openModalToEditBudget(item)">
+              <ion-icon name="create-outline" style="font-size: 25px; padding: 0.5rem;"></ion-icon>
+            </button>
+            <button class="delete-item" (click)="openModalToDeleteBudget(item)">
+              <ion-icon name="trash-outline" color="danger" style="font-size: 25px; padding: 0.5rem;"></ion-icon>
+            </button>
+          </div>
           <div class="summary-icon transport">
             <ion-icon name="{{item.iconoCategoria}}"></ion-icon>
           </div>
@@ -140,6 +148,68 @@
           </button>
         </div>
       </div>
+    </div>
+  </div>
+
+  <!-- Modal para editar presupuesto -->
+  <div class="modal-overlay" *ngIf="isModalToEditBudget">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title">Edita tu presupuesto</h2>
+        <button class="close-button" (click)="closeModalToEditBudget()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="modal-body">
+        <div class="form-group">
+          <label class="form-label">Presupuesto nuevo para ingresar:</label>
+          <ion-input type="number" [(ngModel)]="this.dataBudgetToEdit.amount"></ion-input>
+        </div>
+
+        <label class="form-label">Categoría del presupuesto</label>
+          <select
+            [(ngModel)]="this.dataBudgetToEdit.categoryId"
+            class="form-select">
+            <option value="" selected disabled>Seleccione una categoría</option>
+            <option
+              *ngFor="let categoria of categoriasGasto"
+              [value]="categoria.nombre">
+              {{ categoria.nombre }}
+            </option>
+          </select>
+      </div>
+
+      <button class="action-button primary-button" (click)="editBudget(this.dataBudgetToEdit)">
+        Guardar Transacción
+      </button>
+
+    </div>
+  </div>
+
+  <!-- Modal para eliminar presupuesto -->
+  <div class="modal-overlay" *ngIf="isModalToDeleteBudget">
+    <div class="modal-container">
+      <div class="modal-header">
+        <h2 class="modal-title">Eliminar presupuesto</h2>
+        <button class="close-button" (click)="closeModalToDeleteBudget()">
+          <ion-icon name="close-outline"></ion-icon>
+        </button>
+      </div>
+
+      <div class="modal-body" style="padding: 10px;">
+        <div>
+          <label class="form-label" style="margin-bottom: 0px">¿Estás seguro que deseas eliminar este presupuesto?</label>
+        </div>
+      </div>
+
+      <ion-button color="tertiary" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="deleteBudget(dataBudgetToDelete)">
+        Sí
+      </ion-button>
+      <ion-button color="danger" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="closeModalToDeleteBudget()">
+        No
+      </ion-button>
+
     </div>
   </div>
 </ion-content>

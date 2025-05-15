@@ -6,6 +6,7 @@ export interface Budget {
     amount: number;
     iconoCategoria?: string;
     montoFormateado?: string;
+    docId?: string;
 }
 
 export interface User {
