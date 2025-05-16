@@ -3,30 +3,30 @@
     <!-- Tarjetas de ingresos y gastos -->
     <div class="grid grid-cols-2 gap-4">
       <div class="block income">
-        <h5 class="text-2xl text-center mb-2">
+        <h5 class="text-1xl text-center mb-2">
           Ingresos
         </h5>
-        <p class="amount positive text-center">
-          ${{ calcularIngresos() }}
+        <p class="amount positive text-center" style="font-size: 25px;">
+          {{ calcularIngresos() }}
         </p>
       </div>
       <div class="block expense">
-        <h5 class="text-2xl text-center mb-2">
+        <h5 class="text-1xl text-center mb-2">
           Gastos
         </h5>
-        <p class="amount negative text-center">
-          ${{ calcularGastos() }}
+        <p class="amount negative text-center" style="font-size: 25px;">
+          {{ calcularGastos() }}
         </p>
       </div>
     </div>
 
     <!-- Balance -->
     <div class="block balance">
-      <h5 class="text-2xl text-center mb-2">
+      <h5 class="text-1xl text-center mb-2">
         Balance
       </h5>
-      <p class="amount balance text-center">
-        ${{ calcularSaldo() }}
+      <p class="amount balance text-center" style="font-size: 25px;">
+        {{ calcularSaldo() }}
       </p>
     </div>
 <!-- Cuentas de ahorro -->
@@ -69,15 +69,15 @@
               'negative': transaction.type === 'gasto'
             }"
           >
-            {{ transaction.type === "ingreso" ? "+" : "-" }} ${{
-              transaction.amount
+            {{
+              transaction.formattedAmount
             }}
           </span>
         </div>
 
         <!-- Mensaje cuando no hay transacciones -->
         <div
-          *ngIf="transactions.length === 0"
+          *ngIf="transaction.length === 0"
           class="empty-state"
         >
           No hay transacciones registradas

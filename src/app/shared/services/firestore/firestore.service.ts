@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDocs, getDoc, writeBatch, QuerySnapshot, deleteDoc, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, getDoc, deleteDoc, updateDoc } from '@angular/fire/firestore';
 import { Comuna, User, Transaction, Category, Budget, Bank, SavingAccount } from '../../models/interfaces';
 
 @Injectable({
@@ -23,6 +23,18 @@ export class FirestoreService {
       }
     });
     return comunas;
+  }
+
+  async getGenericDocument (path: string, subPath? : string){
+  const collectionRef = doc(this.firestore, `${path}/${subPath}`)
+  const snapshot = await getDoc(collectionRef);
+    return snapshot;
+  }
+
+  async getCollectionInUsers (userUID: string, path: string){
+    const collectionRef = collection(this.firestore, `users/${userUID}/${path}`)
+    const snapshot = await getDocs(collectionRef);
+    return snapshot;
   }
 
   async createTransaction(
@@ -76,22 +88,6 @@ export class FirestoreService {
     }
   }
 
-  async getTransactions(userId: string): Promise<Transaction[]> {
-    const transactionsRef = collection(this.firestore, `users/${userId}/transactions`);
-    const docSnap = await getDocs(transactionsRef);
-
-    const transactions: Transaction[] = [];
-    docSnap.forEach((doc)=> {
-      const data = doc.data();
-
-      const date = data['date']?.toDate() || new Date();
-      transactions.push({id: doc.id, ...data, date: date } as Transaction);
-    }); 
-    console.log(transactions)
-    return transactions   
-
-  }
-
   async createBudget(userId: string, budget : Budget ){
     const collectionBudget = collection(this.firestore,`users/${userId}/budget`);
     const docRef = await addDoc(collectionBudget, {
@@ -100,25 +96,6 @@ export class FirestoreService {
 
     return docRef.id
   }
-
-  async getBudget(uid: string): Promise<Budget[]> {
-    const collectionBudget = collection(this.firestore, `users/${uid}/budget`);
-    const allBudgets = await getDocs(collectionBudget);
-    let budget: Budget[] = [];
-    
-    allBudgets.docs.forEach((doc) => {
-      const data = doc.data();
-      if (data["budget"]) {
-        budget.push({
-          id: data["budget"].id,
-          categoryId: data["budget"].categoryId,
-          amount: data["budget"].amount,
-          docId: doc.id,
-        });
-      }
-    });
-    return budget;
-}
 
   async getBanks(): Promise <Bank[]> {
     const collectionBank = collection(this.firestore, "banks");
@@ -143,23 +120,6 @@ export class FirestoreService {
 
     await updateDoc(accountRef, {id: accountRef.id});
     return accountRef.id;
-  }
-
-  async getSavingAccounts(userId: string): Promise <SavingAccount[]>{
-    const accountCollection = collection(this.firestore, `users/${userId}/saving_accounts`);
-    const accountRef = await getDocs(accountCollection);
-
-    const accounts: SavingAccount[] = [];
-    accountRef.forEach((doc)=> {
-      const data = doc.data();
-      console.log('Firestore ID:', doc.id, 'Campo id:', data['id']);
-
-      const date = data['date']?.toDate() || new Date();
-      accounts.push({id: doc.id, ...data, date:date} as SavingAccount);
-    });
-    console.log(accounts)
-    return accounts
-
   }
 
   async deleteSavingAccount(userId: string, cuenta: SavingAccount) {
@@ -190,6 +150,5 @@ export class FirestoreService {
     console.log(budget.docId)
     await deleteDoc(budgetRef);
   }
-
 
 }

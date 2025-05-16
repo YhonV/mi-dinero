@@ -23,7 +23,7 @@ export default class HomeComponent  implements OnInit {
   monto: number= 0;
   categoriaSeleccionada: string = '';
   descripcion: string = '';
-  transactions: Transaction[] = [];
+  transaction: Transaction[] = [];
   categoriasIngreso: Category[] = [];
   categoriasGasto: Category[] = [];
   uid: string = '';
@@ -35,7 +35,7 @@ export default class HomeComponent  implements OnInit {
   userData: User | null = null
   currentPage: number = 1;
   itemsPerPage: number = 5;
-  
+  formattedAmount : string = '';
   constructor() {
     addIcons({
       cashOutline,
@@ -72,10 +72,24 @@ export default class HomeComponent  implements OnInit {
 
   async loadTransactions(){
     if (this.uid){
-      const rawTransactions = await this._firestore.getTransactions(this.uid);
-      this.transactions = rawTransactions.map(transaction => {
+      // const rawTransactions = await this._firestore.getTransactions(this.uid);
+      const genericsTransactions = await this._firestore.getCollectionInUsers(this.uid, 'transactions')
+      const transactions: Transaction[] = [];
+      genericsTransactions.forEach((doc)=> {
+        const data = doc.data();
+
+        const date = data['date']?.toDate() || new Date();
+        transactions.push({id: doc.id, ...data, date: date } as Transaction);
+      }); 
+
+      this.transaction = transactions.map(transaction => {
         let iconoCategoria: string;
-  
+        
+      const formattedAmount = this._utils.currencyFormatter({
+          currency: "CLP",
+          value: transaction.amount
+        })
+        console.log(formattedAmount)
         if (transaction.type === 'ingreso'){
           const category = this.categoriasIngreso.find(cat => cat.nombre === transaction.categoryId);
           iconoCategoria = category?.icono ?? 'default-icon';
@@ -86,7 +100,8 @@ export default class HomeComponent  implements OnInit {
         
         return {
           ...transaction,
-          categoryIcon: iconoCategoria
+          categoryIcon: iconoCategoria,
+          formattedAmount // solo para mostrar en el front
         };
       });
     }
@@ -110,7 +125,8 @@ export default class HomeComponent  implements OnInit {
 
     if (this.tipoSeleccionado === 'gasto'){
       const saldoActual = this.calcularSaldo();
-      if (this.monto > saldoActual){
+      const saldoActualLimpio = saldoActual.replace(/[^0-9.-]+/g, "");
+      if (this.monto > parseInt(saldoActualLimpio)){
         toast.error('❌ No puedes gastar más de lo que tienes. Tu saldo actual es: $' + saldoActual);        
         return;
       }
@@ -134,29 +150,43 @@ export default class HomeComponent  implements OnInit {
 
 
   get sortedTransactions(): Transaction[]{
-    return this.transactions.slice().sort((a, b) => {
+    return this.transaction.slice().sort((a, b) => {
       return new Date(b.date).getTime() - new Date(a.date).getTime();
     })
   }
 
-  calcularIngresos(): number{
-    return this.transactions.reduce((total, t) =>
+  calcularIngresos(): string{
+    const totalIngresos = this.transaction.reduce((total, t) =>
       t.type === "ingreso" ? total + t.amount : total, 0);
+
+    return this._utils.currencyFormatter({
+      currency: "CLP",
+      value: totalIngresos
+    })
   }
 
-  calcularGastos(): number {
-    return this.transactions.reduce((total, t) =>
+  calcularGastos(): string {
+    const totalGastos = this.transaction.reduce((total, t) =>
       t.type === "gasto" ? total + t.amount : total, 0);
+
+    return this._utils.currencyFormatter({
+      currency: "CLP",
+      value: totalGastos
+    })
   }
 
 
-  calcularSaldo(): number {
-    return this.transactions.reduce((saldo, t) =>
+  calcularSaldo(): string {
+    const totalSaldo = this.transaction.reduce((saldo, t) =>
       t.type === "ingreso" ? saldo + t.amount : saldo - t.amount, 0);
+    return this._utils.currencyFormatter({
+      currency: "CLP",
+      value: totalSaldo
+    })
   }
 
   getPageCount(): number {
-    return Math.ceil(this.transactions.length / this.itemsPerPage);
+    return Math.ceil(this.transaction.length / this.itemsPerPage);
   }
 
   // Función para generar el array de paginación (1, 2, ..., n)

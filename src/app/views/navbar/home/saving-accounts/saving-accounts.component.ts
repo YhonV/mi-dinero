@@ -60,7 +60,16 @@ export default class SavingAccountsComponent  implements OnInit {
 
   async loadAccounts(){
     if (this.uid){
-      const accounts = await this._firestore.getSavingAccounts(this.uid);
+      const genericAccounts = await this._firestore.getCollectionInUsers(this.uid, "saving_accounts")
+      const accounts: SavingAccount[] = [];
+      genericAccounts.forEach((doc)=> {
+        const data = doc.data();
+        console.log('Firestore ID:', doc.id, 'Campo id:', data['id']);
+
+        const date = data['date']?.toDate() || new Date();
+        accounts.push({id: doc.id, ...data, date:date} as SavingAccount);
+      });
+
       this.cuentas = Array.isArray(accounts) ? accounts : [];
     }
     else {

@@ -33,4 +33,13 @@ export class UtilsService {
   async navigateToWithoutLoading(path: string){
     this._navCtrl.navigateRoot(path);
   }  
+
+  currencyFormatter({ currency, value }: { currency: string; value: number }) {
+    const formatter = new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      minimumFractionDigits: 0,
+      currency
+    }) 
+    return formatter.format(value)
+  }
 }

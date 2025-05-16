@@ -10,7 +10,8 @@ import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
 import { Auth } from '@angular/fire/auth';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-
+import { doc } from '@angular/fire/firestore';
+import { UtilsService } from 'src/app/shared/utils/utils.service';
 Chart.register(...registerables);
 @Component({
   selector: 'app-budget',
@@ -23,8 +24,8 @@ export default class BudgetComponent  implements OnInit {
   @ViewChild('chartCanvas') private chartCanvas!: ElementRef;
   private chart: Chart | undefined;
   private _firestore = inject(FirestoreService);
-  private _auth = inject(Auth)
-
+  private _auth = inject(Auth);
+  private _utils = inject(UtilsService);
   categoriasGasto: Category[] = [];
   uid: string = '';
   userData: User | null = null
@@ -78,24 +79,28 @@ export default class BudgetComponent  implements OnInit {
     })
   }
 
-  currencyFormatter({ currency, value }: { currency: string; value: number }) {
-    const formatter = new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      minimumFractionDigits: 0,
-      currency
-    }) 
-    return formatter.format(value)
-  }
-
   async loadBudgets(uid : string){
-    const allBudgets = await this._firestore.getBudget(uid);
+    const budgetsGeneric = await this._firestore.getCollectionInUsers(uid, 'budget');
+    let budgets: Budget[] = [];
     
-    this.budget = allBudgets.map(budget => {
+    budgetsGeneric.docs.forEach((doc) => {
+      const data = doc.data();
+      if (data["budget"]) {
+        budgets.push({
+          id: data["budget"].id,
+          categoryId: data["budget"].categoryId,
+          amount: data["budget"].amount,
+          docId: doc.id,
+        });
+      }
+    });
+
+    this.budget = budgets.map(budget => {
       let iconoCategoria: string;
       const category = this.categoriasGasto.find(cat => cat.nombre === budget.categoryId);
       iconoCategoria = category?.icono ?? 'default-icon';
 
-      const montoFormateado =  this.currencyFormatter({
+      const montoFormateado =  this._utils.currencyFormatter({
         currency: "CLP",
         value: budget.amount
       })
@@ -198,14 +203,6 @@ export default class BudgetComponent  implements OnInit {
     });
   }
 
-  openModal() {
-    this.isModalOpen = true;
-  }
-
-  closeModal() {
-    this.isModalOpen = false; 
-  }
-
   async saveBudget(){
     if(!this.amount || !this.categoriaSeleccionada){
       toast.error("¡¡ Todos los campos son requeridos !!");
@@ -224,28 +221,6 @@ export default class BudgetComponent  implements OnInit {
     this.ngOnInit();
     this.closeModal();
   }
-
-
-  openModalToEditBudget(selectedBudget : Budget){
-    this.dataBudgetToEdit = selectedBudget;
-    this.isModalToEditBudget = true;
-  }
-
-  closeModalToEditBudget(){
-    this.isModalToEditBudget = false;
-  }
-
-  openModalToDeleteBudget(selectedBudget : Budget){
-    this.dataBudgetToDelete = selectedBudget;
-    console.log(this.dataBudgetToDelete)
-    this.isModalToDeleteBudget = true;
-  }
-
-  closeModalToDeleteBudget(){
-    this.isModalToDeleteBudget = false;
-    this.dataBudgetToDelete = null!;
-  }
-
 
   async deleteBudget(selectedBudget : Budget){
     try{
@@ -272,6 +247,33 @@ export default class BudgetComponent  implements OnInit {
     } catch (e){
       toast.error("Error al editar")
     }
+  }
+
+  openModal() {
+    this.isModalOpen = true;
+  }
+
+  closeModal() {
+    this.isModalOpen = false; 
+  }
+  openModalToEditBudget(selectedBudget : Budget){
+    this.dataBudgetToEdit = selectedBudget;
+    this.isModalToEditBudget = true;
+  }
+
+  closeModalToEditBudget(){
+    this.isModalToEditBudget = false;
+  }
+
+  openModalToDeleteBudget(selectedBudget : Budget){
+    this.dataBudgetToDelete = selectedBudget;
+    console.log(this.dataBudgetToDelete)
+    this.isModalToDeleteBudget = true;
+  }
+
+  closeModalToDeleteBudget(){
+    this.isModalToDeleteBudget = false;
+    this.dataBudgetToDelete = null!;
   }
 
 }
