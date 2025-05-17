@@ -11,15 +11,14 @@
   --card-shadow: 0 10px 25px -5px rgba(140, 82, 255, 0.15);
 }
 
-ion-header {
-  background: transparent;
+/* Estilos para el header */
+ion-header ion-toolbar {
+  --background: var(--primary-color);
+  --color: white;
 }
 
-ion-toolbar {
-  --background: linear-gradient(135deg, #9f6cff 0%, #8c52ff 100%);
+ion-back-button {
   --color: white;
-  border-radius: 0 0 20px 20px;
-  padding-bottom: 10px;
 }
 
 ion-title {
@@ -153,22 +152,21 @@ ion-content {
 .add-account-button {
   display: flex;
   align-items: center;
-  background-color: var(--primary-color);
-  color: white;
+  background-color: var(--text-primary);
   border: none;
   border-radius: 12px;
   padding: 10px 16px;
   font-size: 14px;
-  font-weight: 600;
   cursor: pointer;
-  box-shadow: 0 4px 12px rgba(140, 82, 255, 0.25);
   transition: all 0.3s ease;
+  background-color: #f5f5f5;
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s;
 }
 
 .add-account-button:hover {
-  background-color: var(--primary-dark);
-  transform: translateY(-2px);
-  box-shadow: 0 6px 16px rgba(140, 82, 255, 0.3);
+  background-color: #ebebeb;
 }
 
 .add-account-button ion-icon {
@@ -214,11 +212,6 @@ ion-content {
   margin: 0 0 5px;
 }
 
-.account-bank {
-  font-size: 14px;
-  color: var(--text-secondary);
-  margin: 0;
-}
 
 .account-balance {
   border-top: 1px solid #f0f0f0;
@@ -267,27 +260,29 @@ ion-content {
 }
 
 .total-summary {
-  background: linear-gradient(135deg, #9f6cff 0%, #8c52ff 100%);
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
   border-radius: var(--card-radius);
   padding: 20px;
-  color: white;
+  color: #6a1b9a;
   margin-top: 20px;
   text-align: center;
-  box-shadow: 0 10px 20px rgba(140, 82, 255, 0.2);
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.05);
 }
 
 .total-label {
-  font-size: 16px;
-  opacity: 0.9;
-  margin: 0 0 10px;
+  font-size: 15px;
+  color: #888;
+  margin: 0 0 8px;
 }
 
 .total-amount {
-  font-size: 28px;
-  font-weight: 700;
+  font-size: 26px;
+  font-weight: 600;
+  color: var(--primary-color);
   margin: 0;
-  text-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
+
 
 /* Modal styles */
 .modal-overlay {
@@ -466,3 +461,75 @@ ion-content {
 .secondary-button:hover {
   background-color: #ebebeb;
 }
+
+/* Estilo para las tarjetas de cuentas */
+.account-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--shadow);
+  padding: 12px;
+  margin-bottom: 12px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  position: relative;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  overflow: hidden;
+  min-height: auto;
+  height: auto;
+}
+
+.account-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+/* Indicador de banco en el lateral izquierdo */
+.account-card::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  width: 4px;
+  background: var(--primary-color);
+}
+
+/* Ajustar el banco según el ID */
+.account-card[data-bank="Banco De Chile"]::before {
+  background: #00adef;
+}
+
+.account-card[data-bank="Banco Santander"]::before {
+  background: #ec0000;
+}
+
+.account-card[data-bank="Banco Estado"]::before {
+  background: #ffcc00;
+}
+
+.account-card[data-bank="Banco BCI"]::before {
+  background: #0039a6;
+}
+
+.account-card[data-bank="Banco Falabella"]::before {
+  background: #00a637;
+}
+
+.account-details {
+  margin-bottom: 0;
+}
+
+.account-name {
+  font-size: 15px;
+  font-weight: 600;
+  margin: 0 0 2px;
+  color: var(--text-primary);
+}
+
+.account-bank {
+  font-size: 12px;
+  color: var(--text-secondary);
+  margin: 0;
+}
+

@@ -7,6 +7,8 @@
     <ion-title>Mis cuentas de ahorro</ion-title>
   </ion-toolbar>
 </ion-header>
+
+
 <div class="empty-state-container" *ngIf="cuentas.length === 0">
     <!-- Ilustración de ahorro -->
     <div class="illustration-container">
@@ -85,16 +87,19 @@
 
 
 <!-- Vista cuando sí hay cuentas de ahorro -->
+
+
 <div class="accounts-container" *ngIf="cuentas.length > 0">
   <div class="accounts-header">
   <button class="add-account-button" (click)="openModal()">
     <ion-icon name="add-circle-outline"></ion-icon>
-    Agregar cuenta
+    Nueva cuenta
   </button>
 </div>
+
 <div class="accounts-list">
   <!-- Tarjeta para cada cuenta de ahorro -->
-  <div class="account-card" *ngFor="let cuenta of getSortedAccounts()">
+  <div class="account-card" *ngFor="let cuenta of getSortedAccounts()" [attr.data-bank]="cuenta.bankId">
     <div class="account-info">
       <div class="account-details">
         <h3 class="account-name">{{ cuenta.nombre }}</h3>
@@ -103,7 +108,7 @@
     </div>
     <div class="account-balance">
       <p class="balance-label">Saldo actual</p>
-      <h3 class="balance-amount">${{ cuenta.amount | number:'1.2-2' }}</h3>
+      <h3 class="balance-amount">${{ cuenta.amount | number:'1.0-0' }}</h3>
     </div>
     <div class="account-actions">
       <button class="action-icon-button" (click)="editAccount(cuenta)">
@@ -118,10 +123,11 @@
   <!-- Resumen total de las cuentas -->
   <div class="total-summary">
     <p class="total-label">Saldo total en ahorros:</p>
-    <h2 class="total-amount">${{ getTotalSavingAccounts() | number:'1.2-2' }}</h2>
+    <h2 class="total-amount">${{ getTotalSavingAccounts() | number:'1.0-0' }}</h2>
   </div>
 </div>
 </div>
+
 
 <!-- Modal -->
 <div
