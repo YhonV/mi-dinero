@@ -1,1 +1,86 @@
-<p>hola</p>
+<ion-content>
+  <ion-header>
+    <ion-toolbar>
+      <ion-buttons slot="start">
+        <ion-back-button defaultHref="/home"></ion-back-button>
+      </ion-buttons>
+      <ion-title>Mi Dinero</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <div class="content-wrapper">
+    <!-- Selector de tipo -->
+    <ion-card class="period-selector-card">
+      <ion-card-content>
+        <ion-segment
+        [(ngModel)]="tipo"
+          (ionChange)="onTipoChange($event.detail.value)">
+          <ion-segment-button value="gastos">
+            <ion-label>Gastos</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="ingresos">
+            <ion-label>Ingresos</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="comparativo">
+            <ion-label>Comparativo</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-card-content>
+
+      <ion-card-content>
+        <ion-segment
+        [(ngModel)]="periodo"
+          (ionChange)="onPeriodoChange($event.detail.value)">
+          <ion-segment-button value="semana">
+            <ion-label>Semanal</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="mes">
+            <ion-label>Mensual</ion-label>
+          </ion-segment-button>
+          <ion-segment-button value="anio">
+            <ion-label>Anual</ion-label>
+          </ion-segment-button>
+        </ion-segment>
+      </ion-card-content>
+    </ion-card>
+
+    <!-- Selector de período -->
+    <!-- <ion-card class="period-selector-card">
+      <ion-card-content>
+        <ion-select 
+          placeholder="Seleccionar período" 
+          [(ngModel)]="periodo" 
+          (ionChange)="onPeriodoChange($event)" 
+          interface="popover">
+          <ion-select-option value="semana">Última semana</ion-select-option>
+          <ion-select-option value="mes">Este mes</ion-select-option>
+          <ion-select-option value="anio">Este año</ion-select-option>
+        </ion-select>
+      </ion-card-content>
+    </ion-card> -->
+
+
+    <!-- Gráfico -->
+    <ion-card class="chart-card">
+      <ion-card-content>
+        <div *ngIf="loading" class="loading-container">
+          <ion-spinner name="dots" color="primary"></ion-spinner>
+          <p>Cargando gráfico...</p>
+        </div>
+        
+        <div *ngIf="!loading" class="chart-container">
+          <canvas 
+            #chartCanvas 
+            width="400" 
+            height="400"
+            style="max-height: 400px;">
+          </canvas>
+        </div>
+
+        <div *ngIf="!loading && !chart" class="no-data">
+          <p>No hay datos disponibles para el período seleccionado</p>
+        </div>
+      </ion-card-content>
+    </ion-card>
+  </div>
+</ion-content>

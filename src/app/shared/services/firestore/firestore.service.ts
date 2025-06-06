@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDocs, getDoc, deleteDoc, updateDoc } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, getDoc, deleteDoc, updateDoc, query, where, QuerySnapshot, DocumentData, Timestamp } from '@angular/fire/firestore';
 import { Comuna, User, Transaction, Category, Budget, Bank, SavingAccount } from '../../models/interfaces';
 
 @Injectable({
@@ -87,6 +87,184 @@ export class FirestoreService {
       return [];
     }
   }
+
+  // async getGastosCategoria(userId:string): Promise<{[categoryId: string]: number}> {
+  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+  //   const gastosQuery = query(transactionCollection, where('type', '==', 'gasto'));
+  //   const snapshot: QuerySnapshot<DocumentData> = await getDocs(gastosQuery);
+  //   const agregados: {[categoryId: string]: number} = {};
+
+  //   snapshot.forEach((docSnap) =>{
+  //     const data = docSnap.data() as Transaction;
+  //     const catId = data.categoryId;
+  //     const monto = data.amount;
+
+  //     if (catId && typeof monto === 'number'){
+  //       agregados[catId] = (agregados[catId] || 0) + monto
+  //     }
+  //   });
+  //   return agregados;
+  // }
+
+  async getGastosCategoria(userId:string, desde:Date, hasta:Date): Promise<{[categoryId: string]: number}> {
+    const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+    const gastosQuery = query(transactionCollection, where('type', '==', 'gasto'), where('date', '>=', desde), where('date', '<=', hasta));
+    const snapshot = await getDocs(gastosQuery);
+    const agregados: {[categoryId: string]: number} = {};
+
+    snapshot.forEach((docSnap)=> {
+      const data = docSnap.data() as Transaction;
+      const catId = data.categoryId;
+      const monto = data.amount;
+
+      if (catId && typeof monto === 'number'){
+        agregados[catId] = (agregados[catId] || 0) + monto
+      }
+    });
+    return agregados;
+  }
+
+  async getIngresosCategoria(userId:string, desde:Date, hasta:Date): Promise <{[categoryId: string]: number}> {
+    const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+    const ingresosQuery = query(transactionCollection, where('type', '==', 'ingreso'), where('date', '>=', desde), where('date', '<=', hasta));
+    const snapshot = await getDocs(ingresosQuery)
+    const agregados: {[categoryId: string]: number} = {};
+
+    snapshot.forEach((docSnap)=> {
+      const data = docSnap.data() as Transaction;
+      const catId = data.categoryId;
+      const monto = data.amount;
+
+      if (catId && typeof monto === 'number'){
+        agregados[catId] = (agregados[catId] || 0) + monto
+      }
+    });
+    return agregados;
+  }
+
+
+  normalizarFecha(fecha: any): string{
+    const fec = fecha instanceof Timestamp ? fecha.toDate() : new Date(fecha);
+    return fec.toISOString().split('T')[0];
+  }
+
+  
+
+  async getGastosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
+    const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+    const gastosQuery = query(
+      transactionCollection,
+      where('type', '==', 'gasto'),
+      where('date', '>=', desde),
+      where('date', '<=', hasta)
+    );
+
+    const snapshot = await getDocs(gastosQuery);
+    const agregados: { [fecha: string]: number } = {};
+
+    snapshot.forEach((docSnap)=> {
+      const data = docSnap.data() as Transaction;
+      const fecha = this.normalizarFecha(data.date);
+      const monto = data.amount;
+
+      if (fecha && typeof monto === 'number'){
+        agregados[fecha] = (agregados[fecha] || 0) + monto
+      }
+    });
+    return agregados;
+  }
+
+  async getIngresosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
+    const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+    const gastosQuery = query(
+      transactionCollection,
+      where('type', '==', 'ingreso'),
+      where('date', '>=', desde),
+      where('date', '<=', hasta)
+    );
+
+    const snapshot = await getDocs(gastosQuery);
+    const agregados: { [fecha: string]: number } = {};
+
+    snapshot.forEach((docSnap)=> {
+      const data = docSnap.data() as Transaction;
+      const fecha = this.normalizarFecha(data.date);
+      const monto = data.amount;
+
+      if (fecha && typeof monto === 'number'){
+        agregados[fecha] = (agregados[fecha] || 0) + monto
+      }
+    });
+    return agregados;
+  }
+
+  // async getGastosPeriodo(userId:string, desde:Date, hasta:Date): Promise<{[date: string]: number}> {
+  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+  //   const gastosQuery = query(transactionCollection, where('type', '==', 'gasto'), where('date', '>=', desde), where('date', '<=', hasta));
+  //   const snapshot = await getDocs(gastosQuery);
+  //   const agregados: {[date: string]: number} = {};
+
+  //   snapshot.forEach((docSnap)=> {
+  //     const data = docSnap.data() as Transaction;
+  //     let dateObj: Date;
+  //     if (data.date && typeof data.date === 'object' && 'seconds' in data.date) {
+  //       // Es un Timestamp de Firestore
+  //       dateObj = new Date((data.date as any).seconds * 1000);
+  //     } else if (data.date instanceof Date) {
+  //       dateObj = data.date;
+  //     } else {
+  //       // Manejo de error
+  //       return;
+  //     }
+
+  //     const dateKey = dateObj.toISOString().split('T')[0];
+  //     const monto = data.amount;
+
+  //     if (dateKey && typeof monto === 'number'){
+  //       agregados[dateObj.toDateString()] = (agregados[dateObj.toDateString()] || 0) + monto;
+  //     }
+  //   });
+  //   return agregados;
+  // }
+
+  // async getIngresosPeriodo(userId:string, desde:Date, hasta:Date): Promise<{[date: string]: number}> {
+  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+  //   const gastosQuery = query(transactionCollection, where('type', '==', 'ingreso'), where('date', '>=', desde), where('date', '<=', hasta));
+  //   const snapshot = await getDocs(gastosQuery);
+  //   const agregados: {[date: string]: number} = {};
+
+  //   snapshot.forEach((docSnap)=> {
+  //     const data = docSnap.data() as Transaction;
+  //     let dateObj: Date;
+  //     if (data.date && typeof data.date === 'object' && 'seconds' in data.date) {
+  //       // Es un Timestamp de Firestore
+  //       dateObj = new Date((data.date as any).seconds * 1000);
+  //     } else if (data.date instanceof Date) {
+  //       dateObj = data.date;
+  //     } else {
+  //       // Manejo de error
+  //       return;
+  //     }
+
+  //     const dateKey = dateObj.toISOString().split('T')[0];
+  //     const monto = data.amount;
+
+  //     if (dateKey && typeof monto === 'number'){
+  //       agregados[dateObj.toDateString()] = (agregados[dateObj.toDateString()] || 0) + monto;
+  //     }
+  //   });
+  //   return agregados;
+  // }
+
+
+
+  // async getGastosDataPoints(userId: string): Promise<Array<{ label: string; y:number}>>{
+  //   const gastosPorCategoria = await this.getGastosCategoria(userId);
+  //   return Object.entries(gastosPorCategoria).map(([categoryId, total]) => ({
+  //     label: categoryId,
+  //     y: total
+  //   }));
+  // }
 
   async createBudget(userId: string, budget : Budget ){
     const collectionBudget = collection(this.firestore,`users/${userId}/budget`);
