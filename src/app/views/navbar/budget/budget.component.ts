@@ -12,6 +12,7 @@ import { Auth } from '@angular/fire/auth';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { doc } from '@angular/fire/firestore';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 Chart.register(...registerables);
 @Component({
   selector: 'app-budget',
@@ -39,7 +40,7 @@ export default class BudgetComponent  {
   isLoading: boolean = true;
   dataBudgetToEdit !: Budget;
   dataBudgetToDelete !: Budget;
-  constructor() { 
+  constructor(private userService: UserService) { 
     addIcons({
       trendingUpOutline, 
       addOutline, 
@@ -62,21 +63,36 @@ export default class BudgetComponent  {
   }
 
   async ionViewWillEnter() {
-    this.isLoading = true;
-    this.categoriasGasto = await this._firestore.getCategoriesGastos()
+      this.isLoading = true;
+      await this.loadGastos();
 
-    this._auth.onAuthStateChanged(async user => {
-      if(user){
-        this.uid = user.uid;
-        this.userData = await this._firestore.getUser(user["uid"]);
-        await this.loadBudgets(this.uid);
-        this.isLoading = false;
-      } else{
-        console.log("no user");
-        this.userData = null;  
-        this.isLoading = false;
+      try {
+          await this.userService.waitForAuth();
+          
+          if (this.userService.isAuthenticated()) {
+              this.userData = await this._firestore.getUser(this.userService.getUid());
+              this.uid = this.userService.getUid();
+              await this.loadBudgets(this.uid);
+          } else {
+              console.log("No user authenticated");
+              this.userData = null;
+          }
+      } catch (error) {
+          console.error("Error loading user data:", error);
+      } finally {
+          this.isLoading = false;
       }
-    })
+  }
+
+  private async loadGastos(){
+    const cachedGastos = sessionStorage.getItem('categoriasGasto');
+    if (!cachedGastos) {
+      const catGastos = await this._firestore.getCategoriesGastos()
+      sessionStorage.setItem('categoriasGasto', JSON.stringify(catGastos));
+      this.categoriasGasto = catGastos;
+    } else {
+      this.categoriasGasto = JSON.parse(cachedGastos);
+    }
   }
 
   async loadBudgets(uid : string){

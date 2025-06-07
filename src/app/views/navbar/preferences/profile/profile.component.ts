@@ -36,6 +36,7 @@ import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -70,7 +71,7 @@ export default class ProfileComponent implements OnInit {
   uid : string = '';
   direcciones: Comuna[]=[];
 
-  constructor() {
+  constructor(private userService: UserService) {
     addIcons({
       saveOutline,
       star,
@@ -84,46 +85,61 @@ export default class ProfileComponent implements OnInit {
   }
 
   async ngOnInit() {
-    this.direcciones = await this._firestore.getDirecciones();
     const loading = await this._utils.loadingSpinner();
     await loading.present();
-    this._auth.onAuthStateChanged(async user => {
-      if(user){
-        this.userData = await this._firestore.getUser(user["uid"]);
-        this.uid = user["uid"];
-        await loading.dismiss();
-      } else{
-        console.log("no user");
-        this.userData = null;  
+    try {
+        this.loadDirecciones()
+        await this.userService.waitForAuth();
+
+        if (this.userService.isAuthenticated()) {
+          this.userData = this.userService.getUser();
+          this.uid = this.userService.getUid();
+          await loading.dismiss();
+        } else {
+          console.log("No user authenticated");
+          this.userData = null;
+        }
+      } catch(error) {
+        console.error("Error loading data:", error);
       }
-    }) 
   }
 
+  private async loadDirecciones() {
+    const cacheDirecciones = sessionStorage.getItem('direcciones');
+      if (cacheDirecciones) {
+        this.direcciones = JSON.parse(cacheDirecciones);
+      } else {
+        this.direcciones = await this._firestore.getDirecciones();
+        sessionStorage.setItem('direcciones', JSON.stringify(this.direcciones));
+      }
+  }
+
+
+
+  getRegionesUnicas(): string[] {
+    const regiones = this.direcciones.map((direccion) => direccion.region);
+    return [...new Set(regiones)].sort();
+  }
+
+  getComunasOfRegiones(region: string | null | undefined): Comuna[] {
+    if (!region) return [];
+    return this.direcciones.filter((direccion) => direccion.region === region);
+  }
+
+modoEditar(){
+  this.editar = !this.editar;
+  toast.message(" ✏️ Ahora puedes editar tus datos ")
+}
+
+guardarCambios(){
+  this.editar = false;
   
-    getRegionesUnicas(): string[] {
-      const regiones = this.direcciones.map((direccion) => direccion.region);
-      return [...new Set(regiones)].sort();
-    }
-  
-    getComunasOfRegiones(region: string | null | undefined): Comuna[] {
-      if (!region) return [];
-      return this.direcciones.filter((direccion) => direccion.region === region);
-    }
-
-  modoEditar(){
-    this.editar = !this.editar;
-    toast.message(" ✏️ Ahora puedes editar tus datos ")
+  if (!this.userData || !this.userData.username || !this.userData.region || !this.userData.comuna){
+    toast.warning("Debes completar todos los campos")
+    this.editar = true
+    return
   }
-
-  guardarCambios(){
-    this.editar = false;
-    
-    if (!this.userData || !this.userData.username || !this.userData.region || !this.userData.comuna){
-      toast.warning("Debes completar todos los campos")
-      this.editar = true
-      return
-    }
-      this._authService.editUser(this.uid, this.userData.username, this.userData.region, this.userData.comuna);
-      toast.success("Datos actualizados correctamente")
-    } 
-  }
+    this._authService.editUser(this.uid, this.userData.username, this.userData.region, this.userData.comuna);
+    toast.success("Datos actualizados correctamente")
+  } 
+}

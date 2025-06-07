@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import {IonHeader, IonTitle, IonButtons, IonBackButton, IonToolbar, IonContent, IonIcon, IonButton} from '@ionic/angular/standalone';
-import {createOutline, trashOutline, addCircleOutline} from 'ionicons/icons';
+import {createOutline, trashOutline, addCircleOutline, checkmarkCircleOutline} from 'ionicons/icons';
 import { CommonModule } from '@angular/common';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { Bank, SavingAccount, User } from 'src/app/shared/models/interfaces';
@@ -9,6 +9,7 @@ import { toast } from 'ngx-sonner';
 import { Auth } from '@angular/fire/auth';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
+import { UserService } from 'src/app/shared/services/user/user.service';
 
 
 @Component({
@@ -17,10 +18,9 @@ import { addIcons } from 'ionicons';
   styleUrls: ['./saving-accounts.component.scss'],
   imports: [FormsModule, CommonModule, IonHeader, IonTitle, IonButtons, IonBackButton, IonToolbar, IonContent, IonIcon, IonButton]
 })
-export default class SavingAccountsComponent  implements OnInit {
+export default class SavingAccountsComponent implements OnInit {
   private _utils = inject(UtilsService)
   private _firestore = inject(FirestoreService)
-  private _auth = inject(Auth)
   
   uid: string = '';
   userData: User | null = null
@@ -35,27 +35,38 @@ export default class SavingAccountsComponent  implements OnInit {
   isModalToDeleteSaving : boolean = false;
   dataSavingToDelete !: SavingAccount;
 
-  constructor() {
+  constructor(private userService: UserService) {
     addIcons({
       createOutline,
       trashOutline,
-      addCircleOutline
+      addCircleOutline,
+      checkmarkCircleOutline
       });
    }
 
   async ngOnInit() {
-    this.bancos = await this._firestore.getBanks()
-    
-    this._auth.onAuthStateChanged(async user => {
-      if(user){
-        this.uid = user.uid;
-        this.userData = await this._firestore.getUser(user["uid"]);
-        this.loadAccounts();
-      } else{
-        console.log("no user");
-        this.userData = null;  
+      try {
+        const cachedBanks = sessionStorage.getItem('banks');
+        if (cachedBanks) {
+          this.bancos = JSON.parse(cachedBanks);
+        } else {
+          this.bancos = await this._firestore.getBanks();
+          sessionStorage.setItem('banks', JSON.stringify(this.bancos));
+        }
+
+        await this.userService.waitForAuth();
+
+        if (this.userService.isAuthenticated()) {
+          this.userData = this.userService.getUser();
+          this.uid = this.userService.getUid();
+          await this.loadAccounts();
+        } else {
+          console.log("No user authenticated");
+          this.userData = null;
+        }
+      } catch(error) {
+        console.error("Error loading data:", error);
       }
-    })
   }
 
   async loadAccounts(){

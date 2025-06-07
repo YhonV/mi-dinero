@@ -10,6 +10,7 @@ import { addIcons } from 'ionicons';
 import { cashOutline, fastFoodOutline, carOutline, homeOutline, filmOutline, bulbOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline } from 'ionicons/icons';
 import { toast } from 'ngx-sonner';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
+import { UserService } from 'src/app/shared/services/user/user.service';
 
 @Component({
   selector: 'app-home',
@@ -17,7 +18,7 @@ import { UtilsService } from 'src/app/shared/utils/utils.service';
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
-export default class HomeComponent  implements OnInit {
+export class HomeComponent  implements OnInit {
   isModalOpen: boolean = false;
   tipoSeleccionado: 'ingreso' | 'gasto' = 'ingreso';
   monto: number= 0;
@@ -37,7 +38,8 @@ export default class HomeComponent  implements OnInit {
   itemsPerPage: number = 5;
   formattedAmount : string = '';
   presupuestosActuales: { categoryId: string; amount: number; }[] = [];
-  constructor() {
+
+  constructor(private userService: UserService) {
     addIcons({
       cashOutline,
       fastFoodOutline,
@@ -55,25 +57,39 @@ export default class HomeComponent  implements OnInit {
   }
 
   async ngOnInit() {  
-    const [catGastos, catIngresos] = await Promise.all([
-      this._firestore.getCategoriesGastos(),
-      this._firestore.getCategoriesIngresos()
-    ]);
-    this.categoriasGasto = catGastos;
-    this.categoriasIngreso = catIngresos;
+    await this.loadCategories();
 
-    this._auth.onAuthStateChanged(async user => {
-      if(user){
-        this.uid = user.uid;
-        this.loadBudgets(this.uid);
-        this.userData = await this._firestore.getUser(user["uid"]);
-        this.loadTransactions();
-      } else{
-        console.log("no user");
-        this.userData = null;  
-      }
-    })
+    await this.userService.waitForAuth();
+
+     if (this.userService.isAuthenticated()) {
+      this.userData = this.userService.getUser();
+      this.uid = this.userService.getUid();
+      
+      await Promise.all([
+        this.loadTransactions(),
+        this.loadBudgets(this.uid)
+      ]);
+    }
   }
+
+  private async loadCategories() {
+    const cachedGastos = sessionStorage.getItem('categoriasGasto');
+    const cachedIngresos = sessionStorage.getItem('categoriasIngreso');
+
+    if (!cachedIngresos || !cachedGastos) {
+      const [catGastos, catIngresos] = await Promise.all([
+        this._firestore.getCategoriesGastos(),
+        this._firestore.getCategoriesIngresos()
+      ]);
+      sessionStorage.setItem('categoriasGasto', JSON.stringify(catGastos));
+      sessionStorage.setItem('categoriasIngreso', JSON.stringify(catIngresos));
+      this.categoriasGasto = catGastos;
+      this.categoriasIngreso = catIngresos;
+    } else {
+      this.categoriasGasto = JSON.parse(cachedGastos);
+      this.categoriasIngreso = JSON.parse(cachedIngresos);
+    }
+}
 
   async loadBudgets(uid : string){
       const budgetsGeneric = await this._firestore.getCollectionInUsers(uid, 'budget');
@@ -179,14 +195,18 @@ export default class HomeComponent  implements OnInit {
       categoryId: this.categoriaSeleccionada,
       date: new Date()
     }
-    await this._firestore.createTransaction(this.uid, transaction)
-    await this.loadBudgets(this.uid); 
-    await this.loadTransactions();
-    
+
     toast.success('✅ Transacción creada exitosamente')
+    this.closeModal()
+    
+    await this._firestore.createTransaction(this.uid, transaction);
+    await Promise.all([
+      this.loadBudgets(this.uid),
+      this.loadTransactions()
+    ]);
+    
     this.monto = 0;
     this.categoriaSeleccionada = ''
-    this.closeModal()
   }
 
 

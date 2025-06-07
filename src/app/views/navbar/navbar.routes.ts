@@ -8,7 +8,7 @@ export default [
         children: [
             {
                 path: 'home',
-                loadComponent: () => import('./home/home.component').then(m => m.default)
+                loadComponent: () => import('./home/home.component').then(m => m.HomeComponent)
             },
             {
                 path: 'dashboard',
