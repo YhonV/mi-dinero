@@ -19,7 +19,7 @@ Chart.register(...registerables);
   styleUrls: ['./budget.component.scss'],
   imports: [FormsModule, IonContent, IonButton, IonIcon, IonItem, IonInput, CommonModule]
 })
-export default class BudgetComponent  implements OnInit {
+export default class BudgetComponent  {
 
   @ViewChild('chartCanvas') private chartCanvas!: ElementRef;
   private chart: Chart | undefined;
@@ -61,7 +61,7 @@ export default class BudgetComponent  implements OnInit {
       closeOutline })
   }
 
-  async ngOnInit() {
+  async ionViewWillEnter() {
     this.isLoading = true;
     this.categoriasGasto = await this._firestore.getCategoriesGastos()
 
@@ -218,7 +218,7 @@ export default class BudgetComponent  implements OnInit {
     this.categoriaSeleccionada = '';
     this.amount = 0;
     toast.success("Presupuesto guardado exitosamente")
-    this.ngOnInit();
+    this.ionViewWillEnter();
     this.closeModal();
   }
 
@@ -227,7 +227,7 @@ export default class BudgetComponent  implements OnInit {
       await this._firestore.deleteBudget(selectedBudget, this.uid);
       toast.success("Presupuesto eliminado correctamente")
       this.closeModalToDeleteBudget();
-      this.ngOnInit();
+      this.ionViewWillEnter();
     }catch(error){
       toast.error("Error al eliminar presupuesto " + error)
       console.log(error);
@@ -243,7 +243,7 @@ export default class BudgetComponent  implements OnInit {
       await this._firestore.editBudget(selectedBudget, this.uid);
       toast.success("Presupuesto actualizado correctamente");
       this.closeModalToEditBudget();
-      this.ngOnInit();
+      this.ionViewWillEnter();
     } catch (e){
       toast.error("Error al editar")
     }

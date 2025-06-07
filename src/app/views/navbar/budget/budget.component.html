@@ -62,11 +62,6 @@
         </div>
       </div>
       
-      <!-- Chart container -->
-      <div class="chart-container">
-        <canvas #chartCanvas></canvas>
-      </div>
-      
       <!-- Budget summary cards -->
       <div class="budget-summary" *ngFor="let item of budget; let  i =index">
         <div class="summary-card">
@@ -92,6 +87,12 @@
           </div>
         </div>
       </div>
+
+      <!-- Chart container -->
+      <div class="chart-container">
+        <canvas #chartCanvas></canvas>
+      </div>
+      
       
       <!-- Budget tips -->
       <div class="tips-section">

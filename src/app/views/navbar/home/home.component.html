@@ -21,14 +21,24 @@
     </div>
 
     <!-- Balance -->
-    <div class="block balance">
-      <h5 class="text-1xl text-center mb-2">
-        Balance
-      </h5>
-      <p class="amount balance text-center" style="font-size: 25px;">
-        {{ calcularSaldo() }}
-      </p>
-    </div>
+    <div class="grid grid-cols-2 gap-4">
+      <div class="block balance">
+        <h5 class="text-1xl text-center mb-2">
+          Balance
+        </h5>
+        <p class="amount balance text-center" style="font-size: 25px;">
+          {{ calcularSaldo() }}
+        </p>
+      </div>
+      <div class="block balance">
+        <h5 class="text-1xl text-center mb-2">
+          Prespuesto
+        </h5>
+        <p class="amount balance text-center" style="font-size: 25px;">
+          $0.00
+        </p>
+      </div>
+      </div>
 <!-- Cuentas de ahorro -->
 <div class="savings-access-button" (click)="navigateTo('/home/saving-accounts')">
   <div class="savings-icon">

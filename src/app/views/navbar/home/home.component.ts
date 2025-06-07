@@ -36,7 +36,7 @@ export default class HomeComponent  implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   formattedAmount : string = '';
-  presupuestosActuales: string[] = [];
+  presupuestosActuales: { categoryId: string; amount: number; }[] = [];
   constructor() {
     addIcons({
       cashOutline,
@@ -55,8 +55,13 @@ export default class HomeComponent  implements OnInit {
   }
 
   async ngOnInit() {  
-    this.categoriasGasto = await this._firestore.getCategoriesGastos()
-    this.categoriasIngreso = await this._firestore.getCategoriesIngresos()
+    const [catGastos, catIngresos] = await Promise.all([
+      this._firestore.getCategoriesGastos(),
+      this._firestore.getCategoriesIngresos()
+    ]);
+    this.categoriasGasto = catGastos;
+    this.categoriasIngreso = catIngresos;
+
     this._auth.onAuthStateChanged(async user => {
       if(user){
         this.uid = user.uid;
@@ -87,12 +92,15 @@ export default class HomeComponent  implements OnInit {
           });
         }
       });
-      this.presupuestosActuales = budgets.map((categoria => categoria.categoryId))
+
+      this.presupuestosActuales = budgets.map(budget => ({
+        categoryId: budget.categoryId,
+        amount: budget.amount
+      }))
     }
 
   async loadTransactions(){
     if (this.uid){
-      // const rawTransactions = await this._firestore.getTransactions(this.uid);
       const genericsTransactions = await this._firestore.getCollectionInUsers(this.uid, 'transactions')
       const transactions: Transaction[] = [];
       genericsTransactions.forEach((doc)=> {
@@ -143,8 +151,19 @@ export default class HomeComponent  implements OnInit {
     }
 
     if (this.tipoSeleccionado === 'gasto'){
-      if (this.presupuestosActuales.includes(this.categoriaSeleccionada)) {
-        
+      const presupuestoActual = this.presupuestosActuales.find(p => p.categoryId === this.categoriaSeleccionada);
+
+      if (presupuestoActual){
+        if (this.monto > presupuestoActual.amount) {
+          toast.error(`❌ El gasto excede el presupuesto disponible para ${this.categoriaSeleccionada} (${this._utils.currencyFormatter({currency: "CLP", value: presupuestoActual.amount})})`);
+          return;
+        }
+        presupuestoActual.amount -= this.monto;
+        const budgetDoc = await this._firestore.getCollectionInUsers(this.uid, 'budget');
+        const docToUpdate = budgetDoc.docs.find(doc => doc.data()["budget"]?.categoryId === this.categoriaSeleccionada);
+        if (docToUpdate) {
+          await this._firestore.updateBudget(this.uid, docToUpdate.id, presupuestoActual.amount);
+        }
       }
       const saldoActual = this.calcularSaldo();
       const saldoActualLimpio = saldoActual.replace(/[^0-9.-]+/g, "");
@@ -162,9 +181,10 @@ export default class HomeComponent  implements OnInit {
       date: new Date()
     }
     await this._firestore.createTransaction(this.uid, transaction)
-    toast.success('✅ Transacción creada exitosamente')
-
+    await this.loadBudgets(this.uid); 
     await this.loadTransactions();
+    
+    toast.success('✅ Transacción creada exitosamente')
     this.monto = 0;
     this.categoriaSeleccionada = ''
     this.closeModal()
