@@ -73,7 +73,6 @@ export default class HomeComponent  implements OnInit {
         this.userData = null;  
       }
     })
-
   }
 
   async loadBudgets(uid : string){
