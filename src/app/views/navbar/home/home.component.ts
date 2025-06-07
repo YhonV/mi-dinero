@@ -1,7 +1,7 @@
 import { Component, inject, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { Transaction, Category, User } from 'src/app/shared/models/interfaces';
+import { Transaction, Category, User, Budget } from 'src/app/shared/models/interfaces';
 import { Router } from '@angular/router';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { Auth } from '@angular/fire/auth';
@@ -36,6 +36,7 @@ export default class HomeComponent  implements OnInit {
   currentPage: number = 1;
   itemsPerPage: number = 5;
   formattedAmount : string = '';
+  presupuestosActuales: string[] = [];
   constructor() {
     addIcons({
       cashOutline,
@@ -56,10 +57,10 @@ export default class HomeComponent  implements OnInit {
   async ngOnInit() {  
     this.categoriasGasto = await this._firestore.getCategoriesGastos()
     this.categoriasIngreso = await this._firestore.getCategoriesIngresos()
-
     this._auth.onAuthStateChanged(async user => {
       if(user){
         this.uid = user.uid;
+        this.loadBudgets(this.uid);
         this.userData = await this._firestore.getUser(user["uid"]);
         this.loadTransactions();
       } else{
@@ -70,6 +71,25 @@ export default class HomeComponent  implements OnInit {
 
   }
 
+  async loadBudgets(uid : string){
+      const budgetsGeneric = await this._firestore.getCollectionInUsers(uid, 'budget');
+      let budgets: Budget[] = [];
+      
+      budgetsGeneric.docs.forEach((doc) => {
+        const data = doc.data();
+        if (data["budget"]) {
+          
+          budgets.push({
+            id: data["budget"].id,
+            categoryId: data["budget"].categoryId,
+            amount: data["budget"].amount,
+            docId: doc.id,
+          });
+        }
+      });
+      this.presupuestosActuales = budgets.map((categoria => categoria.categoryId))
+    }
+
   async loadTransactions(){
     if (this.uid){
       // const rawTransactions = await this._firestore.getTransactions(this.uid);
@@ -77,7 +97,6 @@ export default class HomeComponent  implements OnInit {
       const transactions: Transaction[] = [];
       genericsTransactions.forEach((doc)=> {
         const data = doc.data();
-
         const date = data['date']?.toDate() || new Date();
         transactions.push({id: doc.id, ...data, date: date } as Transaction);
       }); 
@@ -89,7 +108,7 @@ export default class HomeComponent  implements OnInit {
           currency: "CLP",
           value: transaction.amount
         })
-        console.log(formattedAmount)
+
         if (transaction.type === 'ingreso'){
           const category = this.categoriasIngreso.find(cat => cat.nombre === transaction.categoryId);
           iconoCategoria = category?.icono ?? 'default-icon';
@@ -124,6 +143,9 @@ export default class HomeComponent  implements OnInit {
     }
 
     if (this.tipoSeleccionado === 'gasto'){
+      if (this.presupuestosActuales.includes(this.categoriaSeleccionada)) {
+        
+      }
       const saldoActual = this.calcularSaldo();
       const saldoActualLimpio = saldoActual.replace(/[^0-9.-]+/g, "");
       if (this.monto > parseInt(saldoActualLimpio)){

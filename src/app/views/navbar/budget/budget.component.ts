@@ -267,7 +267,6 @@ export default class BudgetComponent  implements OnInit {
 
   openModalToDeleteBudget(selectedBudget : Budget){
     this.dataBudgetToDelete = selectedBudget;
-    console.log(this.dataBudgetToDelete)
     this.isModalToDeleteBudget = true;
   }
 

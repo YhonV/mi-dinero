@@ -316,7 +316,6 @@ export class FirestoreService {
   }
 
   async editBudget(newBudget : Budget, uid: string){
-    console.log(newBudget.docId)
     await updateDoc(doc(this.firestore, `users/${uid}/budget/${newBudget.docId}`),{
       "budget.amount": newBudget.amount,
       "budget.categoryId": newBudget.categoryId
@@ -325,7 +324,6 @@ export class FirestoreService {
 
   async deleteBudget(budget: Budget, userId: string) {
     const budgetRef = doc(this.firestore, `users/${userId}/budget/${budget.docId}`);
-    console.log(budget.docId)
     await deleteDoc(budgetRef);
   }
 

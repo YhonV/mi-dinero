@@ -64,7 +64,6 @@ export default class SavingAccountsComponent  implements OnInit {
       const accounts: SavingAccount[] = [];
       genericAccounts.forEach((doc)=> {
         const data = doc.data();
-        console.log('Firestore ID:', doc.id, 'Campo id:', data['id']);
 
         const date = data['date']?.toDate() || new Date();
         accounts.push({id: doc.id, ...data, date:date} as SavingAccount);
