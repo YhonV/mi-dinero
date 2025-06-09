@@ -59,6 +59,7 @@ export interface Transaction {
     date: Date;
     categoryIcon?: string;
     formattedAmount?: string;
+    docId?: string;
   }
 
 export interface SavingAccount {

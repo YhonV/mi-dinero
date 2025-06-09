@@ -23,6 +23,12 @@ ion-content {
   --background: var(--background-color);
 }
 
+ion-item {
+  --inner-border-width: 0;
+  --border-width: 0;
+  --border-style: none;
+}
+
 /* Contenedor principal */
 .max-w-md {
   padding: 20px;
@@ -324,6 +330,30 @@ ion-content {
   cursor: pointer;
   transition: all 0.3s ease;
 }
+
+.delete-button {
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  border: none;
+  background-color: var(--primary-color);
+  color: white;
+  background-color: rgba(205, 14, 14, 0.775);
+  box-shadow: 0 4px 16px rgba(246, 52, 52, 0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.button-group {
+  display: flex;
+  gap: 8px; 
+  justify-content: center;
+  align-items: center;    
+}
+
 
 .add-button:hover {
   transform: translateY(-3px) scale(1.05);

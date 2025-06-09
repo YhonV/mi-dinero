@@ -473,6 +473,7 @@ ion-content {
   flex-direction: row;
   align-items: center;
   position: relative;
+  justify-content: space-between;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
   overflow: hidden;
   min-height: auto;

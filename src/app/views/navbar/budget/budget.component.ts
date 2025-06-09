@@ -13,6 +13,8 @@ import ChartDataLabels from 'chartjs-plugin-datalabels';
 import { doc } from '@angular/fire/firestore';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
+import { HomeService } from 'src/app/shared/services/home/home.service';
+import { BudgetService } from 'src/app/shared/services/budget/budget.service';
 Chart.register(...registerables);
 @Component({
   selector: 'app-budget',
@@ -25,8 +27,8 @@ export default class BudgetComponent  {
   @ViewChild('chartCanvas') private chartCanvas!: ElementRef;
   private chart: Chart | undefined;
   private _firestore = inject(FirestoreService);
-  private _auth = inject(Auth);
   private _utils = inject(UtilsService);
+  saldo: number = 0;
   categoriasGasto: Category[] = [];
   uid: string = '';
   userData: User | null = null
@@ -40,7 +42,11 @@ export default class BudgetComponent  {
   isLoading: boolean = true;
   dataBudgetToEdit !: Budget;
   dataBudgetToDelete !: Budget;
-  constructor(private userService: UserService) { 
+
+  constructor(
+    private userService: UserService,
+    private homeService: HomeService,
+    private budgetService: BudgetService) { 
     addIcons({
       trendingUpOutline, 
       addOutline, 
@@ -65,7 +71,9 @@ export default class BudgetComponent  {
   async ionViewWillEnter() {
       this.isLoading = true;
       await this.loadGastos();
-
+      this.homeService.getSaldo().subscribe(saldo => {
+        this.saldo = saldo;
+      });
       try {
           await this.userService.waitForAuth();
           
@@ -225,6 +233,11 @@ export default class BudgetComponent  {
       return;
     }
 
+    if (this.amount > this.saldo){
+      toast.error("¡No puedes crear un presupuesto mayor a tu saldo!")
+      return;
+    }
+
     const budget : Budget = {
     id: new Date().getTime(),
     categoryId: this.categoriaSeleccionada,
@@ -257,6 +270,7 @@ export default class BudgetComponent  {
         return;
       }
       await this._firestore.editBudget(selectedBudget, this.uid);
+      this.budgetService.notificarCambio(); 
       toast.success("Presupuesto actualizado correctamente");
       this.closeModalToEditBudget();
       this.ionViewWillEnter();

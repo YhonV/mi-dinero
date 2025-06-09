@@ -11,7 +11,6 @@ export class UtilsService {
 
   loadingSpinner(){
     return this.loadingCtrl.create({
-      // message: 'Cargando...',
       spinner: 'crescent'
     });
   }

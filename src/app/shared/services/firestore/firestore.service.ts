@@ -299,4 +299,9 @@ export class FirestoreService {
     });
 }
 
+  deleteTransaction(uid: string, docId: string) {
+    const path = `users/${uid}/transactions/${docId}`;
+    return deleteDoc(doc(this.firestore, path));
+  }
+
 }

@@ -23,6 +23,7 @@ export default class PreferencesComponent  implements OnInit {
   ngOnInit() {}
 
   async signOut(){
+    sessionStorage.removeItem("userData");
     return await this._auth.signOutFirebase();
   }
 

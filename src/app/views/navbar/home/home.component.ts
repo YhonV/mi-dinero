@@ -4,17 +4,18 @@ import { FormsModule } from '@angular/forms';
 import { Transaction, Category, User, Budget } from 'src/app/shared/models/interfaces';
 import { Router } from '@angular/router';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { Auth } from '@angular/fire/auth';
-import { IonIcon, IonContent }   from '@ionic/angular/standalone';
+import { IonIcon, IonContent, IonItemSliding, IonItemOptions, IonItemOption, IonItem }   from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { cashOutline, fastFoodOutline, carOutline, homeOutline, filmOutline, bulbOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline } from 'ionicons/icons';
+import { cashOutline, fastFoodOutline, carOutline, homeOutline, filmOutline, bulbOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline, close, trashOutline} from 'ionicons/icons';
 import { toast } from 'ngx-sonner';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
+import { HomeService } from 'src/app/shared/services/home/home.service';
+import { BudgetService } from 'src/app/shared/services/budget/budget.service';
 
 @Component({
   selector: 'app-home',
-  imports: [CommonModule, FormsModule, IonIcon, IonContent],
+  imports: [CommonModule, FormsModule, IonIcon, IonContent, IonItemSliding, IonItemOptions, IonItemOption, IonItem],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
 })
@@ -32,14 +33,17 @@ export class HomeComponent  implements OnInit {
   private _firestore = inject(FirestoreService); 
   private _utils = inject(UtilsService) 
   router = inject(Router);
-  private _auth = inject(Auth)
   userData: User | null = null
   currentPage: number = 1;
   itemsPerPage: number = 5;
   formattedAmount : string = '';
-  presupuestosActuales: { categoryId: string; amount: number; }[] = [];
+  presupuestosActuales: Budget[] = [];
+  showConfirmDelete = false;
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private homeService: HomeService,
+    private budgetService: BudgetService) {
     addIcons({
       cashOutline,
       fastFoodOutline,
@@ -52,13 +56,17 @@ export class HomeComponent  implements OnInit {
       schoolOutline, 
       barChartOutline, 
       cartOutline, 
-      giftOutline
+      giftOutline,
+      close,
+      trashOutline
     })
   }
 
   async ngOnInit() {  
-    await this.loadCategories();
+    const loading = await this._utils.loadingSpinner();
+    await loading.present();
 
+    await this.loadCategories();
     await this.userService.waitForAuth();
 
      if (this.userService.isAuthenticated()) {
@@ -69,7 +77,11 @@ export class HomeComponent  implements OnInit {
         this.loadTransactions(),
         this.loadBudgets(this.uid)
       ]);
+      await loading.dismiss();
     }
+    this.budgetService.presupuestoActualizado$.subscribe(() => {
+      this.loadBudgets(this.uid);
+    });
   }
 
   private async loadCategories() {
@@ -109,8 +121,10 @@ export class HomeComponent  implements OnInit {
       });
 
       this.presupuestosActuales = budgets.map(budget => ({
+        id: budget.id,
         categoryId: budget.categoryId,
-        amount: budget.amount
+        amount: budget.amount,
+        docId: budget.docId
       }))
     }
 
@@ -121,7 +135,12 @@ export class HomeComponent  implements OnInit {
       genericsTransactions.forEach((doc)=> {
         const data = doc.data();
         const date = data['date']?.toDate() || new Date();
-        transactions.push({id: doc.id, ...data, date: date } as Transaction);
+         transactions.push({
+          docId: doc.id,  // ID del documento en Firestore
+          id: data["id"],    // ID de la transacción
+          ...data, 
+          date: date 
+        } as Transaction);
       }); 
 
       this.transaction = transactions.map(transaction => {
@@ -139,7 +158,6 @@ export class HomeComponent  implements OnInit {
           const category = this.categoriasGasto.find(cat => cat.nombre === transaction.categoryId);
           iconoCategoria = category?.icono ?? 'default-icon';
         }
-        
         return {
           ...transaction,
           categoryIcon: iconoCategoria,
@@ -155,9 +173,23 @@ export class HomeComponent  implements OnInit {
   }
   closeModal() {
     this.isModalOpen = false; 
-     
   }
 
+  async eliminarTransaccion(transaction: Transaction): Promise<void> {
+    if (!transaction.docId) {
+      toast.error('❌ No se puede eliminar la transacción');
+      return;
+    }
+
+    try {
+      await this._firestore.deleteTransaction(this.uid, transaction.docId);
+      await this.loadTransactions();
+      toast.success('✅ Transacción eliminada exitosamente');
+    } catch (error) {
+      console.error('Error al eliminar:', error);
+      toast.error('❌ Error al eliminar la transacción');
+    }
+  }
  
   async guardarTransaccion(): Promise<void> {
     if (this.monto <= 0 || this.categoriaSeleccionada === '') {
@@ -167,13 +199,18 @@ export class HomeComponent  implements OnInit {
 
     if (this.tipoSeleccionado === 'gasto'){
       const presupuestoActual = this.presupuestosActuales.find(p => p.categoryId === this.categoriaSeleccionada);
-
+      console.log(presupuestoActual)
       if (presupuestoActual){
         if (this.monto > presupuestoActual.amount) {
           toast.error(`❌ El gasto excede el presupuesto disponible para ${this.categoriaSeleccionada} (${this._utils.currencyFormatter({currency: "CLP", value: presupuestoActual.amount})})`);
           return;
+        } else {
+          presupuestoActual.amount -= this.monto;
+          if(presupuestoActual.amount == 0) {
+            await this._firestore.deleteBudget(presupuestoActual, this.uid)
+            toast.info("El presupuesto quedó sin fondos, se procede a eliminar")
+          }
         }
-        presupuestoActual.amount -= this.monto;
         const budgetDoc = await this._firestore.getCollectionInUsers(this.uid, 'budget');
         const docToUpdate = budgetDoc.docs.find(doc => doc.data()["budget"]?.categoryId === this.categoriaSeleccionada);
         if (docToUpdate) {
@@ -237,14 +274,17 @@ export class HomeComponent  implements OnInit {
   }
 
 
-  calcularSaldo(): string {
-    const totalSaldo = this.transaction.reduce((saldo, t) =>
-      t.type === "ingreso" ? saldo + t.amount : saldo - t.amount, 0);
-    return this._utils.currencyFormatter({
-      currency: "CLP",
-      value: totalSaldo
-    })
-  }
+calcularSaldo(): string {
+  const totalSaldo = this.transaction.reduce((saldo, t) =>
+    t.type === "ingreso" ? saldo + t.amount : saldo - t.amount, 0);
+  const saldoFormateado = this._utils.currencyFormatter({
+    currency: "CLP",
+    value: totalSaldo
+  });
+  
+  this.homeService.updateSaldo(totalSaldo);
+  return saldoFormateado;
+}
 
   getPageCount(): number {
     return Math.ceil(this.transaction.length / this.itemsPerPage);
@@ -318,9 +358,5 @@ export class HomeComponent  implements OnInit {
   navigateTo(path: string) {
     this._utils.navigateToWithoutLoading(path);
   }
-  
-
-  
-
 
 }
