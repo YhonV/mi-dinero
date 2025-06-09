@@ -76,4 +76,143 @@ ion-content {
     padding: 24px;
   }
 }
+.max-w-md {
+  padding: 10px;
+  margin: 0 auto;
+  
+}
+// .card-graf {
+//     padding: 5px;
+// }
 
+.modern-selector-card {
+  margin: 16px;
+  border-radius: 16px;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
+}
+
+.selector-group {
+  margin-bottom: 20px;
+  
+  &:last-child {
+    margin-bottom: 0;
+  }
+}
+
+.selector-label {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--ion-color-medium);
+  margin-bottom: 12px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.modern-segment {
+  background: var(--ion-color-light);
+  border-radius: 12px;
+  padding: 4px;
+  
+  ion-segment-button {
+    --background: transparent;
+    --background-checked: white;
+    --color: var(--ion-color-medium);
+    --color-checked: var(--primary-color);
+    border-radius: 8px;
+    margin: 2px;
+    transition: all 0.3s ease;
+    
+    &.segment-activated {
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+      transform: translateY(-1px);
+    }
+  }
+}
+
+// .chart-header {
+//     display: flex;
+//     justify-content: flex-end;
+//     margin-bottom: 0px;
+// }
+.chart-download-btn {
+    background: var(--ion-color-light);
+    border: none;
+    color: var(--primary-color);
+    padding: 10px 16px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: flex;
+    align-items: flex-start;
+    gap: 8px;
+    font-size: 12px;
+    font-weight: 500;
+    box-shadow: transparent;
+}
+
+.icon {
+    width: 16px;
+    height: 16px;
+    fill: currentColor;
+}
+
+.chart-download-btn:hover {
+    background:transparent;
+    transform: translateY(-1px);
+    box-shadow: 0 4px 12px rgba(102, 126, 234, 0.4);
+}
+
+.chart-placeholder {
+    height: 300px;
+    background: linear-gradient(45deg, #f8f9fa, #e9ecef);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: #666;
+    font-size: 16px;
+    position: relative;
+}
+
+.chart-container {
+  position: relative; // Needed for Chart.js responsiveness
+  height: 60vh;      // Example: Takes 60% of the viewport height. Adjust as needed.
+  // OR use min-height if you want it to grow but not be smaller than a certain point
+  // min-height: 300px; 
+  width: 100%;
+}
+
+.card-graf { 
+    padding: 10px;
+  display: flex;
+  flex-direction: column; // Arrange children vertically
+  height: 100%; // Ensure the card content takes full height
+}
+
+.chart-header {
+  // Ensure the header does not take up too much space
+  margin-bottom: 5px; // Add some space below the export button
+  display: flex;
+  justify-content: flex-end;
+
+}
+
+.card-analisis {
+    padding: 15x;
+}
+
+.loading-overlay {
+  position: absolute; /* Position it relative to .card-graf or .chart-card */
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(255, 255, 255, 0.8); /* Semi-transparent white overlay */
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  z-index: 10; /* Ensure it's on top of the chart */
+}

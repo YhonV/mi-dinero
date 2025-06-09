@@ -88,40 +88,50 @@ export class FirestoreService {
     }
   }
 
-  async getGastosCategoria(userId:string, desde:Date, hasta:Date): Promise<{[categoryId: string]: number}> {
-    const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
-    const gastosQuery = query(transactionCollection, where('type', '==', 'gasto'), where('date', '>=', desde), where('date', '<=', hasta));
-    const snapshot = await getDocs(gastosQuery);
-    const agregados: {[categoryId: string]: number} = {};
+  // async getGastosCategoria(userId:string, desde:Date, hasta:Date): Promise<{[categoryId: string]: number}> {
+  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+  //   const gastosQuery = query(transactionCollection, where('type', '==', 'gasto'), where('date', '>=', desde), where('date', '<=', hasta));
+  //   const snapshot = await getDocs(gastosQuery);
+  //   const agregados: {[categoryId: string]: number} = {};
 
-    snapshot.forEach((docSnap)=> {
-      const data = docSnap.data() as Transaction;
-      const catId = data.categoryId;
-      const monto = data.amount;
+  //   snapshot.forEach((docSnap)=> {
+  //     const data = docSnap.data() as Transaction;
+  //     const catId = data.categoryId;
+  //     const monto = data.amount;
 
-      if (catId && typeof monto === 'number'){
-        agregados[catId] = (agregados[catId] || 0) + monto
-      }
-    });
-    return agregados;
-  }
+  //     if (catId && typeof monto === 'number'){
+  //       agregados[catId] = (agregados[catId] || 0) + monto
+  //     }
+  //   });
+  //   return agregados;
+  // }
 
-  async getIngresosCategoria(userId:string, desde:Date, hasta:Date): Promise <{[categoryId: string]: number}> {
+  async getIngresosAgrupados(userId:string, desde:Date, hasta:Date): Promise <{
+    porCategoria: { [catId: string]: number },
+    porFecha: { [fecha: string]: number }}> {
     const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
     const ingresosQuery = query(transactionCollection, where('type', '==', 'ingreso'), where('date', '>=', desde), where('date', '<=', hasta));
     const snapshot = await getDocs(ingresosQuery)
-    const agregados: {[categoryId: string]: number} = {};
+    const porCategoria: { [catId: string]: number } = {};
+    const porFecha: { [fecha: string]: number } = {};
 
     snapshot.forEach((docSnap)=> {
       const data = docSnap.data() as Transaction;
       const catId = data.categoryId;
+      const fecha = this.normalizarFecha(data.date);
       const monto = data.amount;
 
-      if (catId && typeof monto === 'number'){
-        agregados[catId] = (agregados[catId] || 0) + monto
-      }
+       // Por categoría total
+      porCategoria[catId] = (porCategoria[catId] || 0) + monto;
+
+      // Por fecha total
+      porFecha[fecha] = (porFecha[fecha] || 0) + monto;
+
     });
-    return agregados;
+    return {
+      porCategoria,
+      porFecha
+    };
   }
 
 
@@ -130,55 +140,95 @@ export class FirestoreService {
     return fec.toISOString().split('T')[0];
   }
 
+  async getGastosAgrupados(
+  userId: string,
+  desde: Date,
+  hasta: Date
+): Promise<{
+  porCategoria: { [catId: string]: number },
+  porFecha: { [fecha: string]: number },
+}> {
+  const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+  const gastosQuery = query(
+    transactionCollection,
+    where('type', '==', 'gasto'),
+    where('date', '>=', desde),
+    where('date', '<=', hasta)
+  );
+
+  const snapshot = await getDocs(gastosQuery);
+
+  const porCategoria: { [catId: string]: number } = {};
+  const porFecha: { [fecha: string]: number } = {};
+
+  snapshot.forEach((docSnap) => {
+    const data = docSnap.data() as Transaction;
+    const fecha = this.normalizarFecha(data.date);
+    const catId = data.categoryId || 'sin_categoria';
+    const monto = data.amount;
+
+    // Por categoría total
+    porCategoria[catId] = (porCategoria[catId] || 0) + monto;
+
+    // Por fecha total
+    porFecha[fecha] = (porFecha[fecha] || 0) + monto;
+  });
+
+  return {
+    porCategoria,
+    porFecha
+  };
+}
+
   
 
-  async getGastosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
-    const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
-    const gastosQuery = query(
-      transactionCollection,
-      where('type', '==', 'gasto'),
-      where('date', '>=', desde),
-      where('date', '<=', hasta)
-    );
+  // async getGastosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
+  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+  //   const gastosQuery = query(
+  //     transactionCollection,
+  //     where('type', '==', 'gasto'),
+  //     where('date', '>=', desde),
+  //     where('date', '<=', hasta)
+  //   );
 
-    const snapshot = await getDocs(gastosQuery);
-    const agregados: { [fecha: string]: number } = {};
+  //   const snapshot = await getDocs(gastosQuery);
+  //   const agregados: { [fecha: string]: number } = {};
 
-    snapshot.forEach((docSnap)=> {
-      const data = docSnap.data() as Transaction;
-      const fecha = this.normalizarFecha(data.date);
-      const monto = data.amount;
+  //   snapshot.forEach((docSnap)=> {
+  //     const data = docSnap.data() as Transaction;
+  //     const fecha = this.normalizarFecha(data.date);
+  //     const monto = data.amount;
 
-      if (fecha && typeof monto === 'number'){
-        agregados[fecha] = (agregados[fecha] || 0) + monto
-      }
-    });
-    return agregados;
-  }
+  //     if (fecha && typeof monto === 'number'){
+  //       agregados[fecha] = (agregados[fecha] || 0) + monto
+  //     }
+  //   });
+  //   return agregados;
+  // }
 
-  async getIngresosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
-    const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
-    const gastosQuery = query(
-      transactionCollection,
-      where('type', '==', 'ingreso'),
-      where('date', '>=', desde),
-      where('date', '<=', hasta)
-    );
+  // async getIngresosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
+  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
+  //   const gastosQuery = query(
+  //     transactionCollection,
+  //     where('type', '==', 'ingreso'),
+  //     where('date', '>=', desde),
+  //     where('date', '<=', hasta)
+  //   );
 
-    const snapshot = await getDocs(gastosQuery);
-    const agregados: { [fecha: string]: number } = {};
+  //   const snapshot = await getDocs(gastosQuery);
+  //   const agregados: { [fecha: string]: number } = {};
 
-    snapshot.forEach((docSnap)=> {
-      const data = docSnap.data() as Transaction;
-      const fecha = this.normalizarFecha(data.date);
-      const monto = data.amount;
+  //   snapshot.forEach((docSnap)=> {
+  //     const data = docSnap.data() as Transaction;
+  //     const fecha = this.normalizarFecha(data.date);
+  //     const monto = data.amount;
 
-      if (fecha && typeof monto === 'number'){
-        agregados[fecha] = (agregados[fecha] || 0) + monto
-      }
-    });
-    return agregados;
-  }
+  //     if (fecha && typeof monto === 'number'){
+  //       agregados[fecha] = (agregados[fecha] || 0) + monto
+  //     }
+  //   });
+  //   return agregados;
+  // }
 
 
   async createBudget(userId: string, budget : Budget ){
