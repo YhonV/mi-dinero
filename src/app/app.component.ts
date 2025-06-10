@@ -1,7 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { IonApp, IonRouterOutlet } from '@ionic/angular/standalone';
 import { NgxSonnerToaster } from 'ngx-sonner';
 import { FormsModule } from '@angular/forms';
+import { UserService } from './shared/services/user/user.service';
+import { UtilsService } from './shared/utils/utils.service';
 
 
 @Component({
@@ -9,7 +11,19 @@ import { FormsModule } from '@angular/forms';
   templateUrl: 'app.component.html',
   imports: [IonApp, IonRouterOutlet, NgxSonnerToaster, FormsModule],
 })
-export class AppComponent {
-  constructor() {}
+export class AppComponent implements OnInit{
+  constructor(private _utils: UtilsService, private userService: UserService) {}
 
+  async ngOnInit() {
+    try{
+      await this.userService.waitForAuth()
+      if (this.userService.isAuthenticated()) {
+          this._utils.navigateTo("/home")
+        } else {
+           this._utils.navigateTo("/auth/sign-in")
+        }
+    } catch(e){
+      console.log(e)
+    }
+  }
 }

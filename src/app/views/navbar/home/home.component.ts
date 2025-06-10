@@ -79,6 +79,7 @@ export class HomeComponent  implements OnInit {
       ]);
       await loading.dismiss();
     }
+    await loading.dismiss();
     this.budgetService.presupuestoActualizado$.subscribe(() => {
       this.loadBudgets(this.uid);
     });

@@ -2,6 +2,7 @@ import { inject, Injectable } from '@angular/core';
 import { User } from '../../models/interfaces';
 import { createUserWithEmailAndPassword, Auth, signInWithEmailAndPassword, sendPasswordResetEmail, signOut } from '@angular/fire/auth';
 import { setDoc, doc, Firestore, updateDoc } from '@angular/fire/firestore';
+import { Observable } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
