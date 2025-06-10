@@ -131,15 +131,16 @@ modoEditar(){
   toast.message(" ✏️ Ahora puedes editar tus datos ")
 }
 
-guardarCambios(){
-  this.editar = false;
-  
-  if (!this.userData || !this.userData.username || !this.userData.region || !this.userData.comuna){
-    toast.warning("Debes completar todos los campos")
-    this.editar = true
-    return
-  }
-    this._authService.editUser(this.uid, this.userData.username, this.userData.region, this.userData.comuna);
-    toast.success("Datos actualizados correctamente")
-  } 
+  async guardarCambios(){
+    this.editar = false;
+    
+    if (!this.userData || !this.userData.username || !this.userData.region || !this.userData.comuna){
+      toast.warning("Debes completar todos los campos")
+      this.editar = true
+      return
+    }
+      this._authService.editUser(this.uid, this.userData.username, this.userData.region, this.userData.comuna);
+      toast.success("Datos actualizados correctamente")
+      await this._firestore.createLog(this.uid, "Usuario actualiza sus datos", "Perfil")
+    } 
 }

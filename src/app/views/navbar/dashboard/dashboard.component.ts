@@ -400,6 +400,7 @@ export default class DashboardComponent implements OnInit, AfterViewInit, OnDest
       await addImageToPdf(this.resumenCanvas.nativeElement, 'Reporte Financiero: Comparativo', periodText);
 
       doc.save(`Reporte_Financiero_${this.periodo}_${new Date().toLocaleDateString('es-CL').replace(/\//g, '-')}.pdf`);
+      await this._firestore.createLog(this.uid, "Reporte descargado", "Dashboard")
 
     } catch (error) {
       console.error('Error generating PDF report:', error);

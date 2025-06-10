@@ -304,4 +304,15 @@ export class FirestoreService {
     return deleteDoc(doc(this.firestore, path));
   }
 
+  async createLog(userId: string, message: string, tipo: string) {
+    const logCollection = collection(this.firestore, 'logs'); 
+    await addDoc(logCollection, {
+      userId,
+      mensaje: message,
+      tipo,
+      fecha: new Date() 
+    });
+  }
+
+
 }
