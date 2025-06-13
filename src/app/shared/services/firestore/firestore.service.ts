@@ -1,6 +1,6 @@
 import { inject, Injectable } from '@angular/core';
 import { addDoc, collection, doc, Firestore, getDocs, getDoc, deleteDoc, updateDoc, query, where, QuerySnapshot, DocumentData, Timestamp } from '@angular/fire/firestore';
-import { Comuna, User, Transaction, Category, Budget, Bank, SavingAccount } from '../../models/interfaces';
+import { Comuna, User, Transaction, Category, Budget, Bank, SavingAccount, TipFinanciero, FAQ } from '../../models/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -35,6 +35,66 @@ export class FirestoreService {
     const collectionRef = collection(this.firestore, `users/${userUID}/${path}`)
     const snapshot = await getDocs(collectionRef);
     return snapshot;
+  }
+
+  async getGenericCollection<T>(collectionName: string): Promise<T[]> {
+    try {
+      const collectionRef = collection(this.firestore, `${collectionName}`);
+      const snapshot = await getDocs(collectionRef);
+      return snapshot.docs.map(doc => ({
+        id: doc.id,
+        ...doc.data()
+      })) as T[];
+    } catch (error) {
+      console.error('Error al obtener la colección:', error);
+      throw error;
+    }
+  }
+
+  async getTipsFinancieros(): Promise<TipFinanciero[]> {
+    try {
+      const cachedTips = sessionStorage.getItem('tips_financieros');
+      if (cachedTips) {
+        return JSON.parse(cachedTips);
+      }
+
+      const snapshot = await this.getGenericCollection<TipFinanciero>('tips_financieros');
+      const tips: TipFinanciero[] = [];
+      
+      snapshot.forEach((doc) => {
+        tips.push({
+          id: (doc as any).id,
+          ...(doc as any)
+        } as TipFinanciero);
+      });
+
+      sessionStorage.setItem('tips_financieros', JSON.stringify(tips));
+      return tips;
+    } catch (error) {
+      console.error('Error al obtener tips:', error);
+      throw error;
+    }
+  }
+
+  async getFAQs(): Promise<FAQ[]> {
+    try {
+      // Intentar obtener del caché primero
+      const cachedFAQs = sessionStorage.getItem('preguntas_frecuentes');
+      if (cachedFAQs) {
+        return JSON.parse(cachedFAQs);
+      }
+
+      // Si no está en caché, obtener de Firestore
+      const snapshot = await this.getGenericCollection<FAQ>('preguntas_frecuentes');
+      
+      // Guardar en caché
+      sessionStorage.setItem('preguntas_frecuentes', JSON.stringify(snapshot));
+      
+      return snapshot;
+    } catch (error) {
+      console.error('Error al obtener preguntas frecuentes:', error);
+      throw error;
+    }
   }
 
   async createTransaction(

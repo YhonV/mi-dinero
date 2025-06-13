@@ -4,13 +4,11 @@ import { Chart, registerables } from 'chart.js';
 import { CommonModule } from '@angular/common';
 import { addIcons } from 'ionicons';
 import { trendingUpOutline, addOutline, filmOutline, carOutline, bulbOutline, restaurantOutline, fastFoodOutline, cashOutline, homeOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline, createOutline, trashOutline, closeOutline } from 'ionicons/icons'; 
-import { Budget, Category, User } from 'src/app/shared/models/interfaces';
+import { Budget, Category, TipFinanciero, User } from 'src/app/shared/models/interfaces';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { FormsModule } from '@angular/forms';
 import { toast } from 'ngx-sonner';
-import { Auth } from '@angular/fire/auth';
 import ChartDataLabels from 'chartjs-plugin-datalabels';
-import { doc } from '@angular/fire/firestore';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { HomeService } from 'src/app/shared/services/home/home.service';
@@ -42,6 +40,9 @@ export default class BudgetComponent  {
   isLoading: boolean = true;
   dataBudgetToEdit !: Budget;
   dataBudgetToDelete !: Budget;
+  private tips: TipFinanciero[] = [];
+  currentTip?: TipFinanciero;
+  private tipInterval?: any;
 
   constructor(
     private userService: UserService,
@@ -80,6 +81,7 @@ export default class BudgetComponent  {
           if (this.userService.isAuthenticated()) {
               this.userData = await this._firestore.getUser(this.userService.getUid());
               this.uid = this.userService.getUid();
+              await this.getTipsFinancieros()
               await this.loadBudgets(this.uid);
           } else {
               console.log("No user authenticated");
@@ -279,6 +281,31 @@ export default class BudgetComponent  {
     }
   }
 
+   async getTipsFinancieros() {
+    try {
+      if (this.tips.length === 0) {
+        this.tips = await this._firestore.getTipsFinancieros();
+      }
+      
+      this.showRandomTip();
+      
+      // Cambiar tip cada 30 segundos
+      this.tipInterval = setInterval(() => {
+        this.showRandomTip();
+      }, 180000); // 30 segundos
+      
+    } catch (e) {
+      toast.error("Error al obtener los tips");
+    }
+  }
+
+  private showRandomTip() {
+    if (this.tips.length > 0) {
+      const randomIndex = Math.floor(Math.random() * this.tips.length);
+      this.currentTip = this.tips[randomIndex];
+    }
+  }
+
   openModal() {
     this.isModalOpen = true;
   }
@@ -305,4 +332,9 @@ export default class BudgetComponent  {
     this.dataBudgetToDelete = null!;
   }
 
+  ngOnDestroy() {
+    if (this.tipInterval) {
+      clearInterval(this.tipInterval);
+    }
+  }
 }
