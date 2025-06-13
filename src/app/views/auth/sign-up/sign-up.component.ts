@@ -84,6 +84,9 @@ export default class SignUpComponent implements OnInit {
       );
 
       this.navigateTo('/home');
+      
+      await this._firestoreService.createLog(uid, 'Usuario registrado', 'registro');
+
     } catch (error) {
       let message = 'Ocurrió un error durante el inicio de sesión';
       if (error instanceof FirebaseError) {

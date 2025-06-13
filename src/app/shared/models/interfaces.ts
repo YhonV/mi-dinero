@@ -74,4 +74,14 @@ export interface Bank {
     codigo: string;
     nombre: string;
 }
-  
+
+export interface TipFinanciero {
+  id: string;
+  title: string;
+}
+
+export interface FAQ {
+  id: string;
+  question: string;
+  answer: string;
+}

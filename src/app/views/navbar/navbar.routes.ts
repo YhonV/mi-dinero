@@ -53,4 +53,8 @@ export default [
         path: 'home/saving-accounts',
         loadComponent:() => import('./home/saving-accounts/saving-accounts.component').then(m => m.default)
     },
+    {
+        path: 'preferences/faq',
+        loadComponent: () => import('./preferences/faq/faq.component').then(m => m.FaqComponent)
+    },
 ] as Routes

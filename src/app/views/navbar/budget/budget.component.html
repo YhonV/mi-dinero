@@ -96,11 +96,11 @@
       
       
       <!-- Budget tips -->
-      <div class="tips-section">
+      <div class="tips-section" *ngIf="currentTip">
         <h3 class="tips-title">Consejos para mejorar tus finanzas</h3>
         <div class="tip-card">
           <ion-icon name="bulb-outline"></ion-icon>
-          <p>Considera ajustar tu presupuesto de entretenimiento para ahorrar más este mes.</p>
+          <p>{{currentTip.title}}</p>
         </div>
       </div>
     </div>
