@@ -45,11 +45,16 @@
     <ion-card class="chart-card">
       <ion-card-content class="card-graf">
         <div class="chart-header">
-          <button class="chart-download-btn" (click)="downloadPdfReport()">
+          <button class="chart-download-btn" (click)="descargarPdf()">
             <ion-icon class="icon" slot="start" name="download-outline"></ion-icon>
-            Exportar
+            Descargar
+          </button>
+          <button class="chart-download-btn" (click)="compartirPdf()">
+            <ion-icon class="icon" slot="start" name="share-social-outline"></ion-icon>
+            Compartir
           </button>
         </div>
+          
 
 
         <div [hidden]="!loading" class="loading-container">

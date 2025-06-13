@@ -31,9 +31,9 @@ ion-content {
 /* Configuración del header */
 .header-container {
   padding: 20px 16px;
+  padding-top: calc(20px + env(safe-area-inset-top));
   background-color: var(--background-color);
   border-radius: var(--border-radius);
-  margin-bottom: 16px;
   box-shadow: var(--item-shadow);
 }
 

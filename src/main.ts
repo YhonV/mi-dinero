@@ -19,7 +19,7 @@ import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 bootstrapApplication(AppComponent, {
   providers: [
     { provide: RouteReuseStrategy, useClass: IonicRouteStrategy },
-    provideIonicAngular(),
+    provideIonicAngular({ mode: 'ios' }),
     provideRouter(routes, withPreloading(PreloadAllModules)),
     provideFirebaseApp(() =>
       initializeApp({

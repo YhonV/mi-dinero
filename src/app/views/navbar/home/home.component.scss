@@ -32,6 +32,7 @@ ion-item {
 /* Contenedor principal */
 .max-w-md {
   padding: 20px;
+  padding-top: calc(20px + env(safe-area-inset-top));
   margin: 0 auto;
 }
 
@@ -661,5 +662,10 @@ ion-item {
   
   .savings-label {
     display: none;
+  }
+
+  ion-content {
+    --padding-start: 12px;
+    --padding-end: 12px;
   }
 }
