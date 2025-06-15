@@ -359,6 +359,11 @@ export class FirestoreService {
     });
 }
 
+  async deleteDocument(docId: string, path: string) {
+    const genericPath = doc(this.firestore, `${path}/${docId}`)
+    await deleteDoc(genericPath)
+  }
+
   deleteTransaction(uid: string, docId: string) {
     const path = `users/${uid}/transactions/${docId}`;
     return deleteDoc(doc(this.firestore, path));

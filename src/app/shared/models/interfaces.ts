@@ -88,9 +88,10 @@ export interface FAQ {
 }
 
 export interface Logs {
-    fecha: Date,
+    fecha: any,
     mensaje: string,
     tipo: string
+    fechaFormateada?: string; 
 }
 export interface ChangePassword {
     oldPassword: FormControl<string | null>;

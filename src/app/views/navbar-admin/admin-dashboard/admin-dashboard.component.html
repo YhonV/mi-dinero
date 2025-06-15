@@ -8,22 +8,28 @@
     </ion-segment-button>
   </ion-segment>
 
-  <div [ngSwitch]="selectedSegment">
+  <div [ngSwitch]="selectedSegment" class="segment-content">
     <div *ngSwitchCase="'usuarios'">
-      <!-- Contenido de usuarios -->
-        <div class="card-content" *ngFor="let user of this.userData">
-            <div class="info">
-                <div class="email-user">{{user.email}}</div>
-                <div class="region">{{user.region}}</div>
-            </div>
-            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+      <div class="card-content" *ngFor="let user of userData">
+        <div class="info">
+          <div class="email-user">{{ user.email }}</div>
+          <div class="region">{{ user.region }}</div>
         </div>
+        <ion-icon 
+          name="trash-outline" 
+          (click)="prepareDeleteUser(user)"
+        ></ion-icon>
+      </div>
     </div>
 
     <div *ngSwitchCase="'logs'">
-      <!-- Contenido de logs -->
-      <div class="ion-padding">
-        Contenido de logs
+      <div class="card-content" *ngFor="let log of logs">
+        <div class="info">
+          <div class="email-user">{{ log.tipo }}</div>
+          <div class="region">{{ log.mensaje }}</div>
+          <div class="fecha">{{ log.fechaFormateada }}</div>
+        </div>
+        <ion-icon name="trash-outline" (click)="prepareDeleteLog(log)"></ion-icon>
       </div>
     </div>
   </div>
