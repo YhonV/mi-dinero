@@ -15,6 +15,7 @@ export interface User {
     username?: string;
     comuna?: string;
     region?: string;
+    isAdmin?: false;
 }
 
 export interface FormFeedback {
@@ -86,6 +87,11 @@ export interface FAQ {
   answer: string;
 }
 
+export interface Logs {
+    fecha: Date,
+    mensaje: string,
+    tipo: string
+}
 export interface ChangePassword {
     oldPassword: FormControl<string | null>;
     newPassword: FormControl<string | null>;

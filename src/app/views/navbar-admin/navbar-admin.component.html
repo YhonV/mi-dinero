@@ -1,19 +1,9 @@
 <ion-router-outlet></ion-router-outlet>
-<ion-tabs *ngIf="!isAdmin">
+<ion-tabs>
   <ion-tab-bar color="light" slot="bottom">
     <ion-tab-button tab="home">
       <ion-icon name="home"></ion-icon>
       <ion-label>Inicio</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="dashboard">
-      <ion-icon name="stats-chart-outline"></ion-icon>
-      <ion-label>Gráficos</ion-label>
-    </ion-tab-button>
-
-    <ion-tab-button tab="budget">
-      <ion-icon name="wallet-outline"></ion-icon>
-      <ion-label>Presupuesto</ion-label>
     </ion-tab-button>
 
     <ion-tab-button tab="preferences">

@@ -1,0 +1,30 @@
+<ion-content>
+  <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+    <ion-segment-button value="usuarios">
+      <ion-label>Usuarios</ion-label>
+    </ion-segment-button>
+    <ion-segment-button value="logs">
+      <ion-label>Logs</ion-label>
+    </ion-segment-button>
+  </ion-segment>
+
+  <div [ngSwitch]="selectedSegment">
+    <div *ngSwitchCase="'usuarios'">
+      <!-- Contenido de usuarios -->
+        <div class="card-content" *ngFor="let user of this.userData">
+            <div class="info">
+                <div class="email-user">{{user.email}}</div>
+                <div class="region">{{user.region}}</div>
+            </div>
+            <ion-icon name="trash-outline" slot="icon-only"></ion-icon>
+        </div>
+    </div>
+
+    <div *ngSwitchCase="'logs'">
+      <!-- Contenido de logs -->
+      <div class="ion-padding">
+        Contenido de logs
+      </div>
+    </div>
+  </div>
+</ion-content>
