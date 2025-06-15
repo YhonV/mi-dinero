@@ -1,10 +1,12 @@
 import { Routes } from "@angular/router";
 import NavbarComponent from "./navbar.component";
+import { notAdminUserGuard } from "src/app/guards/not-admin-user.guard";
 
 export default [
     {
         path: '',
         component: NavbarComponent,
+        canActivateChild: [notAdminUserGuard],
         children: [
             {
                 path: 'home',

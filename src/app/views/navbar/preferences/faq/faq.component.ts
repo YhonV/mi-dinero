@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { IonContent, IonTitle, IonBackButton, IonButton, IonButtons, IonToolbar, IonHeader, IonAccordionGroup, IonAccordion, IonItem, IonLabel }from '@ionic/angular/standalone';
+import { IonContent, IonTitle, IonBackButton, IonButtons, IonToolbar, IonHeader, IonAccordionGroup, IonAccordion, IonItem, IonLabel }from '@ionic/angular/standalone';
 import { FAQ } from 'src/app/shared/models/interfaces';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { CommonModule } from '@angular/common';
@@ -8,7 +8,7 @@ import { CommonModule } from '@angular/common';
   selector: 'app-faq',
   templateUrl: './faq.component.html',
   styleUrls: ['./faq.component.scss'],
-  imports: [CommonModule,IonContent, IonTitle, IonBackButton, IonButton, IonButtons, IonToolbar, IonHeader, IonAccordionGroup, IonAccordion, IonItem, IonLabel]
+  imports: [CommonModule,IonContent, IonTitle, IonBackButton, IonButtons, IonToolbar, IonHeader, IonAccordionGroup, IonAccordion, IonItem, IonLabel]
 })
 export class FaqComponent implements OnInit {
   faqs: FAQ[] = [];

@@ -19,6 +19,7 @@ export class UserService {
           const cachedUser = sessionStorage.getItem('userData');
           if (cachedUser) {
             this.userData = JSON.parse(cachedUser);
+            console.log(cachedUser)
           } else {
             this.userData = await this._firestore.getUser(user.uid);
             sessionStorage.setItem('userData', JSON.stringify(this.userData));
@@ -55,4 +56,9 @@ export class UserService {
   isAuthenticated(): boolean {
     return !!this.userData;
   }
+
+  isAdmin(): boolean {
+    return !!this.userData?.isAdmin;
+  }
+
 }

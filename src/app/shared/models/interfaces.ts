@@ -15,6 +15,7 @@ export interface User {
     username?: string;
     comuna?: string;
     region?: string;
+    isAdmin?: false;
 }
 
 export interface FormFeedback {
@@ -84,4 +85,10 @@ export interface FAQ {
   id: string;
   question: string;
   answer: string;
+}
+
+export interface Logs {
+    fecha: Date,
+    mensaje: string,
+    tipo: string
 }
