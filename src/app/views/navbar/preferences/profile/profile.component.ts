@@ -27,7 +27,8 @@ import {
   mailOutline,
   personOutline,
   colorFilterOutline,
-  createOutline
+  createOutline,
+  personCircleOutline
 } from 'ionicons/icons';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { Auth } from '@angular/fire/auth';
@@ -79,7 +80,8 @@ export default class ProfileComponent implements OnInit {
       locationOutline,
       mailOutline,
       personOutline,
-      createOutline
+      createOutline,
+      personCircleOutline
     });
 
   }

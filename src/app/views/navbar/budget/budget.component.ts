@@ -37,7 +37,7 @@ export default class BudgetComponent  {
   categoriaSeleccionada: string = '';
   budget : Budget[] = []
   hasBudget : boolean = false
-  isLoading: boolean = true;
+  isLoading: boolean = false;
   dataBudgetToEdit !: Budget;
   dataBudgetToDelete !: Budget;
   private tips: TipFinanciero[] = [];

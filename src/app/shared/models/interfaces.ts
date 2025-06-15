@@ -92,3 +92,8 @@ export interface Logs {
     mensaje: string,
     tipo: string
 }
+export interface ChangePassword {
+    oldPassword: FormControl<string | null>;
+    newPassword: FormControl<string | null>;
+    confirmNewPass: FormControl<string | null>;
+}
