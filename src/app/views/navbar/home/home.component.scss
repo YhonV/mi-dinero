@@ -185,10 +185,15 @@ ion-item {
   background: linear-gradient(to right, #f8f9fa, #f0f4ff);
   padding: 10px;
   border-bottom: 1px solid #e9ecef;
+  justify-content: space-between;
+  display: flex;
+  align-items: center;
+  
 }
 
+
 .transactions-title {
-  font-size: 18px;
+  font-size: 16px;
   font-weight: 600;
   color: var(--text-color);
   margin: 0;
@@ -275,7 +280,7 @@ ion-item {
 .pagination-container {
   display: flex;
   align-items: center;
-  justify-content: space-between;
+  justify-content: center;
   padding: 16px 20px;
   background-color: #f8f9fa;
   border-top: 1px solid #e9ecef;
@@ -318,8 +323,8 @@ ion-item {
 }
 
 .add-button {
-  width: 48px;
-  height: 48px;
+  width: 40px;
+  height: 40px;
   border-radius: 50%;
   border: none;
   background-color: var(--primary-color);
