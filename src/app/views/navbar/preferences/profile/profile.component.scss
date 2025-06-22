@@ -60,6 +60,11 @@ ion-card-content {
   padding: 16px;
 }
 
+.max-w-md {
+  padding: 20px;
+  padding-top: calc(30px + env(safe-area-inset-top));
+  margin: 0 auto;
+}
 /* Items de perfil */
 .profile-item {
   --background: transparent;

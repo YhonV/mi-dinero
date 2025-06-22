@@ -10,13 +10,13 @@ import {
   hasEmailError,
   isRequired,
 } from 'src/app/shared/utils/validators.service';
-import { IonButton } from '@ionic/angular/standalone';
+import { IonButton, IonContent } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-sign-in',
   templateUrl: './sign-in.component.html',
   styleUrls: ['./sign-in.component.scss'],
-  imports: [ReactiveFormsModule, IonButton]
+  imports: [ReactiveFormsModule, IonButton, IonContent]
 })
 export default class SignInComponent {
 

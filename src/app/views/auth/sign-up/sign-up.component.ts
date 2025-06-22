@@ -11,12 +11,12 @@ import {
 import { firebaseErrors } from 'src/app/config/constants';
 import { FirebaseError } from '@angular/fire/app';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { IonButton } from '@ionic/angular/standalone';
+import { IonButton, IonContent } from '@ionic/angular/standalone';
 @Component({
   selector: 'app-sign-up',
   templateUrl: './sign-up.component.html',
   styleUrls: ['./sign-up.component.scss'],
-  imports: [ReactiveFormsModule, IonButton],
+  imports: [ReactiveFormsModule, IonButton, IonContent],
   providers: [AuthService],
 })
 export default class SignUpComponent implements OnInit {

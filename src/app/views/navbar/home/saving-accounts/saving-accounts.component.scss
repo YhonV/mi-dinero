@@ -14,8 +14,6 @@
 /* Estilos para el header */
 ion-header ion-toolbar {
   --background: var(--primary-color);
-  padding: 20px;
-  padding-top: calc(20px + env(safe-area-inset-top));
   --color: white;
 }
 
@@ -34,6 +32,12 @@ ion-back-button {
 
 ion-content {
   --background: #f9fafc;
+}
+
+.max-w-md {
+  padding: 20px;
+  padding-top: calc(30px + env(safe-area-inset-top));
+  margin: 0 auto;
 }
 
 /* Empty state */

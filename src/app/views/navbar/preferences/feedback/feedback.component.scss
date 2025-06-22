@@ -10,10 +10,6 @@
 /* Estilos generales */
 ion-content {
   --background: #f5f6fa;
-  --padding-start: 16px;
-  --padding-end: 16px;
-  --padding-top: 16px;
-  --padding-bottom: 16px;
 }
 
 /* Eliminar bordes y scroll visible */
@@ -36,6 +32,12 @@ ion-header ion-toolbar {
 
 ion-back-button {
   --color: white;
+}
+
+.max-w-md {
+  padding: 20px;
+  padding-top: calc(30px + env(safe-area-inset-top));
+  margin: 0 auto;
 }
 
 /* Estilos para el encabezado de contacto */

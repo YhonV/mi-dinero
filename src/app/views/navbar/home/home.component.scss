@@ -32,7 +32,7 @@ ion-item {
 /* Contenedor principal */
 .max-w-md {
   padding: 20px;
-  padding-top: calc(20px + env(safe-area-inset-top));
+  padding-top: calc(30px + env(safe-area-inset-top));
   margin: 0 auto;
 }
 
