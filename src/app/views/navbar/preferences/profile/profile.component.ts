@@ -26,7 +26,6 @@ import {
   locationOutline,
   mailOutline,
   personOutline,
-  colorFilterOutline,
   createOutline,
   personCircleOutline
 } from 'ionicons/icons';
@@ -38,6 +37,7 @@ import { CommonModule } from '@angular/common';
 import { toast } from 'ngx-sonner';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
+import { NavController } from '@ionic/angular';
 @Component({
   selector: 'app-profile',
   templateUrl: './profile.component.html',
@@ -64,7 +64,6 @@ import { UserService } from 'src/app/shared/services/user/user.service';
 })
 export default class ProfileComponent implements OnInit {
   private _firestore = inject(FirestoreService);
-  private _auth = inject(Auth);
   private _authService  = inject(AuthService)
   userData: User | null = null
   private _utils = inject(UtilsService);
@@ -72,7 +71,9 @@ export default class ProfileComponent implements OnInit {
   uid : string = '';
   direcciones: Comuna[]=[];
 
-  constructor(private userService: UserService) {
+  constructor(
+    private userService: UserService,
+    private navCtrl: NavController) {
     addIcons({
       saveOutline,
       star,
@@ -83,9 +84,11 @@ export default class ProfileComponent implements OnInit {
       createOutline,
       personCircleOutline
     });
-
   }
 
+  goBack() {
+    this.navCtrl.back();
+  }
   async ngOnInit() {
     const loading = await this._utils.loadingSpinner();
     await loading.present();

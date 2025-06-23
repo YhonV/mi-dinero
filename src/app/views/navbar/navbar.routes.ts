@@ -22,7 +22,7 @@ export default [
             },
             {
                 path: 'preferences',
-                loadComponent: () => import('./preferences/preferences.component').then(m => m.default)
+                loadComponent: () => import('./preferences/preferences.component').then(m => m.PreferencesComponent)
             },
             {
                 path: 'navbar',

@@ -1,5 +1,5 @@
 import { inject, Injectable } from '@angular/core';
-import { addDoc, collection, doc, Firestore, getDocs, getDoc, deleteDoc, updateDoc, query, where, QuerySnapshot, DocumentData, Timestamp } from '@angular/fire/firestore';
+import { addDoc, collection, doc, Firestore, getDocs, getDoc, deleteDoc, updateDoc, query, where, setDoc, Timestamp } from '@angular/fire/firestore';
 import { Comuna, User, Transaction, Category, Budget, Bank, SavingAccount, TipFinanciero, FAQ } from '../../models/interfaces';
 
 @Injectable({
@@ -240,56 +240,6 @@ export class FirestoreService {
   };
 }
 
-  
-
-  // async getGastosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
-  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
-  //   const gastosQuery = query(
-  //     transactionCollection,
-  //     where('type', '==', 'gasto'),
-  //     where('date', '>=', desde),
-  //     where('date', '<=', hasta)
-  //   );
-
-  //   const snapshot = await getDocs(gastosQuery);
-  //   const agregados: { [fecha: string]: number } = {};
-
-  //   snapshot.forEach((docSnap)=> {
-  //     const data = docSnap.data() as Transaction;
-  //     const fecha = this.normalizarFecha(data.date);
-  //     const monto = data.amount;
-
-  //     if (fecha && typeof monto === 'number'){
-  //       agregados[fecha] = (agregados[fecha] || 0) + monto
-  //     }
-  //   });
-  //   return agregados;
-  // }
-
-  // async getIngresosPorDia(userId:string, desde:Date, hasta:Date): Promise<{[fecha: string]: number}> {
-  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
-  //   const gastosQuery = query(
-  //     transactionCollection,
-  //     where('type', '==', 'ingreso'),
-  //     where('date', '>=', desde),
-  //     where('date', '<=', hasta)
-  //   );
-
-  //   const snapshot = await getDocs(gastosQuery);
-  //   const agregados: { [fecha: string]: number } = {};
-
-  //   snapshot.forEach((docSnap)=> {
-  //     const data = docSnap.data() as Transaction;
-  //     const fecha = this.normalizarFecha(data.date);
-  //     const monto = data.amount;
-
-  //     if (fecha && typeof monto === 'number'){
-  //       agregados[fecha] = (agregados[fecha] || 0) + monto
-  //     }
-  //   });
-  //   return agregados;
-  // }
-
 
   async createBudget(userId: string, budget : Budget ){
     const collectionBudget = collection(this.firestore,`users/${userId}/budget`);
@@ -377,6 +327,15 @@ export class FirestoreService {
       tipo,
       fecha: new Date() 
     });
+  }
+
+  async guardarTokenEnFirestore(token: string, uid: string) {
+    const tokenRef = doc(this.firestore, 'fcm_tokens', token);
+    await setDoc(tokenRef, {
+            userId: uid,
+            createdAt: new Date(),
+        });
+    console.log("Token guardado en Firestore exitosamente.");
   }
 
 

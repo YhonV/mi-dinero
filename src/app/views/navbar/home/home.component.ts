@@ -12,6 +12,7 @@ import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { HomeService } from 'src/app/shared/services/home/home.service';
 import { BudgetService } from 'src/app/shared/services/budget/budget.service';
+import { PushNotifications } from '@capacitor/push-notifications';
 
 @Component({
   selector: 'app-home',
@@ -65,7 +66,7 @@ export class HomeComponent  implements OnInit {
   async ngOnInit() {  
     const loading = await this._utils.loadingSpinner();
     await loading.present();
-
+    this.registrarParaNotificaciones()
     await this.loadCategories();
     await this.userService.waitForAuth();
 
@@ -84,6 +85,34 @@ export class HomeComponent  implements OnInit {
       this.loadBudgets(this.uid);
     });
   }
+
+  async registrarParaNotificaciones(){
+    let permStatus = await PushNotifications.checkPermissions();
+    console.log("Entré en registrar notificaciones")
+    console.log(this.uid)
+    if (permStatus.receive === "prompt"){
+      permStatus = await PushNotifications.requestPermissions();
+    }
+
+    if (permStatus.receive !== "granted"){
+      throw new Error("El usuario no concedió permisos para recibir notificaciones")
+    }
+
+    await PushNotifications.register();
+
+    PushNotifications.addListener("registration", async (token) => {
+      console.log(this.uid)
+      console.log("Token FCM obtenido " + token.value);
+      await this._firestore.guardarTokenEnFirestore(token.value, this.uid)
+    });
+
+    PushNotifications.addListener('registrationError', (err) => {
+      console.error('Error al registrar notificaciones:', err.error);
+    });
+  }
+
+  
+
 
   private async loadCategories() {
     const cachedGastos = sessionStorage.getItem('categoriasGasto');

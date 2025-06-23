@@ -18,9 +18,9 @@ export class AppComponent implements OnInit{
     try{
       await this.userService.waitForAuth()
       if (this.userService.isAuthenticated()) {
-          this._utils.navigateTo("/home")
+          this._utils.navigateToWithoutLoading("/home")
         } else {
-           this._utils.navigateTo("/auth/sign-in")
+           this._utils.navigateToWithoutLoading("/auth/sign-in")
         }
     } catch(e){
       console.log(e)

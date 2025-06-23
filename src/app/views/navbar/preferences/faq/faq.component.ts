@@ -3,6 +3,7 @@ import { IonContent, IonTitle, IonBackButton, IonButtons, IonToolbar, IonHeader,
 import { FAQ } from 'src/app/shared/models/interfaces';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { CommonModule } from '@angular/common';
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-faq',
@@ -13,7 +14,13 @@ import { CommonModule } from '@angular/common';
 export class FaqComponent implements OnInit {
   faqs: FAQ[] = [];
 
-  constructor(private _firestore: FirestoreService) {}
+  constructor(
+    private _firestore: FirestoreService,
+    private navCtrl: NavController) {}
+
+  goBack() {
+    this.navCtrl.back();
+  }
 
   async ngOnInit() {
     try {

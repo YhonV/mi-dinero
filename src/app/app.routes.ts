@@ -28,6 +28,13 @@ export const routes: Routes = [
           )
       },
       {
+        path: 'preferences',
+        loadComponent: () =>
+          import('./views/navbar/preferences/preferences.component').then(
+            (m) => m.PreferencesComponent
+          )
+      },
+      {
         path: '',
         redirectTo: 'dashboard',
         pathMatch: 'full'

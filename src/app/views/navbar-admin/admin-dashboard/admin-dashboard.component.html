@@ -6,6 +6,9 @@
     <ion-segment-button value="logs">
       <ion-label>Logs</ion-label>
     </ion-segment-button>
+    <ion-segment-button value="feedbacks">
+      <ion-label>Feedbacks</ion-label>
+    </ion-segment-button>
   </ion-segment>
 
   <div [ngSwitch]="selectedSegment" class="segment-content">
@@ -32,5 +35,17 @@
         <ion-icon name="trash-outline" (click)="prepareDeleteLog(log)"></ion-icon>
       </div>
     </div>
+
+    <div *ngSwitchCase="'feedbacks'">
+      <div class="card-content" *ngFor="let feedback of feedbacks">
+        <div class="info">
+          <div class="email-user">{{ feedback.subject }}</div>
+          <div class="region"><strong>Mensaje: </strong>{{ feedback.message }}</div>
+          <div class="fecha"><strong>Rating: </strong>{{ feedback.rating }}</div>
+        </div>
+        <ion-icon name="trash-outline" (click)="prepareDeleteFeedback(feedback)"></ion-icon>
+      </div>
+    </div>
+
   </div>
 </ion-content>

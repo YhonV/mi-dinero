@@ -4,15 +4,14 @@ import {
   IonSegment, 
   IonSegmentButton, 
   IonLabel, 
-  IonIcon, 
-  IonAlert
+  IonIcon
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
 import { trashOutline } from 'ionicons/icons';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
-import { Logs, User } from 'src/app/shared/models/interfaces';
+import { Feedback, Logs, User } from 'src/app/shared/models/interfaces';
 import { toast } from 'ngx-sonner';
 import { AlertController } from '@ionic/angular';
 
@@ -27,15 +26,14 @@ import { AlertController } from '@ionic/angular';
     IonSegmentButton, 
     IonLabel, 
     FormsModule, 
-    IonIcon, 
-    IonAlert
+    IonIcon
   ]
 })
 export class AdminDashboardComponent  implements OnInit {
   selectedSegment: string = 'usuarios';
   userData: User[] = []
   logs: Logs[] = []
-  private selectedUser: User | null = null;
+  feedbacks: Feedback[] = []
 
   constructor(private _firestoreService: FirestoreService, private alertController: AlertController) {
     addIcons({
@@ -46,6 +44,7 @@ export class AdminDashboardComponent  implements OnInit {
   ngOnInit() {
     this.getAllUsers();
     this.getAllLogs();
+    this.getFeedbacks();
   }
 
   segmentChanged(event: any) {
@@ -54,14 +53,21 @@ export class AdminDashboardComponent  implements OnInit {
 
   async getAllUsers(){
     this.userData = await this._firestoreService.getGenericCollection<User>("users");
+  }
 
-    console.log(this.userData)
+  async getFeedbacks(){
+    try{
+      const feedbackData = await this._firestoreService.getGenericCollection<Feedback>("feedback");
+      this.feedbacks = feedbackData
+      console.log(this.feedbacks)
+    } catch(e){
+      throw new Error("Error al obtener los feedbacks" + e);
+    }
   }
 
   async getAllLogs() {
     try {
       const logsData = await this._firestoreService.getGenericCollection<Logs>("logs");
-      console.log(logsData)
       this.logs = logsData.map(log => {
         const fechaDate = log.fecha?.toDate?.() || new Date();
 
@@ -109,6 +115,18 @@ export class AdminDashboardComponent  implements OnInit {
       }
   }
 
+    async deleteFeedback(feedback: Feedback){
+    const feedbackId = (feedback as any).id;
+    try {
+        await this._firestoreService.deleteDocument(feedbackId, 'feedback');
+        await this.getFeedbacks();
+        toast.success('Feedback eliminado correctamente');
+    } catch (error) {
+          console.error('Error al eliminar feedback:', error);
+          toast.error('Error al eliminar feedback');
+      }
+  }
+
   async prepareDeleteUser(user: User) {
     const alert = await this.alertController.create({
       header: '¿Estás seguro?',
@@ -133,7 +151,7 @@ export class AdminDashboardComponent  implements OnInit {
     async prepareDeleteLog(log: Logs) {
     const alert = await this.alertController.create({
       header: '¿Estás seguro?',
-      message: `¿Deseas eliminar aste log?`,
+      message: `¿Deseas eliminar este log?`,
       buttons: [
         {
           text: 'Cancelar',
@@ -150,6 +168,28 @@ export class AdminDashboardComponent  implements OnInit {
 
     await alert.present();
   }
+
+  async prepareDeleteFeedback(feedback: Feedback) {
+    const alert = await this.alertController.create({
+      header: '¿Estás seguro?',
+      message: `¿Deseas eliminar este feedback?`,
+      buttons: [
+        {
+          text: 'Cancelar',
+          role: 'cancel'
+        },
+        {
+          text: 'Eliminar',
+          handler: () => {
+            this.deleteFeedback(feedback);
+          }
+        }
+      ]
+    });
+
+    await alert.present();
+  }
+
 
 
 

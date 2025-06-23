@@ -11,7 +11,7 @@ import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { User as FirebaseAuthUser } from '@angular/fire/auth'; // <--- IMPORTANTE: Renombra el User de Firebase Auth
-
+import { NavController } from '@ionic/angular';
 
 @Component({
   selector: 'app-change-password',
@@ -33,6 +33,7 @@ export default class ChangePasswordComponent implements OnInit  {
 
   constructor(
     private fb: FormBuilder,
+    private navCtrl: NavController
     
   ) {
     this.form = this.fb.group({
@@ -44,6 +45,9 @@ export default class ChangePasswordComponent implements OnInit  {
   });
   }
 
+  goBack() {
+    this.navCtrl.back();
+  }
 
   async ngOnInit() {
    this.currentUser = this._authService.getCurrentFirebaseUser();

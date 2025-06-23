@@ -12,7 +12,7 @@ import { UtilsService } from 'src/app/shared/utils/utils.service';
   styleUrls: ['./preferences.component.scss'],
   imports: [IonLabel, IonItem, IonContent, IonIcon, IonButton, FormsModule ]
 })
-export default class PreferencesComponent  implements OnInit {
+export class PreferencesComponent  implements OnInit {
   private _auth = inject(AuthService);
   private _utils = inject(UtilsService)
 

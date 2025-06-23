@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "222243591802",
+    "project_id": "mi-dinero-58798",
+    "storage_bucket": "mi-dinero-58798.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:222243591802:android:fab027981216e8c9e74dc3",
+        "android_client_info": {
+          "package_name": "io.ionic.starter"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCx4GA2U_hsGg5hUBsDPLDeY6cSSlSmwNs"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

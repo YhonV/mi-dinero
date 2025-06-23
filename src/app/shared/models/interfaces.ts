@@ -98,3 +98,9 @@ export interface ChangePassword {
     newPassword: FormControl<string | null>;
     confirmNewPass: FormControl<string | null>;
 }
+
+export interface Feedback {
+    rating: number;
+    message: string;
+    subject: string
+}

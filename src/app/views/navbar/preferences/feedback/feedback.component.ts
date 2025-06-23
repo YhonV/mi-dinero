@@ -32,7 +32,7 @@ import { toast } from 'ngx-sonner';
 import { FormFeedback } from 'src/app/shared/models/interfaces';
 import { FeedbackService } from 'src/app/shared/services/feedback/feedback.service';
 import { Clipboard } from '@capacitor/clipboard';
-
+import { NavController } from '@ionic/angular';
 
 
 @Component({
@@ -70,7 +70,9 @@ export default class FeedbackComponent implements OnInit {
     message: this._formBuilder.control('', [Validators.required]),
   })
 
-  constructor() {
+  constructor(
+    private navCtrl: NavController
+  ) {
     addIcons({
       paperPlane,
       star,
@@ -86,6 +88,10 @@ export default class FeedbackComponent implements OnInit {
   }
 
   ngOnInit() {}
+
+  goBack() {
+    this.navCtrl.back();
+  }
 
   setRating(value : number){
     this.rating = value;
