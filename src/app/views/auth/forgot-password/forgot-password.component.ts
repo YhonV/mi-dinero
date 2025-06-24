@@ -7,13 +7,13 @@ import { FormForgotPassword } from 'src/app/shared/models/interfaces';
 import { AuthService } from 'src/app/shared/services/auth/auth.service';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { hasEmailError, isRequired } from 'src/app/shared/utils/validators.service';
-import { IonButton } from '@ionic/angular/standalone';
+import { IonButton, IonContent } from '@ionic/angular/standalone';
 
 @Component({
   selector: 'app-forgot-password',
   templateUrl: './forgot-password.component.html',
   styleUrls: ['./forgot-password.component.scss'],
-  imports: [ReactiveFormsModule, IonButton]
+  imports: [ReactiveFormsModule, IonButton, IonContent]
 })
 export default class ForgotPasswordComponent {
   private _utils = inject(UtilsService);

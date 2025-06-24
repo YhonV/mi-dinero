@@ -55,8 +55,8 @@
   font-size: 28px;
   font-weight: 700;
   color: white;
-  margin-bottom: 6px;
   text-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  margin: 0;
 }
 
 .budget-subtitle {
@@ -178,7 +178,7 @@
   align-items: center;
   justify-content: center;
   text-align: center;
-  padding: 40px 20px;
+  padding: 15px 15px;
   background: linear-gradient(to bottom, #f0f4ff, #ffffff);
   border-radius: var(--card-radius);
   border: 2px dashed #c4d3ff;
@@ -198,7 +198,7 @@
 .empty-subtitle {
   font-size: 16px;
   color: var(--text-secondary);
-  margin-bottom: 25px;
+  margin-bottom: 15px;
   max-width: 300px;
 }
 
