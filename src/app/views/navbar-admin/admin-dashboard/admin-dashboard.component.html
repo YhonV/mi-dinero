@@ -1,5 +1,11 @@
 <ion-content>
-  <ion-segment [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
+  <ion-header>
+    <ion-toolbar>
+      <ion-title>Panel de Administración</ion-title>
+    </ion-toolbar>
+  </ion-header>
+
+  <ion-segment class="ion-padding-horizontal" [(ngModel)]="selectedSegment" (ionChange)="segmentChanged($event)">
     <ion-segment-button value="usuarios">
       <ion-label>Usuarios</ion-label>
     </ion-segment-button>
@@ -12,40 +18,136 @@
   </ion-segment>
 
   <div [ngSwitch]="selectedSegment" class="segment-content">
-    <div *ngSwitchCase="'usuarios'">
-      <div class="card-content" *ngFor="let user of userData">
+    <div *ngSwitchCase="'usuarios'" class="usuarios">
+      <div class="card-content" *ngFor="let user of userData;">
         <div class="info">
           <div class="email-user">{{ user.email }}</div>
           <div class="region">{{ user.region }}</div>
         </div>
-        <ion-icon 
-          name="trash-outline" 
-          (click)="prepareDeleteUser(user)"
-        ></ion-icon>
+        <ion-button fill="clear" size="small" (click)="openModalToDeleteUser(user)">
+          <ion-icon 
+            name="trash-outline" 
+            slot="icon-only"
+          ></ion-icon>
+        </ion-button>
       </div>
     </div>
 
-    <div *ngSwitchCase="'logs'">
-      <div class="card-content" *ngFor="let log of logs">
+    <div *ngSwitchCase="'logs'" class="logs">
+      <div class="card-content" *ngFor="let log of logs;">
         <div class="info">
           <div class="email-user">{{ log.tipo }}</div>
           <div class="region">{{ log.mensaje }}</div>
           <div class="fecha">{{ log.fechaFormateada }}</div>
         </div>
-        <ion-icon name="trash-outline" (click)="prepareDeleteLog(log)"></ion-icon>
+         <ion-button fill="clear" size="small" (click)="openModalToDeleteLog(log)">
+          <ion-icon 
+            name="trash-outline" 
+            slot="icon-only"
+            aria-label="'Eliminar log ' + log.tipo"
+          ></ion-icon>
+        </ion-button>
       </div>
     </div>
 
-    <div *ngSwitchCase="'feedbacks'">
-      <div class="card-content" *ngFor="let feedback of feedbacks">
+    <div *ngSwitchCase="'feedbacks'" class="feedbacks">
+      <div class="card-content" *ngFor="let feedback of feedbacks;">
         <div class="info">
           <div class="email-user">{{ feedback.subject }}</div>
-          <div class="region"><strong>Mensaje: </strong>{{ feedback.message }}</div>
-          <div class="fecha"><strong>Rating: </strong>{{ feedback.rating }}</div>
+          <div class="region">
+            <strong>Mensaje:</strong> {{ feedback.message }}
+          </div>
+          <div class="fecha">
+            <strong>Rating:</strong> 
+            <span class="rating-stars">
+              {{ getStarRating(feedback.rating) }}
+            </span>
+            <!-- ({{ feedback.rating }}) -->
+          </div>
         </div>
-        <ion-icon name="trash-outline" (click)="prepareDeleteFeedback(feedback)"></ion-icon>
+        <ion-button fill="clear" size="small" (click)="openModalToDeleteFeedback(feedback)">
+          <ion-icon 
+            name="trash-outline" 
+            slot="icon-only"
+            aria-label="Eliminar feedback"
+          ></ion-icon>
+        </ion-button>
+      </div>
+    </div>
+  </div>
+</ion-content>
+
+<!-- Modal para eliminar presupuesto -->
+<div class="modal-overlay" *ngIf="isModalToDeleteUser">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">Eliminar usuario</h2>
+      <button class="close-button" (click)="closeModalToDeleteUser()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding: 10px;">
+      <div>
+        <label class="form-label" style="margin-bottom: 0px">¿Estás seguro que deseas eliminar este usuario?</label>
       </div>
     </div>
 
+    <ion-button color="tertiary" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="deleteUser()">
+      Sí
+    </ion-button>
+    <ion-button color="danger" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="closeModalToDeleteUser()">
+      No
+    </ion-button>
   </div>
-</ion-content>
+</div>
+
+<!-- Modal para eliminar logs -->
+<div class="modal-overlay" *ngIf="isModalToDeleteLog">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">Eliminar log</h2>
+      <button class="close-button" (click)="closeModalToDeleteLog()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding: 10px;">
+      <div>
+        <label class="form-label" style="margin-bottom: 0px">¿Estás seguro que deseas eliminar este log?</label>
+      </div>
+    </div>
+
+    <ion-button color="tertiary" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="deleteLog()">
+      Sí
+    </ion-button>
+    <ion-button color="danger" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="closeModalToDeleteLog()">
+      No
+    </ion-button>
+  </div>
+</div>
+
+<!-- Modal para eliminar feedbacks -->
+<div class="modal-overlay" *ngIf="isModalToDeleteFeedback">
+  <div class="modal-container">
+    <div class="modal-header">
+      <h2 class="modal-title">Eliminar feedback</h2>
+      <button class="close-button" (click)="closeModalToDeleteFeedback()">
+        <ion-icon name="close-outline"></ion-icon>
+      </button>
+    </div>
+
+    <div class="modal-body" style="padding: 10px;">
+      <div>
+        <label class="form-label" style="margin-bottom: 0px">¿Estás seguro que deseas eliminar este feedback?</label>
+      </div>
+    </div>
+
+    <ion-button color="tertiary" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="deleteFeedback()">
+      Sí
+    </ion-button>
+    <ion-button color="danger" fill="outline" expand="block" shape="round" style="padding: 0.5rem;" (click)="closeModalToDeleteFeedback()">
+      No
+    </ion-button>
+  </div>
+</div>

@@ -13,7 +13,7 @@ import {
 import { routes } from './app/app.routes';
 import { AppComponent } from './app/app.component';
 import { getApp, initializeApp, provideFirebaseApp } from '@angular/fire/app';
-import { getAuth, provideAuth, connectAuthEmulator, initializeAuth, indexedDBLocalPersistence } from '@angular/fire/auth';
+import { getAuth, provideAuth, initializeAuth, indexedDBLocalPersistence } from '@angular/fire/auth';
 import { getFirestore, provideFirestore } from '@angular/fire/firestore';
 import { Capacitor } from '@capacitor/core';
 

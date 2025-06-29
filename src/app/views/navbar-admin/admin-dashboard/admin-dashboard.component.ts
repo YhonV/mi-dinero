@@ -4,12 +4,16 @@ import {
   IonSegment, 
   IonSegmentButton, 
   IonLabel, 
-  IonIcon
+  IonIcon,
+  IonHeader,
+  IonToolbar,
+  IonTitle,
+  IonButton
 } from '@ionic/angular/standalone';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { addIcons } from 'ionicons';
-import { trashOutline } from 'ionicons/icons';
+import { trashOutline, closeOutline, star } from 'ionicons/icons';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { Feedback, Logs, User } from 'src/app/shared/models/interfaces';
 import { toast } from 'ngx-sonner';
@@ -26,7 +30,11 @@ import { AlertController } from '@ionic/angular';
     IonSegmentButton, 
     IonLabel, 
     FormsModule, 
-    IonIcon
+    IonIcon,
+    IonHeader,
+    IonToolbar,
+    IonTitle,
+    IonButton
   ]
 })
 export class AdminDashboardComponent  implements OnInit {
@@ -34,10 +42,19 @@ export class AdminDashboardComponent  implements OnInit {
   userData: User[] = []
   logs: Logs[] = []
   feedbacks: Feedback[] = []
+  isModalToDeleteUser : boolean = false;
+  isModalToDeleteLog: boolean = false;
+  isModalToDeleteFeedback: boolean = false;
+  userToDelete: any;
+  logToDelete: any;
+  feedbackToDelete: any;
+  rating: number = 1;
 
   constructor(private _firestoreService: FirestoreService, private alertController: AlertController) {
     addIcons({
-      trashOutline
+      trashOutline,
+      closeOutline,
+      star
     })
    }
 
@@ -59,7 +76,6 @@ export class AdminDashboardComponent  implements OnInit {
     try{
       const feedbackData = await this._firestoreService.getGenericCollection<Feedback>("feedback");
       this.feedbacks = feedbackData
-      console.log(this.feedbacks)
     } catch(e){
       throw new Error("Error al obtener los feedbacks" + e);
     }
@@ -91,106 +107,83 @@ export class AdminDashboardComponent  implements OnInit {
   }
 
 
-  async deleteUser(user: User) {
+  async deleteUser() {
+      let user = this.userToDelete
       const userId = (user as any).id;
       try {
           await this._firestoreService.deleteDocument(userId, 'users');
-          await this.getAllUsers();
           toast.success('Usuario eliminado correctamente');
+          this.closeModalToDeleteUser();
+          await this.getAllUsers();
       } catch (error) {
           console.error('Error al eliminar usuario:', error);
           toast.error('Error al eliminar usuario');
       }
   }
 
-  async deleteLog(log: Logs){
+  async deleteLog(){
+    let log = this.logToDelete;
     const logId = (log as any).id;
     try {
         await this._firestoreService.deleteDocument(logId, 'logs');
-        await this.getAllLogs();
         toast.success('Log eliminado correctamente');
+        this.closeModalToDeleteLog();
+        await this.getAllLogs();
     } catch (error) {
           console.error('Error al eliminar log:', error);
           toast.error('Error al eliminar log');
       }
   }
 
-    async deleteFeedback(feedback: Feedback){
+  async deleteFeedback(){
+    let feedback = this.feedbackToDelete;
     const feedbackId = (feedback as any).id;
     try {
         await this._firestoreService.deleteDocument(feedbackId, 'feedback');
-        await this.getFeedbacks();
         toast.success('Feedback eliminado correctamente');
+        this.closeModalToDeleteFeedback();
+        await this.getFeedbacks();
     } catch (error) {
           console.error('Error al eliminar feedback:', error);
           toast.error('Error al eliminar feedback');
       }
   }
 
-  async prepareDeleteUser(user: User) {
-    const alert = await this.alertController.create({
-      header: '¿Estás seguro?',
-      message: `¿Deseas eliminar al usuario <strong>${user.email}</strong>?`,
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.deleteUser(user);
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+  openModalToDeleteUser(user : User){
+    this.isModalToDeleteUser = true;
+    this.userToDelete = user;
+  }
+  
+  closeModalToDeleteUser(){
+    this.isModalToDeleteUser = false;
+    this.userToDelete = null!;
   }
 
-    async prepareDeleteLog(log: Logs) {
-    const alert = await this.alertController.create({
-      header: '¿Estás seguro?',
-      message: `¿Deseas eliminar este log?`,
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.deleteLog(log);
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+  openModalToDeleteLog(log : Logs){
+    this.isModalToDeleteLog = true;
+    this.logToDelete = log;
   }
 
-  async prepareDeleteFeedback(feedback: Feedback) {
-    const alert = await this.alertController.create({
-      header: '¿Estás seguro?',
-      message: `¿Deseas eliminar este feedback?`,
-      buttons: [
-        {
-          text: 'Cancelar',
-          role: 'cancel'
-        },
-        {
-          text: 'Eliminar',
-          handler: () => {
-            this.deleteFeedback(feedback);
-          }
-        }
-      ]
-    });
-
-    await alert.present();
+  closeModalToDeleteLog(){
+    this.isModalToDeleteLog = false;
+    this.logToDelete = null;
   }
 
+  openModalToDeleteFeedback(feedback : Feedback){
+    this.isModalToDeleteFeedback = true;
+    this.feedbackToDelete = feedback;
+  }
 
+  closeModalToDeleteFeedback(){
+    this.isModalToDeleteFeedback = false;
+    this.feedbackToDelete = null;
+  }
 
+  getStarRating(value: number): string {
+    const maxStars = 5;
+    const fullStar = '★';
+    const emptyStar = '☆';
 
+    return fullStar.repeat(value) + emptyStar.repeat(maxStars - value);
+  }
 }

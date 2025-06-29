@@ -169,27 +169,27 @@ export default class SavingAccountsComponent implements OnInit {
   }
 
   openModalToDeleteSaving(selectedSaving : SavingAccount){
-      this.dataSavingToDelete = selectedSaving;
-      console.log(this.dataSavingToDelete)
-      this.isModalToDeleteSaving = true;
-    }
+    this.dataSavingToDelete = selectedSaving;
+    console.log(this.dataSavingToDelete)
+    this.isModalToDeleteSaving = true;
+  }
   
-    closeModalToDeleteSaving(){
-      this.isModalToDeleteSaving = false;
-      this.dataSavingToDelete = null!;
-    }
+  closeModalToDeleteSaving(){
+    this.isModalToDeleteSaving = false;
+    this.dataSavingToDelete = null!;
+  }
 
   async deleteSaving(selectedSaving : SavingAccount){
-      try{
-        await this._firestore.deleteSavingAccount(this.uid, selectedSaving);
-        toast.success("Cuenta de ahorro eliminada correctamente")
-        this.closeModalToDeleteSaving();
-        this.ngOnInit();
-      }catch(error){
-        toast.error("Error al eliminar presupuesto " + error)
-        console.log(error);
-      }
+    try{
+      await this._firestore.deleteSavingAccount(this.uid, selectedSaving);
+      toast.success("Cuenta de ahorro eliminada correctamente")
+      this.closeModalToDeleteSaving();
+      this.ngOnInit();
+    }catch(error){
+      toast.error("Error al eliminar presupuesto " + error)
+      console.log(error);
     }
+  }
 
 
 }
