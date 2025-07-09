@@ -378,6 +378,10 @@ ion-content {
 .input-container {
   position: relative;
 }
+.amount-input::placeholder {
+  color: #6c757d; /* Color gris medio */
+  opacity: 0.7; /* Ajusta la opacidad si lo deseas */
+}
 
 .amount-input {
   width: 100%;

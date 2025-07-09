@@ -165,7 +165,7 @@
           <input
             type="text"
             [(ngModel)]="nombre"
-            placeholder="Mi cuenta de ahorros"
+            placeholder="Ingresa tu cuenta"
             class="amount-input"
           />
         </div>
@@ -176,8 +176,9 @@
         <label class="form-label">Monto</label>
         <div class="input-container">
           <input
-            type="number"
-            [(ngModel)]="monto"
+            type="text"
+            [value]="montoFormateado" 
+            (input)="onMontoInput($event)" 
             placeholder="0.00"
             class="amount-input"
           />

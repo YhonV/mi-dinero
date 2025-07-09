@@ -6,25 +6,44 @@ import { Router } from '@angular/router';
 import { FirestoreService } from 'src/app/shared/services/firestore/firestore.service';
 import { IonIcon, IonContent, IonItemSliding, IonItemOptions, IonItemOption, IonItem }   from '@ionic/angular/standalone';
 import { addIcons } from 'ionicons';
-import { cashOutline, fastFoodOutline, carOutline, homeOutline, filmOutline, bulbOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline, close, trashOutline} from 'ionicons/icons';
+import { cashOutline, fastFoodOutline, carOutline, homeOutline, filmOutline, bulbOutline, medkitOutline, shirtOutline, schoolOutline, barChartOutline, cartOutline, giftOutline, close, trashOutline, walletOutline} from 'ionicons/icons';
 import { toast } from 'ngx-sonner';
 import { UtilsService } from 'src/app/shared/utils/utils.service';
 import { UserService } from 'src/app/shared/services/user/user.service';
 import { HomeService } from 'src/app/shared/services/home/home.service';
 import { BudgetService } from 'src/app/shared/services/budget/budget.service';
 import { PushNotifications } from '@capacitor/push-notifications';
+import { runTransaction } from "firebase/firestore";
+import {
+  trigger,
+  transition,
+  style,
+  animate
+} from '@angular/animations';
 
 @Component({
   selector: 'app-home',
   imports: [CommonModule, FormsModule, IonIcon, IonContent, IonItemSliding, IonItemOptions, IonItemOption, IonItem],
   templateUrl: './home.component.html',
   styleUrls: ['./home.component.scss'],
+  animations: [
+    trigger('fadeInOut', [
+      transition(':enter', [ // fade in
+        style({ opacity: 0 }),
+        animate('300ms ease-in', style({ opacity: 1 }))
+      ]),
+      transition(':leave', [ // fade out
+        animate('300ms ease-out', style({ opacity: 0 }))
+      ])
+    ])
+  ]
 })
 export class HomeComponent  implements OnInit {
   isModalOpen: boolean = false;
-  tipoSeleccionado: 'ingreso' | 'gasto' = 'ingreso';
+  tipoSeleccionado: string = '';
   monto: number= 0;
   categoriaSeleccionada: string = '';
+  otraCategoria: string = '';
   descripcion: string = '';
   transaction: Transaction[] = [];
   categoriasIngreso: Category[] = [];
@@ -40,6 +59,7 @@ export class HomeComponent  implements OnInit {
   formattedAmount : string = '';
   presupuestosActuales: Budget[] = [];
   showConfirmDelete = false;
+  montoFormateado: string = '$0';
 
   constructor(
     private userService: UserService,
@@ -59,8 +79,14 @@ export class HomeComponent  implements OnInit {
       cartOutline, 
       giftOutline,
       close,
-      trashOutline
+      trashOutline,
+      walletOutline
     })
+  }
+
+  cambiarTipoGasto(tipoGasto: string) {
+    this.tipoSeleccionado = tipoGasto;
+    this.categoriaSeleccionada = '';
   }
 
   async ngOnInit() {  
@@ -111,8 +137,19 @@ export class HomeComponent  implements OnInit {
     });
   }
 
-  
+  onMontoInput(event: any) {
+    const rawValue = event.target.value.replace(/\D/g, ''); 
+    this.monto = Number(rawValue);
+    this.montoFormateado = this.formatCLP(this.monto);
+  }
 
+  formatCLP(valor: number): string {
+    return valor.toLocaleString('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0
+    });
+  }
 
   private async loadCategories() {
     const cachedGastos = sessionStorage.getItem('categoriasGasto');
@@ -183,10 +220,10 @@ export class HomeComponent  implements OnInit {
 
         if (transaction.type === 'ingreso'){
           const category = this.categoriasIngreso.find(cat => cat.nombre === transaction.categoryId);
-          iconoCategoria = category?.icono ?? 'default-icon';
+          iconoCategoria = category?.icono ?? 'wallet-outline';
         } else {
           const category = this.categoriasGasto.find(cat => cat.nombre === transaction.categoryId);
-          iconoCategoria = category?.icono ?? 'default-icon';
+          iconoCategoria = category?.icono ?? 'wallet-outline';
         }
         return {
           ...transaction,
@@ -197,7 +234,6 @@ export class HomeComponent  implements OnInit {
     }
   }
 
-  
   openModal() {
     this.isModalOpen = true;
   }
@@ -223,59 +259,82 @@ export class HomeComponent  implements OnInit {
  
   async guardarTransaccion(): Promise<void> {
     if (this.monto <= 0 || this.categoriaSeleccionada === '') {
-      console.error('Por favor, completa todos los campos correctamente.');
+      toast.error('Por favor, completa todos los campos correctamente.');
       return;
     }
 
-    if (this.tipoSeleccionado === 'gasto'){
-      const presupuestoActual = this.presupuestosActuales.find(p => p.categoryId === this.categoriaSeleccionada);
-      console.log(presupuestoActual)
-      if (presupuestoActual){
-        if (this.monto > presupuestoActual.amount) {
-          toast.error(`❌ El gasto excede el presupuesto disponible para ${this.categoriaSeleccionada} (${this._utils.currencyFormatter({currency: "CLP", value: presupuestoActual.amount})})`);
-          return;
-        } else {
-          presupuestoActual.amount -= this.monto;
-          if(presupuestoActual.amount == 0) {
-            await this._firestore.deleteBudget(presupuestoActual, this.uid)
-            toast.info("El presupuesto quedó sin fondos, se procede a eliminar")
+    try {
+      const firestoreInstance = this._firestore.getFirestoreInstance();
+
+      await runTransaction(firestoreInstance, async (transaction) => {
+        
+        if (this.tipoSeleccionado === 'gasto') {
+
+          if(this.otraCategoria) {
+            this.categoriaSeleccionada = this.otraCategoria;
+          }
+          const presupuestoActual = this.presupuestosActuales.find(
+            p => p.categoryId === this.categoriaSeleccionada
+          );
+
+          // Convertir el saldo calculado a número para la comparación
+          const saldoActual = this.transaction.reduce((saldo, t) =>
+            t.type === "ingreso" ? saldo + t.amount : saldo - t.amount, 0);
+          if(this.monto > saldoActual) {
+            toast.error(`No puedes gastar más que tu saldo actual ${saldoActual}`)
+            throw new Error(`No puedes gastar más que tu saldo actual ${saldoActual}`);
+          }
+
+          if (presupuestoActual) {
+            
+            if (this.monto > presupuestoActual.amount) {
+              toast.error(`El gasto excede el presupuesto de ${this.formatCLP(presupuestoActual.amount)}`);
+              throw new Error(`El gasto excede el presupuesto de ${this.formatCLP(presupuestoActual.amount)}`);
+            }
+
+            const nuevoMonto = presupuestoActual.amount - this.monto;
+            if (!presupuestoActual.docId) {
+              throw new Error('El presupuesto encontrado no tiene un ID de documento.');
+            }
+            const budgetDocRef = this._firestore.getBudgetDocRef(this.uid, presupuestoActual.docId);
+
+            if (nuevoMonto <= 0) {
+              transaction.delete(budgetDocRef);
+            } else {
+              transaction.update(budgetDocRef, { "budget.amount": nuevoMonto });
+            }
           }
         }
-        const budgetDoc = await this._firestore.getCollectionInUsers(this.uid, 'budget');
-        const docToUpdate = budgetDoc.docs.find(doc => doc.data()["budget"]?.categoryId === this.categoriaSeleccionada);
-        if (docToUpdate) {
-          await this._firestore.updateBudget(this.uid, docToUpdate.id, presupuestoActual.amount);
-        }
-      }
-      const saldoActual = this.calcularSaldo();
-      const saldoActualLimpio = saldoActual.replace(/[^0-9.-]+/g, "");
-      if (this.monto > parseInt(saldoActualLimpio)){
-        toast.error('❌ No puedes gastar más de lo que tienes. Tu saldo actual es: $' + saldoActual);        
-        return;
-      }
-    }
 
-    const transaction: Transaction = {
-      id: Date.now().toString(),
-      type: this.tipoSeleccionado,
-      amount: this.monto,
-      categoryId: this.categoriaSeleccionada,
-      date: new Date()
-    }
+        const newTransactionData: Transaction = {
+          id: Date.now().toString(),
+          type: this.tipoSeleccionado,
+          amount: this.monto,
+          categoryId: this.categoriaSeleccionada,
+          date: new Date()
+        };
+        
+        const newTransactionRef = this._firestore.getNewTransactionDocRef(this.uid);
+        transaction.set(newTransactionRef, newTransactionData);
+      });
 
-    toast.success('✅ Transacción creada exitosamente')
-    this.closeModal()
-    
-    await this._firestore.createTransaction(this.uid, transaction);
-    await Promise.all([
-      this.loadBudgets(this.uid),
-      this.loadTransactions()
-    ]);
-    
-    this.monto = 0;
-    this.categoriaSeleccionada = ''
+      await Promise.all([
+        this.loadBudgets(this.uid),
+        this.loadTransactions()
+      ]);
+
+      this.monto = 0;
+      this.categoriaSeleccionada = '';  
+      this.montoFormateado = '$0';
+      
+      toast.success('✅ Transacción creada exitosamente');
+      this.closeModal();
+
+    } catch (error: any) {
+      console.error('Error al guardar transacción:', error);
+      // toast.error(`❌ Error: ${error.message || 'Error al procesar la transacción'}`);
+    }
   }
-
 
   get sortedTransactions(): Transaction[]{
     return this.transaction.slice().sort((a, b) => {

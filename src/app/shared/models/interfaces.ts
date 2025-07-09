@@ -54,7 +54,7 @@ export interface Category {
   
 export interface Transaction {
     id: string;
-    type: 'ingreso' | 'gasto';
+    type: string;
     amount: number;
     categoryId: string;
     date: Date;

@@ -33,7 +33,7 @@ export default class BudgetComponent  {
   isModalOpen: boolean = false;
   isModalToEditBudget: boolean = false;
   isModalToDeleteBudget: boolean = false;
-  amount: number = 0;
+  monto: number = 0;
   categoriaSeleccionada: string = '';
   budget : Budget[] = []
   hasBudget : boolean = false
@@ -43,6 +43,7 @@ export default class BudgetComponent  {
   private tips: TipFinanciero[] = [];
   currentTip?: TipFinanciero;
   private tipInterval?: any;
+  montoFormateado: string = '$0';
 
   constructor(
     private userService: UserService,
@@ -67,6 +68,20 @@ export default class BudgetComponent  {
       createOutline,
       trashOutline,
       closeOutline })
+  }
+
+  onMontoInput(event: any) {
+    const rawValue = event.target.value.replace(/\D/g, ''); 
+    this.monto = Number(rawValue);
+    this.montoFormateado = this.formatCLP(this.monto);
+  }
+
+  formatCLP(valor: number): string {
+    return valor.toLocaleString('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0
+    });
   }
 
   async ionViewWillEnter() {
@@ -230,24 +245,32 @@ export default class BudgetComponent  {
   }
 
   async saveBudget(){
-    if(!this.amount || !this.categoriaSeleccionada){
+    if(!this.monto || !this.categoriaSeleccionada){
       toast.error("¡¡ Todos los campos son requeridos !!");
       return;
     }
 
-    if (this.amount > this.saldo){
+    if (this.monto > this.saldo){
       toast.error("¡No puedes crear un presupuesto mayor a tu saldo!")
+      return;
+    }
+
+    let estaRepitido = this.budget.filter(item => this.categoriaSeleccionada === item.categoryId)
+
+    if(estaRepitido.length > 0){
+      toast.error("¡No puedes crear un presupuesto que ya está existe!")
       return;
     }
 
     const budget : Budget = {
     id: new Date().getTime(),
     categoryId: this.categoriaSeleccionada,
-    amount: this.amount
+    amount: this.monto
     }
     await this._firestore.createBudget(this.uid, budget)
     this.categoriaSeleccionada = '';
-    this.amount = 0;
+    this.montoFormateado = '$0';
+    this.monto = 0;
     toast.success("Presupuesto guardado exitosamente")
     this.ionViewWillEnter();
     this.closeModal();

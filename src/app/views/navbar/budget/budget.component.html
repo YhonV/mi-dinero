@@ -135,7 +135,7 @@
         <div class="form-group">
           <label class="form-label">Ingresa la cantidad de tu presupuesto</label>
           <ion-item class="amount-input">
-            <ion-input type="number" placeholder="$19.990" [(ngModel)]="amount"></ion-input>
+            <ion-input type="text" [value]="montoFormateado"  (input)="onMontoInput($event)" placeholder="$0"></ion-input>
           </ion-item>
         </div>
         

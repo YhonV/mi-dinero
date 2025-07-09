@@ -29,14 +29,14 @@
         {{ calcularSaldo() }}
       </p>
     </div>
-<!-- Cuentas de ahorro -->
-<div class="savings-access-button" (click)="navigateTo('/home/saving-accounts')">
-  <div class="savings-icon">
-    <i class="fas fa-piggy-bank"></i>
+  <!-- Cuentas de ahorro -->
+  <div class="savings-access-button" (click)="navigateTo('/home/saving-accounts')">
+    <div class="savings-icon">
+      <i class="fas fa-piggy-bank"></i>
+    </div>
+    <div class="savings-label">Mis Ahorros</div>
   </div>
-  <div class="savings-label">Mis Ahorros</div>
-</div>
-    
+      
     <!-- Recent Transactions -->
     <div class="block transactions-card">
       <div class="transactions-header">
@@ -161,7 +161,7 @@
           <div class="transaction-type-buttons">
             <button
               type="button"
-              (click)="tipoSeleccionado = 'ingreso'"
+              (click)="cambiarTipoGasto('ingreso')"
               class="type-button income"
               [ngClass]="{'active': tipoSeleccionado === 'ingreso'}"
             >
@@ -185,7 +185,7 @@
             </button>
             <button
               type="button"
-              (click)="tipoSeleccionado = 'gasto'"
+              (click)="cambiarTipoGasto('gasto')"
               class="type-button expense"
               [ngClass]="{'active': tipoSeleccionado === 'gasto'}"
             >
@@ -214,8 +214,9 @@
             <label class="form-label">Monto</label>
             <div class="input-container">
               <input 
-                type="number" 
-                [(ngModel)]="monto" 
+                type="text" 
+                [value]="montoFormateado" 
+                (input)="onMontoInput($event)" 
                 placeholder="0.00" 
                 class="amount-input" 
               />
@@ -270,6 +271,18 @@
                   ></path>
                 </svg>
               </div>
+            </div>
+          </div>
+
+          <div class="form-field" *ngIf="categoriaSeleccionada === 'Otros gastos'" @fadeInOut>
+            <label class="form-label">Categoria de gasto:</label>
+            <div class="input-container">
+              <input 
+                type="text" 
+                placeholder="Ingresa tu gasto" 
+                class="amount-input" 
+                [(ngModel)]="otraCategoria"
+              />
             </div>
           </div>
         </div>

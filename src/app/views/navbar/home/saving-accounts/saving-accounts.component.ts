@@ -34,7 +34,8 @@ export default class SavingAccountsComponent implements OnInit {
   modalMode: 'add' | 'edit' = 'add';
   isModalToDeleteSaving : boolean = false;
   dataSavingToDelete !: SavingAccount;
-
+  montoFormateado: string = '$0';
+  
   constructor(private userService: UserService) {
     addIcons({
       createOutline,
@@ -67,6 +68,20 @@ export default class SavingAccountsComponent implements OnInit {
       } catch(error) {
         console.error("Error loading data:", error);
       }
+  }
+
+  onMontoInput(event: any) {
+    const rawValue = event.target.value.replace(/\D/g, ''); 
+    this.monto = Number(rawValue);
+    this.montoFormateado = this.formatCLP(this.monto);
+  }
+
+  formatCLP(valor: number): string {
+    return valor.toLocaleString('es-CL', {
+      style: 'currency',
+      currency: 'CLP',
+      maximumFractionDigits: 0
+    });
   }
 
   async loadAccounts(){
@@ -152,6 +167,7 @@ export default class SavingAccountsComponent implements OnInit {
   }
   
   await this.loadAccounts();
+  this.montoFormateado = '$0';
   this.nombre= '';
   this.monto = 0;
   this.bancoSeleccionado = ''

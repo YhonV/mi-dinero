@@ -4,6 +4,7 @@ import { NgxSonnerToaster } from 'ngx-sonner';
 import { FormsModule } from '@angular/forms';
 import { UserService } from './shared/services/user/user.service';
 import { UtilsService } from './shared/utils/utils.service';
+import { SplashScreen } from '@capacitor/splash-screen';
 
 
 @Component({
@@ -15,7 +16,15 @@ export class AppComponent implements OnInit {
   private authPromise: Promise<void>;
 
   constructor(private _utils: UtilsService, private userService: UserService) {
+    this.showSplash()
     this.authPromise = this.initializeAuth();
+  }
+
+  async showSplash(){
+    await SplashScreen.show({
+      autoHide: true,
+      showDuration: 3000
+    });
   }
 
   async ngOnInit() {

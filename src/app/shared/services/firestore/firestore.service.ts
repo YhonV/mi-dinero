@@ -10,6 +10,10 @@ export class FirestoreService {
   private firestore = inject(Firestore)
   private n : number = 0;
 
+  getFirestoreInstance() {
+    return this.firestore;
+  }
+
   async getDirecciones(): Promise<Comuna[]> {
     const collectionDireccion = collection(this.firestore, "direccion");
     const allComunas = await getDocs(collectionDireccion);
@@ -147,24 +151,6 @@ export class FirestoreService {
       return [];
     }
   }
-
-  // async getGastosCategoria(userId:string, desde:Date, hasta:Date): Promise<{[categoryId: string]: number}> {
-  //   const transactionCollection = collection(this.firestore, `users/${userId}/transactions`);
-  //   const gastosQuery = query(transactionCollection, where('type', '==', 'gasto'), where('date', '>=', desde), where('date', '<=', hasta));
-  //   const snapshot = await getDocs(gastosQuery);
-  //   const agregados: {[categoryId: string]: number} = {};
-
-  //   snapshot.forEach((docSnap)=> {
-  //     const data = docSnap.data() as Transaction;
-  //     const catId = data.categoryId;
-  //     const monto = data.amount;
-
-  //     if (catId && typeof monto === 'number'){
-  //       agregados[catId] = (agregados[catId] || 0) + monto
-  //     }
-  //   });
-  //   return agregados;
-  // }
 
   async getIngresosAgrupados(userId:string, desde:Date, hasta:Date): Promise <{
     porCategoria: { [catId: string]: number },
@@ -338,5 +324,24 @@ export class FirestoreService {
     console.log("Token guardado en Firestore exitosamente.");
   }
 
+  /**
+   * Obtiene la referencia a un documento de presupuesto específico.
+   * @param uid ID del usuario
+   * @param budgetDocId ID del documento del presupuesto
+   * @returns Una DocumentReference al presupuesto
+   */
+  getBudgetDocRef(uid: string, budgetDocId: string) {
+    return doc(this.firestore, `users/${uid}/budget/${budgetDocId}`);
+  }
+
+  /**
+   * Crea una referencia para un nuevo documento en la colección de transacciones del usuario.
+   * @param uid ID del usuario
+   * @returns Una DocumentReference para una nueva transacción.
+   */
+  getNewTransactionDocRef(uid: string) {
+    const transactionsCollectionRef = collection(this.firestore, `users/${uid}/transactions`);
+    return doc(transactionsCollectionRef); // Genera una referencia con un ID automático
+  }
 
 }
